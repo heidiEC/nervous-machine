@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nervous Machine: Causal AI for Industrial Intelligence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Roboto+Mono:wght@400&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico"> <style>
+        /* General Body & Root Styling */
+        :root {
+            --color-dark-bg: #0A0A1A; /* Very dark indigo/near black */
+            --color-light-text: #E0E0F0; /* Off-white / very light gray */
+            --color-accent-indigo: #4C00FF; /* Vibrant indigo */
+            --color-accent-violet: #8A2BE2; /* Vibrant violet */
+            --color-gradient-start: #4c00ff; /* Matches accent-indigo */
+            --color-gradient-end: #8a2be2; /* Matches accent-violet */
+            --spacing-unit: 1rem;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--color-dark-bg);
+            color: var(--color-light-text);
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
+
+        /* Container for content width */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: calc(2 * var(--spacing-unit));
+        }
+
+        /* Typography */
+        h1, h2, h3 {
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: calc(1.5 * var(--spacing-unit));
+            color: var(--color-light-text); /* Ensure headings are bright */
+        }
+
+        h1 {
+            font-size: 3.5rem; /* Larger for hero */
+            line-height: 1.1;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: calc(3 * var(--spacing-unit));
+            position: relative;
+        }
+        h2::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient_to_right_var_(--color-accent-indigo_var_(--color-accent-violet));
+            margin: var(--spacing-unit) auto 0;
+            border-radius: 2px;
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            color: var(--color-accent-violet);
+            margin-bottom: var(--spacing-unit);
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: var(--spacing-unit);
+        }
+
+        /* Header Navigation */
+        header {
+            background-color: rgba(10, 10, 26, 0.8); /* Slightly transparent dark */
+            padding: var(--spacing-unit) 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px); /* Frosted glass effect */
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 calc(2 * var(--spacing-unit));
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--color-accent-indigo);
+            margin: 0;
+            letter-spacing: 0.05rem;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-left: calc(2 * var(--spacing-unit));
+        }
+
+        nav ul li a {
+            color: var(--color-light-text);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            position: relative;
+            padding-bottom: 5px;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient_to_right_var_(--color-accent-indigo_var_(--color-accent-violet));
+            transition: width 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: var(--color-accent-violet);
+        }
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            /* Placeholder for image from prompt - this should be a static asset URL */
+            background-image: url('./images/abyss.jpeg');
+        }
+
+        .hero-image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient_to_top_rgba(0_0_0_0.7)_rgba(0_0_0_0.3); /* Dark overlay for text readability */
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            padding: calc(2 * var(--spacing-unit));
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            color: var(--color-light-text);
+            margin-bottom: var(--spacing-unit);
+            text-shadow: 0 0 15px rgba(var(--color-accent-indigo)_0.7), 0 0 25px rgba(var(--color-accent-violet)_0.5);
+        }
+        .hero-content h2 {
+            font-size: 2.5rem;
+            color: var(--color-accent-violet);
+            margin-bottom: 0.5rem;
+            text-align: center; /* Override default h2 styling */
+        }
+        .hero-content h2::after {
+            display: none; /* Remove underline for hero h2 */
+        }
+
+        .hero-content .tagline {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: var(--color-light-text);
+            opacity: 0.9;
+        }
+
+        /* Content Sections */
+        .content-section {
+            padding: calc(5 * var(--spacing-unit)) 0;
+            background-color: var(--color-dark-bg);
+        }
+
+        .content-section.light-bg {
+            background-color: #1a1a33; /* Slightly lighter dark for contrast */
+        }
+
+        .content-section p {
+            text-align: center;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Feature Grid (for Causal Vectors) */
+        .feature-grid, .principles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: calc(3 * var(--spacing-unit));
+            margin-top: calc(3 * var(--spacing-unit));
+        }
+
+        .feature-item, .principle-item {
+            background-color: #1a1a33; /* Slightly lighter than main dark bg */
+            padding: calc(2 * var(--spacing-unit));
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--color-accent-indigo);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .feature-item:hover, .principle-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(var(--color-accent-violet)_0.6);
+            border-color: var(--color-accent-violet);
+        }
+
+        .feature-item h3, .principle-item h3 {
+            text-align: center;
+            color: var(--color-accent-indigo);
+            margin-bottom: calc(1 * var(--spacing-unit));
+            font-size: 1.5rem;
+            position: relative;
+        }
+        .feature-item h3::after, .principle-item h3::after {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 2px;
+            background: var(--color-accent-violet);
+            margin: 0.5rem auto 0;
+        }
+
+        .feature-item p, .principle-item p {
+            font-size: 1rem;
+            text-align: left;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        /* Call to Action Button */
+        .button {
+            display: inline-block;
+            background: linear-gradient_to_right_var_(--color-accent-indigo_var_(--color-accent-violet));
+            color: var(--color-light-text);
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(var(--color-accent-indigo)_0.4);
+            border: none;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(var(--color-accent-violet)_0.6);
+            background: linear-gradient_to_right_var_(--color-accent-violet_var_(--color-accent-indigo)); /* Reverse gradient on hover */
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--color-dark-bg);
+            color: var(--color-light-text);
+            text-align: center;
+            padding: calc(2 * var(--spacing-unit)) 0;
+            border-top: 1px solid rgba(var(--color-accent-indigo)_0.2);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.8rem; }
+            h2 { font-size: 2rem; }
+            h3 { font-size: 1.4rem; }
+            p { font-size: 1rem; }
+
+            header .container {
+                flex-direction: column;
+                text-align: center;
+            }
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                margin-top: var(--spacing-unit);
+            }
+            nav ul li {
+                margin: 0.5rem 1rem;
+            }
+            .hero-content {
+                padding: var(--spacing-unit);
+            }
+            .hero-content h1 {
+                font-size: 3rem;
+            }
+            .hero-content .tagline {
+                font-size: 1.2rem;
+            }
+            .feature-grid, .principles-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 class="logo">Nervous Machine</h1>
+            <nav>
+                <ul>
+                    <li><a href="#vision">Our Vision</a></li>
+                    <li><a href="#framework">The Framework</a></li>
+                    <li><a href="#principles">Core Principles</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="hero" class="hero-section">
+        <div class="hero-image-overlay"></div>
+        <div class="hero-content">
+            <h2>Nervous Machine: Causal AI for machines.</h2>
+            <h1>Deep Tech for Industrial Intelligence.</h1>
+            <p class="tagline">Bridging the IT/OT gap and the semantic/physical abyss.</p>
+        </div>
+    </section>
+
+    <section id="vision" class="content-section">
+        <div class="container">
+            <h2>Our Vision: Bridging the Abyss</h2>
+            <p>In the complex landscape of modern industry, a profound chasm exists between information technology (IT) and operational technology (OT), and between human semantic understanding and raw physical reality. Nervous Machine is engineered to close this gap by endowing machines with a true understanding of cause and effect.</p>
+        </div>
+    </section>
+
+    <section id="framework" class="content-section light-bg">
+        <div class="container">
+            <h2>The Nervous Machine Framework: Powered by Causal Vectors</h2>
+            <p>At the core of our system are **Causal Vectors** – a revolutionary approach to encoding and learning the intricate relationships that govern physical and semantic worlds.</p>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <h3>Multi-Dimensional Causal Properties</h3>
+                    <p>Our causal vectors are designed with rich, multi-dimensional attributes that capture the full spectrum of cause-and-effect relationships within complex industrial systems.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Language & Behavioral Data Fusion</h3>
+                    <p>They learn from both high-level language/semantic inputs (like documentation and human intent) and precise, real-world physical/behavioral data from industrial operations.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Continuously Adapted in Real-World OT</h3>
+                    <p>Unlike static models, our causal vectors constantly evolve, continuously adapting and refining their understanding based on real-time observations and feedback from the operational environment.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Explicitly Structured to Bridge OT/IT</h3>
+                    <p>The very architecture of our causal vectors is engineered to seamlessly connect the insights from IT data with the dynamic realities of OT, enabling true end-to-end intelligence.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="principles" class="content-section">
+        <div class="container">
+            <h2>Core Principles: Building Truly Intelligent Machines</h2>
+            <div class="principles-grid">
+                <div class="principle-item">
+                    <h3>Common Sense & Real-World Grounding</h3>
+                    <p>Our systems learn intuitive physics and grounded reality, enabling machines to develop common-sense understanding through direct, continuous interaction with their environment.</p>
+                </div>
+                <div class="principle-item">
+                    <h3>Deep Causal Understanding</h3>
+                    <p>Causal vectors are built to robustly encode and learn complex physical and semantic relationships, moving beyond mere correlation to true, actionable understanding.</p>
+                </div>
+                <div class="principle-item">
+                    <h3>Learning from Mistakes in a Grounded Way</h3>
+                    <p>We provide a systematic way to identify and correct errors by directly grounding semantic understanding in real-world observations, fostering continuous improvement and unprecedented reliability.</p>
+                </div>
+                <div class="principle-item">
+                    <h3>Reliability & Predictability in Complex Scenarios</h3>
+                    <p>By truly understanding causality, our AI delivers steerable and interpretable outcomes in even the most complex industrial scenarios, leading to unparalleled reliability and predictability.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="content-section light-bg">
+        <div class="container">
+            <h2>Get In Touch</h2>
+            <p>Discover how Nervous Machine can transform your industrial operations with the next generation of causal AI.</p>
+            <a href="mailto:info@nervousmachine.com" class="button">Contact Us</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Nervous Machine. All rights reserved.</p>
+            </div>
+    </footer>
+</body>
+</html>
