@@ -5,16 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nervous Machine: Causal AI for Industrial Intelligence</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Roboto+Mono:wght@400&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="/favicon.ico"> <style>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <style>
         /* General Body & Root Styling */
         :root {
-            --color-dark-bg: #0A0A1A; /* Very dark indigo/near black */
-            --color-light-text: #E0E0F0; /* Off-white / very light gray */
-            --color-accent-indigo: #4C00FF; /* Vibrant indigo */
-            --color-accent-violet: #8A2BE2; /* Vibrant violet */
-            --color-gradient-start: #4c00ff; /* Matches accent-indigo */
-            --color-gradient-end: #8a2be2; /* Matches accent-violet */
+            --color-dark-bg: #0A0A1A;
+            --color-light-text: #E0E0F0;
+            --color-accent-indigo: #4C00FF;
+            --color-accent-violet: #8A2BE2;
+            --color-gradient-start: #4c00ff;
+            --color-gradient-end: #8a2be2;
             --spacing-unit: 1rem;
+            --color-cyan: #00FFFF;
+            --color-card-bg: #1a1a33;
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
@@ -25,6 +32,29 @@
             color: #FFFFFF;
             line-height: 1.6;
             scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(76, 0, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(138, 43, 226, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 255, 255, 0.05) 0%, transparent 50%);
+            z-index: -1;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
         }
 
         /* Container for content width */
@@ -39,11 +69,11 @@
             font-weight: 700;
             margin-top: 0;
             margin-bottom: calc(1.5 * var(--spacing-unit));
-            color: #FFFFFF; /* Ensure headings are bright */
+            color: #FFFFFF;
         }
 
         h1 {
-            font-size: 3.5rem; /* Larger for hero */
+            font-size: 3.5rem;
             line-height: 1.1;
         }
 
@@ -53,19 +83,20 @@
             margin-bottom: calc(3 * var(--spacing-unit));
             position: relative;
         }
+
         h2::after {
             content: '';
             display: block;
             width: 80px;
             height: 3px;
-            background: linear-gradient_to_right_var_(--color-accent-indigo_var_(--color-accent-violet));
+            background: linear-gradient(to right, var(--color-accent-indigo), var(--color-accent-violet));
             margin: var(--spacing-unit) auto 0;
             border-radius: 2px;
         }
 
         h3 {
             font-size: 1.8rem;
-            color: #00FFFF; /* Bright cyan */
+            color: var(--color-cyan);
             margin-bottom: var(--spacing-unit);
         }
 
@@ -76,15 +107,16 @@
 
         /* Header Navigation */
         header {
-            background-color: rgba(10, 10, 26, 0.8); /* Slightly transparent dark */
+            background-color: rgba(10, 10, 26, 0.95);
             padding: var(--spacing-unit) 0;
             position: fixed;
             width: 100%;
             top: 0;
             left: 0;
             z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(5px); /* Frosted glass effect */
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(76, 0, 255, 0.2);
         }
 
         header .container {
@@ -100,6 +132,7 @@
             color: #F0F0F0;
             margin: 0;
             letter-spacing: 0.05rem;
+            text-shadow: 0 0 10px rgba(76, 0, 255, 0.5);
         }
 
         nav ul {
@@ -120,7 +153,7 @@
             font-size: 1rem;
             position: relative;
             padding-bottom: 5px;
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
         }
 
         nav ul li a::after {
@@ -130,13 +163,15 @@
             height: 2px;
             bottom: 0;
             left: 0;
-            background: linear-gradient_to_right_var_(--color-accent-indigo_var_(--color-accent-violet));
+            background: linear-gradient(to right, var(--color-accent-indigo), var(--color-accent-violet));
             transition: width 0.3s ease;
         }
 
         nav ul li a:hover {
-            color: #00FFFF; /* Bright cyan */
+            color: var(--color-cyan);
+            text-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
         }
+
         nav ul li a:hover::after {
             width: 100%;
         }
@@ -150,61 +185,70 @@
             justify-content: center;
             text-align: center;
             overflow: hidden;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            /* Placeholder for image from prompt - this should be a static asset URL */
-            background-image: url('./images/abyss.jpeg');
-        }
-
-        .hero-image-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient_to_top_rgba(0_0_0_0.7)_rgba(0_0_0_0.3); /* Dark overlay for text readability */
-            z-index: 1;
+            background: 
+                linear-gradient(135deg, rgba(10, 10, 26, 0.8), rgba(26, 26, 51, 0.9)),
+                radial-gradient(circle at 30% 70%, rgba(76, 0, 255, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 70% 30%, rgba(138, 43, 226, 0.3) 0%, transparent 50%);
         }
 
         .hero-content {
             position: relative;
             z-index: 2;
-            max-width: 900px;
+            max-width: 1000px;
             padding: calc(2 * var(--spacing-unit));
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-content h2 {
+            font-size: 2.2rem;
+            color: var(--color-cyan);
+            margin-bottom: 1rem;
+            text-align: center;
+            font-weight: 600;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+
+        .hero-content h2::after {
+            display: none;
         }
 
         .hero-content h1 {
-            font-size: 4rem;
+            font-size: 3.8rem;
             color: #FFFFFF;
-            margin-bottom: var(--spacing-unit);
-            text-shadow: 0 0 15px rgba(var(--color-accent-indigo)_0.7), 0 0 25px rgba(var(--color-accent-violet)_0.5);
-        }
-        .hero-content h2 {
-            font-size: 2.5rem;
-            color: #00FFFF; /* Bright cyan */
-            margin-bottom: 0.5rem;
-            text-align: center; /* Override default h2 styling */
-        }
-        .hero-content h2::after {
-            display: none; /* Remove underline for hero h2 */
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 30px rgba(76, 0, 255, 0.5), 0 0 60px rgba(138, 43, 226, 0.3);
+            line-height: 1.2;
         }
 
         .hero-content .tagline {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 300;
-            color: #FFFFFF;
-            opacity: 1; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8), 0 0 15px rgba(0, 255, 255, 0.3);
+            color: #E0E0F0;
+            opacity: 0.9;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+            margin-bottom: 2rem;
         }
 
         /* Content Sections */
         .content-section {
             padding: calc(5 * var(--spacing-unit)) 0;
             background-color: var(--color-dark-bg);
+            position: relative;
         }
 
         .content-section.light-bg {
-            background-color: #1a1a33; /* Slightly lighter dark for contrast */
+            background-color: var(--color-card-bg);
         }
 
         .content-section p {
@@ -214,72 +258,129 @@
             margin-right: auto;
         }
 
-        /* Feature Grid (for Causal Vectors) */
-        .feature-grid, .principles-grid {
+        /* Use Cases Section */
+        .use-cases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: calc(2.5 * var(--spacing-unit));
+            margin-top: calc(3 * var(--spacing-unit));
+        }
+
+        .use-case {
+            background: linear-gradient(135deg, var(--color-card-bg), rgba(26, 26, 51, 0.8));
+            padding: calc(2.5 * var(--spacing-unit));
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(76, 0, 255, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .use-case::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(to right, var(--color-accent-indigo), var(--color-accent-violet));
+        }
+
+        .use-case:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 40px rgba(76, 0, 255, 0.4);
+            border-color: var(--color-cyan);
+        }
+
+        .use-case h3 {
+            font-size: 1.6rem;
+            color: var(--color-cyan);
+            margin-bottom: calc(1.2 * var(--spacing-unit));
+            text-align: left;
+        }
+
+        .use-case p {
+            font-size: 1.05rem;
+            text-align: left;
+            margin: 0;
+            color: #E0E0F0;
+            line-height: 1.7;
+        }
+
+        /* Principles Grid */
+        .principles-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: calc(3 * var(--spacing-unit));
             margin-top: calc(3 * var(--spacing-unit));
         }
 
-        .feature-item, .principle-item {
-            background-color: #1a1a33; /* Slightly lighter than main dark bg */
-            padding: calc(2 * var(--spacing-unit));
-            border-radius: 8px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
-            border: 1px solid var(--color-accent-indigo);
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-        }
-
-        .feature-item:hover, .principle-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(var(--color-accent-violet)_0.6);
-            border-color: #00FFFF; /* Bright cyan */
-        }
-
-        .feature-item h3, .principle-item h3 {
-            text-align: center;
-            color: #00FFFF; ;
-            margin-bottom: calc(1 * var(--spacing-unit));
-            font-size: 1.5rem;
+        .principle-item {
+            background: linear-gradient(135deg, var(--color-card-bg), rgba(26, 26, 51, 0.8));
+            padding: calc(2.5 * var(--spacing-unit));
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            transition: all 0.3s ease;
             position: relative;
-        }
-        .feature-item h3::after, .principle-item h3::after {
-            content: '';
-            display: block;
-            width: 40px;
-            height: 2px;
-            background: var(--color-accent-violet);
-            margin: 0.5rem auto 0;
+            overflow: hidden;
         }
 
-        .feature-item p, .principle-item p {
-            font-size: 1rem;
+        .principle-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(to right, var(--color-accent-violet), var(--color-accent-indigo));
+        }
+
+        .principle-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 40px rgba(138, 43, 226, 0.4);
+            border-color: var(--color-cyan);
+        }
+
+        .principle-item h3 {
             text-align: left;
-            margin-left: 0;
-            margin-right: 0;
+            color: var(--color-cyan);
+            margin-bottom: calc(1.2 * var(--spacing-unit));
+            font-size: 1.5rem;
+        }
+
+        .principle-item p {
+            font-size: 1.05rem;
+            text-align: left;
+            margin: 0;
+            color: #E0E0F0;
+            line-height: 1.7;
         }
 
         /* Call to Action Button */
         .button {
             display: inline-block;
-            background: linear-gradient_to_right_var_(--color-accent-indigo_var_(--color-accent-violet));
+            background: linear-gradient(135deg, var(--color-accent-indigo), var(--color-accent-violet));
             color: #FFFFFF;
-            padding: 1rem 2rem;
+            padding: 1.2rem 2.5rem;
             text-decoration: none;
             border-radius: 50px;
             font-weight: 600;
             font-size: 1.1rem;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 20px rgba(var(--color-accent-indigo)_0.4);
+            box-shadow: 0 8px 25px rgba(76, 0, 255, 0.4);
             border: none;
             cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .button:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(var(--color-accent-violet)_0.6);
-            background: linear-gradient_to_right_var_(--color-accent-violet_var_(--color-accent-indigo)); /* Reverse gradient on hover */
+            box-shadow: 0 12px 35px rgba(138, 43, 226, 0.6);
+            background: linear-gradient(135deg, var(--color-accent-violet), var(--color-accent-indigo));
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
 
         /* Footer */
@@ -288,7 +389,7 @@
             color: #FFFFFF;
             text-align: center;
             padding: calc(2 * var(--spacing-unit)) 0;
-            border-top: 1px solid rgba(var(--color-accent-indigo)_0.2);
+            border-top: 1px solid rgba(76, 0, 255, 0.2);
             font-size: 0.9rem;
         }
 
@@ -303,25 +404,41 @@
                 flex-direction: column;
                 text-align: center;
             }
+
             nav ul {
                 flex-wrap: wrap;
                 justify-content: center;
                 margin-top: var(--spacing-unit);
             }
+
             nav ul li {
                 margin: 0.5rem 1rem;
             }
+
             .hero-content {
                 padding: var(--spacing-unit);
             }
+
             .hero-content h1 {
-                font-size: 3rem;
+                font-size: 2.8rem;
             }
+
+            .hero-content h2 {
+                font-size: 1.8rem;
+            }
+
             .hero-content .tagline {
                 font-size: 1.2rem;
             }
-            .feature-grid, .principles-grid {
+
+            .use-cases-grid {
                 grid-template-columns: 1fr;
+                gap: calc(2 * var(--spacing-unit));
+            }
+
+            .principles-grid {
+                grid-template-columns: 1fr;
+                gap: calc(2 * var(--spacing-unit));
             }
         }
     </style>
@@ -333,7 +450,7 @@
             <nav>
                 <ul>
                     <li><a href="#vision">Our Vision</a></li>
-                    <li><a href="#framework">The Framework</a></li>
+                    <li><a href="#use-cases">Intelligence</a></li>
                     <li><a href="#principles">Core Principles</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
@@ -342,7 +459,6 @@
     </header>
 
     <section id="hero" class="hero-section">
-        <div class="hero-image-overlay"></div>
         <div class="hero-content">
             <h2>Your engineers need sleep. Your factory doesn't.</h2>
             <h1>24/7 troubleshooting and operations that gets smarter with every interaction.</h1>
@@ -357,23 +473,25 @@
         </div>
     </section>
 
-    <section id="use-cases" class="content-section">
+    <section id="use-cases" class="content-section light-bg">
         <div class="container">
             <h2>Intelligence Where You Need It</h2>
             
-            <div class="use-case">
-                <h3>24/7 Troubleshooting</h3>
-                <p>Your engineering knowledge doesn't leave at 5 PM. AI assistants trained on your team's expertise provide instant diagnostics around the clock.</p>
-            </div>
-            
-            <div class="use-case">
-                <h3>Virtual PLC Operations</h3>
-                <p>Millisecond edge decisions informed by global intelligence. Part of the smart factory stack that enables real-time optimization without human bottlenecks.</p>
-            </div>
-            
-            <div class="use-case">
-                <h3>Material Intelligence</h3>
-                <p>Fast feedback loops from design to manufacturing. Creative decisions informed by real production data, accelerating innovation cycles.</p>
+            <div class="use-cases-grid">
+                <div class="use-case">
+                    <h3>24/7 Troubleshooting</h3>
+                    <p>Your engineering knowledge doesn't leave at 5 PM. AI assistants trained on your team's expertise provide instant diagnostics around the clock.</p>
+                </div>
+                
+                <div class="use-case">
+                    <h3>Virtual PLC Operations</h3>
+                    <p>Millisecond edge decisions informed by global intelligence. Part of the smart factory stack that enables real-time optimization without human bottlenecks.</p>
+                </div>
+                
+                <div class="use-case">
+                    <h3>Material Intelligence</h3>
+                    <p>Fast feedback loops from design to manufacturing. Creative decisions informed by real production data, accelerating innovation cycles.</p>
+                </div>
             </div>
         </div>
     </section>
@@ -406,14 +524,16 @@
         <div class="container">
             <h2>Get In Touch</h2>
             <p>Discover how Nervous Machine can transform your industrial operations with the next generation of causal AI.</p>
-            <div style="text-align: center; margin-top: 2rem;"><a href="mailto:heidi@everychart.io" class="button">Contact Us</a></div>
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="mailto:heidi@everychart.io" class="button">Contact Us</a>
+            </div>
         </div>
     </section>
 
     <footer>
         <div class="container">
             <p>&copy; 2025 Nervous Machine. All rights reserved.</p>
-            </div>
+        </div>
     </footer>
 </body>
 </html>
