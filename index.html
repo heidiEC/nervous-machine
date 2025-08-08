@@ -308,6 +308,114 @@
             line-height: 1.7;
         }
 
+        /* Case Study Section */
+        .case-study-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: calc(3 * var(--spacing-unit));
+            margin-top: calc(3 * var(--spacing-unit));
+        }
+
+        .case-study-step {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: calc(2 * var(--spacing-unit));
+            align-items: center;
+            background: linear-gradient(135deg, var(--color-card-bg), rgba(26, 26, 51, 0.8));
+            padding: calc(2.5 * var(--spacing-unit));
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(76, 0, 255, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .case-study-step:nth-child(even) .step-image {
+            order: 2;
+        }
+
+        .case-study-step:nth-child(even) .step-content {
+            order: 1;
+        }
+
+        .case-study-step::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(to right, var(--color-accent-indigo), var(--color-accent-violet));
+        }
+
+        .case-study-step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 16px 40px rgba(76, 0, 255, 0.4);
+            border-color: var(--color-cyan);
+        }
+
+        .step-image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .step-image img {
+            width: 100%;
+            max-width: 350px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            border: 2px solid rgba(0, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .step-image img:hover {
+            transform: scale(1.15);
+            border-color: var(--color-cyan);
+            box-shadow: 0 12px 35px rgba(0, 255, 255, 0.3);
+            z-index: 10;
+            position: relative;
+        }
+
+        .step-content h3 {
+            color: var(--color-cyan);
+            margin-bottom: calc(1.2 * var(--spacing-unit));
+            font-size: 1.6rem;
+            text-align: left;
+        }
+
+        .step-content p {
+            font-size: 1.05rem;
+            color: #E0E0F0;
+            line-height: 1.7;
+            text-align: left;
+            margin: 0;
+        }
+
+        .case-study-outcome {
+            margin-top: calc(4 * var(--spacing-unit));
+            text-align: center;
+            background: linear-gradient(135deg, rgba(76, 0, 255, 0.1), rgba(138, 43, 226, 0.1));
+            padding: calc(2.5 * var(--spacing-unit));
+            border-radius: 12px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+        }
+
+        .case-study-outcome h3 {
+            color: var(--color-cyan);
+            font-size: 1.8rem;
+            margin-bottom: calc(1.2 * var(--spacing-unit));
+        }
+
+        .case-study-outcome p {
+            font-size: 1.2rem;
+            color: #FFFFFF;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
         /* Principles Grid */
         .principles-grid {
             display: grid;
@@ -440,6 +548,37 @@
                 grid-template-columns: 1fr;
                 gap: calc(2 * var(--spacing-unit));
             }
+
+            .case-study-step {
+                grid-template-columns: 1fr !important;
+                gap: calc(1.5 * var(--spacing-unit));
+            }
+
+            .case-study-step:nth-child(even) .step-image,
+            .case-study-step:nth-child(even) .step-content {
+                order: unset;
+            }
+
+            .step-image img {
+                max-width: 100%;
+            }
+
+            .step-content h3 {
+                font-size: 1.4rem;
+                text-align: center;
+            }
+
+            .step-content p {
+                text-align: center;
+            }
+
+            .case-study-outcome h3 {
+                font-size: 1.6rem;
+            }
+
+            .case-study-outcome p {
+                font-size: 1.1rem;
+            }
         }
     </style>
 </head>
@@ -492,6 +631,60 @@
                     <h3>Material Intelligence</h3>
                     <p>Fast feedback loops from design to manufacturing. Creative decisions informed by real production data, accelerating innovation cycles.</p>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="case-study" class="content-section">
+        <div class="container">
+            <h2>Embedded Systems Intelligence: From Microcontrollers to Safety Systems</h2>
+            <p>The entire ecosystem gets smarter from every interaction. See how our system-agnostic AI handles diverse industrial challenges across your technology stack.</p>
+            
+            <div class="case-study-grid">
+                <div class="case-study-step">
+                    <div class="step-image">
+                        <img src="images/screenshot1.png" alt="Microcontroller diagnostic analysis with weighted probable causes" />
+                    </div>
+                    <div class="step-content">
+                        <h3>Microcontroller Diagnostics</h3>
+                        <p><strong>Instant Analysis:</strong> System provides weighted probable causes, diagnostic procedures, and cost estimates for embedded hardware failures.</p>
+                    </div>
+                </div>
+
+                <div class="case-study-step">
+                    <div class="step-image">
+                        <img src="images/screenshot5.png" alt="Safety interlock system troubleshooting interface" />
+                    </div>
+                    <div class="step-content">
+                        <h3>Safety-Critical Systems</h3>
+                        <p><strong>Mission-Critical Support:</strong> Safety interlock diagnostics with immediate stop protocols and systematic troubleshooting for regulatory compliance.</p>
+                    </div>
+                </div>
+
+                <div class="case-study-step">
+                    <div class="step-image">
+                        <img src="images/screenshot3.png" alt="PLC system causal analysis and network visualization" />
+                    </div>
+                    <div class="step-content">
+                        <h3>Industrial Control Systems</h3>
+                        <p><strong>Complex System Analysis:</strong> PLC troubleshooting with causal network visualization showing interconnected system dependencies and failure modes.</p>
+                    </div>
+                </div>
+
+                <div class="case-study-step">
+                    <div class="step-image">
+                        <img src="images/screenshot4.png" alt="Expert escalation chat with human engineer consultation" />
+                    </div>
+                    <div class="step-content">
+                        <h3>Expert Escalation</h3>
+                        <p><strong>Human-in-the-Loop:</strong> Complex edge cases automatically escalate to expert engineers with full diagnostic context, enabling sophisticated analysis and defect detection.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="case-study-outcome">
+                <h3>System-Agnostic Learning</h3>
+                <p>From microcontrollers to PLCs to safety interlocks - every diagnosis strengthens the global knowledge base. Your entire embedded ecosystem becomes more intelligent with each interaction.</p>
             </div>
         </div>
     </section>
