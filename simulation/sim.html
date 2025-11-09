@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E2E Causal Curiosity Simulation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f7f9;
+        }
+
+        .convergence-bar {
+            transition: width 0.3s ease-in-out;
+        }
+
+        .certainty-text {
+            min-width: 4rem;
+        }
+
+        .loading-dot {
+            animation: bounce 1s infinite;
+        }
+
+        .loading-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loading-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0);
+            }
+
+            40% {
+                transform: scale(1.0);
+            }
+        }
+    </style>
+</head>
+
+<body class="p-4 sm:p-8">
+    <div id="app" class="max-w-4xl mx-auto">
+        <header class="text-center mb-10">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-800">
+                Causal Curiosity & LLM Integration
+            </h1>
+            <p class="mt-2 text-lg text-slate-600">
+                Dissipative Learning, Causal Mismatch, and Validation via Bradford Hill Criteria
+            </p>
+        </header>
+
+        <!-- Configuration -->
+        <div class="bg-white p-6 rounded-xl shadow-2xl mb-8 border-t-4 border-slate-700">
+            <h2 class="text-xl font-bold mb-4 text-slate-700">Model Parameters (ISS Thermal Anomaly)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                <p class="text-slate-600">
+                    <span class="font-semibold block text-slate-800">Unmodeled Factor Error:</span>
+                    <span id="unmodeled_error_display" class="text-red-600 font-mono text-lg">0.40</span>
+                </p>
+                <p class="text-slate-600">
+                    <span class="font-semibold block text-slate-800">Curiosity Threshold:</span>
+                    <span class="font-mono text-lg">0.20</span>
+                </p>
+                <p class="text-slate-600">
+                    <span class="font-semibold block text-slate-800">Stability Threshold (Z):</span>
+                    <span class="font-mono text-lg">0.85</span>
+                </p>
+            </div>
+            <p class="mt-4 text-sm text-slate-500 italic">
+                The core unexplained error is **0.40**. The system will flag a Mismatch once known factors stabilize (Z
+                > 0.85) but the error remains high (above 0.20).
+            </p>
+        </div>
+
+        <!-- Cycle & Controls -->
+        <div
+            class="flex flex-col sm:flex-row justify-between items-center bg-slate-100 p-6 rounded-xl shadow-inner mb-8">
+            <div class="text-2xl font-extrabold text-slate-700 mb-4 sm:mb-0">
+                Validation Cycle: <span id="cycle-count" class="text-teal-600">0</span>
+            </div>
+            <div class="flex space-x-4 w-full sm:w-auto">
+                <button id="run-cycle-btn"
+                    class="bg-slate-700 hover:bg-slate-800 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-200 w-full sm:w-auto disabled:opacity-50">
+                    Run Next Cycle
+                </button>
+                <button id="ask-llm-btn"
+                    class="hidden bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-200 w-full sm:w-auto disabled:opacity-50"
+                    disabled>
+                    Ask LLM Agent
+                </button>
+            </div>
+        </div>
+
+        <!-- Mismatch & Error Panel -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Causal Mismatch Flag -->
+            <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-lg border-l-4 border-orange-400">
+                <h2 class="text-xl font-bold text-slate-800 mb-3 flex items-center">
+                    Causal Mismatch (E Mismatch)
+                </h2>
+                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <p class="text-sm font-semibold text-slate-700 mb-2">Unexplained Error Gap:</p>
+                    <div class="flex items-center space-x-3">
+                        <div class="h-4 bg-slate-200 rounded-full flex-grow relative">
+                            <!-- Curiosity Threshold Marker (0.20) -->
+                            <div class="absolute h-full border-r-2 border-red-500 border-dashed"
+                                style="left: 20%; top: 0; transform: translateY(-1px);"></div>
+                            <div id="mismatch-bar" class="convergence-bar h-full bg-orange-400 rounded-full"
+                                style="width: 0%"></div>
+                        </div>
+                        <span id="mismatch-value" class="certainty-text text-xl font-mono text-orange-700">0.000</span>
+                    </div>
+                </div>
+
+                <div id="curiosity-status"
+                    class="mt-4 p-3 rounded-lg text-center font-bold text-slate-900 bg-slate-200 transition-all duration-300">
+                    System in Learning Mode (Model Unstable)
+                </div>
+            </div>
+
+            <!-- Total Prediction Error -->
+            <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-red-500">
+                <h2 class="text-xl font-bold text-slate-800 mb-3">Total Prediction Error (E Total)</h2>
+                <div class="flex items-center space-x-3">
+                    <div class="h-6 bg-slate-200 rounded-full flex-grow">
+                        <div id="total-error-bar" class="convergence-bar h-full bg-red-600 rounded-full"
+                            style="width: 80%"></div>
+                    </div>
+                    <span id="total-error-value" class="certainty-text text-3xl font-mono text-red-700">0.80</span>
+                </div>
+                <p class="mt-2 text-sm text-slate-500 italic">
+                    The observable error decreases, but stabilizes due to the fixed **unmodeled factor**.
+                </p>
+            </div>
+        </div>
+
+        <!-- LLM Suggestion Panel -->
+        <div id="llm-panel" class="hidden bg-teal-50 p-6 rounded-xl shadow-lg border-2 border-teal-400 mb-8">
+            <h2 class="text-xl font-bold mb-4 text-slate-900 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-teal-600" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M3.636 5.636l.707.707m0 12.728l.707-.707M6.364 17.364l-.707.707M16 12H4m12 0a4 4 0 014 4v2m-2-2a4 4 0 00-4-4m5 0v1a2 2 0 01-2 2h-1.293c-.695 0-1.36.276-1.848.764l-1.04 1.04a2 2 0 01-2.828 0l-1.04-1.04a2 2 0 00-1.848-.764H7a2 2 0 01-2-2v-1" />
+                </svg>
+                LLM Agent Hypothesis (Curiosity Fired)
+            </h2>
+            <p id="llm-query" class="text-sm italic text-slate-600 mb-4">Query sent to LLM: "The system shows
+                persistent, stable error of 0.40 despite learning all known factors. Context: ISS thermal telemetry.
+                What is the most plausible unmodeled causal factor?"</p>
+            <div id="llm-response-box" class="bg-white p-4 rounded-lg shadow border border-teal-300">
+                <p id="llm-response" class="text-slate-800 font-medium italic">... Awaiting Curiosity Signal ...</p>
+            </div>
+        </div>
+
+        <!-- Edge Convergence Visualization -->
+        <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h2 class="text-xl font-bold mb-6 text-slate-700">Known Causal Factors (Dissipative Learning)</h2>
+            <div id="edge-container" class="space-y-8">
+                <!-- Edge rows will be injected here -->
+            </div>
+        </div>
+
+        <!-- History Table -->
+        <div class="mt-10">
+            <h2 class="text-xl font-bold mb-4 text-slate-700">Simulation History</h2>
+            <div class="overflow-x-auto bg-white rounded-xl shadow-lg border border-slate-200">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-slate-50">
+                        <tr>
+                            <th class="px-4 py-3 text-left text-xs font-bold text-slate-600 uppercase tracking-wider">
+                                Cycle</th>
+                            <th class="px-4 py-3 text-left text-xs font-bold text-slate-600 uppercase tracking-wider">
+                                Avg Z</th>
+                            <th class="px-4 py-3 text-left text-xs font-bold text-slate-600 uppercase tracking-wider">
+                                Attributable Error</th>
+                            <th class="px-4 py-3 text-left text-xs font-bold text-slate-600 uppercase tracking-wider">
+                                Causal Mismatch</th>
+                            <th class="px-4 py-3 text-center text-xs font-bold text-slate-600 uppercase tracking-wider">
+                                Curiosity Fired?</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-body" class="bg-white divide-y divide-gray-100">
+                        <!-- History rows will be injected here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- Configuration Constants ---
+        let UNMODELED_FACTOR_ERROR = 0.40; // Error caused by the missing variable
+        const EXPLAINED_ERROR_BY_LLM = 0.35; // How much error the LLM's factor explains
+        const CURIOSITY_MISMATCH_THRESHOLD = 0.20;
+        const HIGH_CERTAINTY_THRESHOLD = 0.85;
+        const BH_VARIANCE_THRESHOLD = 0.20; // High std dev in BH scores is a flag
+
+        // --- State Variables ---
+        let cycleCount = 0;
+        let isCuriosityTriggered = false;
+        let isLLMIntegrated = false;
+
+        // Bradford Hill Criteria names (9)
+        const BH_CRITERIA_NAMES = [
+            { id: 'strength', name: 'Strength (Effect Size)' },
+            { id: 'consistency', name: 'Consistency (Reproducibility)' },
+            { id: 'temporality', name: 'Temporality (Ordering)' },
+            { id: 'plausibility', name: 'Plausibility (Mechanism)' },
+            { id: 'coherence', name: 'Coherence (Fits Knowledge)' },
+            { id: 'specificity', name: 'Specificity (Unique)' },
+            { id: 'gradient', name: 'Dose-Response (Gradient)' },
+            { id: 'experiment', name: 'Experiment (Evidence)' },
+            { id: 'analogy', name: 'Analogy (Similarity)' }
+        ];
+
+        /**
+         * Initializes Bradford Hill scores for a *known* factor.
+         * Start scores high, simulating existing validation.
+         */
+        const initializeBradfordHill = () => {
+            const bh = {};
+            BH_CRITERIA_NAMES.forEach(({ id, name }) => {
+                // Initialize known factors with a decent score
+                let initialScore;
+                if (id === 'temporality' || id === 'plausibility') {
+                    // Start temporality and plausibility slightly higher to create variance later
+                    initialScore = 0.7 + Math.random() * 0.2;
+                } else {
+                    initialScore = 0.5 + Math.random() * 0.4; // 0.5 to 0.9
+                }
+                bh[id] = { score: initialScore, name: name };
+            });
+            return bh;
+        };
+
+        /**
+         * Initializes Bradford Hill scores for a *new, unvalidated* factor.
+         * Start scores low, simulating an unproven hypothesis.
+         */
+        const initializeNewFactorBradfordHill = () => {
+            const bh = {};
+            BH_CRITERIA_NAMES.forEach(({ id, name }) => {
+                // Initialize new factor with low scores
+                const initialScore = 0.05 + Math.random() * 0.2; // 0.05 to 0.25
+                bh[id] = { score: initialScore, name: name };
+            });
+            return bh;
+        };
+
+
+        let KNOWN_CAUSAL_EDGES = [
+            { id: 'solar', name: 'Solar Array Angle', certainty: 0.30, weight: 0.1, current_error: 0.30, target_weight: 0.55, bradfordHill: initializeBradfordHill(), bh_std_dev: 0.0 },
+            { id: 'attitude', name: 'Attitude (Orbital Plane)', certainty: 0.30, weight: -0.1, current_error: 0.25, target_weight: -0.40, bradfordHill: initializeBradfordHill(), bh_std_dev: 0.0 },
+            { id: 'battery', name: 'Battery Charging State', certainty: 0.30, weight: 0.15, current_error: 0.20, target_weight: 0.35, bradfordHill: initializeBradfordHill(), bh_std_dev: 0.0 },
+        ];
+
+        let history = [];
+
+        // --- Core Nervous Machine Functions ---
+
+        /**
+         * Calculates the learning rate (eta) based on Certainty (Z).
+         */
+        const calculateLearningRate = (z) => {
+            return 1 / (1 + Math.exp(10 * (z - 0.5)));
+        };
+
+        /**
+         * Calculates the standard deviation of an array of scores.
+         */
+        function calculateStdDev(scores) {
+            if (scores.length <= 1) return 0;
+            const mean = scores.reduce((sum, score) => sum + score, 0) / scores.length;
+            const squaredDifferences = scores.map(score => Math.pow(score - mean, 2));
+            const variance = squaredDifferences.reduce((sum, diff) => sum + diff, 0) / scores.length;
+            return Math.sqrt(variance);
+        }
+
+        /**
+         * Simulates one Dissipative Learning step for a single edge.
+         */
+        function updateEdge(edge) {
+            const eta = calculateLearningRate(edge.certainty);
+            const weightDifference = edge.target_weight - edge.weight;
+
+            const simulatedErrorSignal = Math.abs(weightDifference) * 0.5 + Math.random() * 0.05;
+
+            const direction = weightDifference > 0 ? 1 : -1;
+            const deltaW = eta * simulatedErrorSignal * direction;
+            edge.weight += deltaW;
+            edge.weight = Math.max(-1, Math.min(1, edge.weight));
+
+            // Update Certainty (Z): Increased multiplier for faster convergence
+            const certaintyGain = (1 - edge.certainty) * eta * 0.35;
+            edge.certainty += certaintyGain;
+            edge.certainty = Math.min(0.99, edge.certainty);
+
+            // Update Edge Error
+            const baseReduction = (edge.id === 'llm-factor') ? 0.7 : 0.8;
+            edge.current_error = Math.max(0.01, simulatedErrorSignal * baseReduction * (1 - edge.certainty));
+
+            if (edge.id === 'llm-factor' && edge.certainty > 0.9) {
+                edge.current_error = Math.max(0.005, edge.current_error * 0.5);
+            }
+
+            // Update Bradford Hill Criteria Scores
+            let bhScores = [];
+            Object.keys(edge.bradfordHill).forEach(key => {
+                // BH score increases proportional to certainty gain, simulating validation 
+                // and data gathering associated with model stability.
+                let bhScoreGain = certaintyGain * 0.2;
+
+                // Add controlled variance to the 'solar' factor to trigger the BH Variance Mismatch test later
+                if (edge.id === 'solar' && edge.certainty > 0.7 && key !== 'temporality' && key !== 'plausibility') {
+                    // Temporality/Plausibility are inherently high, but Strength/Specificity are hard to prove.
+                    bhScoreGain *= 0.1; // Slow down convergence on non-temporality/plausibility scores
+                }
+
+                edge.bradfordHill[key].score += bhScoreGain * (1 - edge.bradfordHill[key].score);
+                edge.bradfordHill[key].score = Math.min(1.0, edge.bradfordHill[key].score);
+                bhScores.push(edge.bradfordHill[key].score);
+            });
+
+            // Calculate and store the BH Variance (Standard Deviation)
+            edge.bh_std_dev = calculateStdDev(bhScores);
+        }
+
+        // --- Curiosity Algorithm Core ---
+
+        function calculateCausalMismatch() {
+            const attributableError = KNOWN_CAUSAL_EDGES.reduce((sum, e) => sum + e.current_error, 0);
+            const totalError = attributableError + UNMODELED_FACTOR_ERROR;
+            const causalMismatchError = Math.max(0, totalError - attributableError);
+
+            const avgCertainty = KNOWN_CAUSAL_EDGES.reduce((sum, e) => sum + e.certainty, 0) / KNOWN_CAUSAL_EDGES.length;
+            const isStable = avgCertainty > HIGH_CERTAINTY_THRESHOLD;
+            const isMismatchHigh = causalMismatchError > CURIOSITY_MISMATCH_THRESHOLD;
+
+            let isCurious = false;
+            let statusMessage = 'System in Learning Mode (Model Unstable)';
+            let statusClass = 'bg-slate-200';
+            let isBHVarianceMismatch = false;
+
+            // Check for high certainty AND high BH variance in *any* known factor
+            if (isStable && !isLLMIntegrated) {
+                isBHVarianceMismatch = KNOWN_CAUSAL_EDGES.some(edge =>
+                    edge.certainty > HIGH_CERTAINTY_THRESHOLD &&
+                    edge.bh_std_dev > BH_VARIANCE_THRESHOLD
+                );
+            }
+
+            // Check for Curiosity Trigger
+            if (isLLMIntegrated) {
+                statusMessage = 'Model Updated. Validating LLM Hypothesis and Causal Criteria.';
+                statusClass = 'bg-teal-200 text-teal-800';
+            } else if (isStable && isMismatchHigh) {
+                isCurious = true;
+                isCuriosityTriggered = true;
+                statusMessage = '🚨 CURIOSITY FIRED: Model Stable, but Mismatch Gap Exists! Seek New Factor!';
+                statusClass = 'bg-orange-400 text-slate-900 font-extrabold animate-pulse';
+            } else if (isBHVarianceMismatch) {
+                isCurious = true;
+                isCuriosityTriggered = true;
+                statusMessage = '⚠️ CURIOSITY FIRED: BH Variance Mismatch Detected! Possible Confounder/Spurious Edge!';
+                statusClass = 'bg-orange-400 text-slate-900 font-extrabold animate-pulse';
+            } else if (isStable) {
+                statusMessage = 'Known Model Stable. Checking Mismatch...';
+                statusClass = 'bg-slate-300 text-slate-800';
+            }
+
+            return {
+                totalError,
+                attributableError,
+                causalMismatchError,
+                isCurious,
+                isStable,
+                avgCertainty,
+                statusMessage,
+                statusClass,
+                isBHVarianceMismatch
+            };
+        }
+
+        // --- LLM Interaction Functions (Simulated) ---
+
+        function askLLMForFactor() {
+            const llmBtn = document.getElementById('ask-llm-btn');
+            const runBtn = document.getElementById('run-cycle-btn');
+            const llmResponseBox = document.getElementById('llm-response');
+
+            // 1. Disable buttons and show loading
+            llmBtn.disabled = true;
+            runBtn.disabled = true;
+            llmResponseBox.innerHTML = `<span class="flex items-center text-teal-600 font-bold">Querying Gemini Agent... <span class="loading-dot ml-2 bg-teal-600 h-2 w-2 rounded-full"></span><span class="loading-dot ml-1 bg-teal-600 h-2 w-2 rounded-full"></span><span class="loading-dot ml-1 bg-teal-600 h-2 w-2 rounded-full"></span></span>`;
+
+            // 2. Simulate API Call delay (3 seconds)
+            setTimeout(() => {
+                const newFactorName = 'High-Frequency Thermal Stress (Internal Flux)';
+
+                llmResponseBox.innerHTML = `
+                    <span class="font-bold text-teal-700">Hypothesis Received:</span>
+                    <p class="mt-1 text-lg font-mono">${newFactorName}</p>
+                    <p class="text-sm italic text-slate-600 mt-2">LLM's reasoning (simulated): Stable residual error in ISS telemetry or inconsistent validation evidence (BH Variance) suggests an unmodeled, persistent thermal load, likely a high-frequency internal flux that our sensors under-sample. This requires a new causal edge.</p>
+                `;
+
+                // 3. Integrate the new factor
+                integrateNewFactor(newFactorName);
+
+                // 4. Update UI state
+                llmBtn.classList.add('hidden');
+                runBtn.disabled = false;
+            }, 3000); // 3-second mock latency
+        }
+
+        function integrateNewFactor(factorName) {
+            isLLMIntegrated = true;
+
+            // 1. Reduce the unmodeled error (the new factor explains most of it)
+            UNMODELED_FACTOR_ERROR = Math.max(0.01, UNMODELED_FACTOR_ERROR - EXPLAINED_ERROR_BY_LLM);
+            document.getElementById('unmodeled_error_display').textContent = UNMODELED_FACTOR_ERROR.toFixed(2);
+
+            // 2. Add the new edge to the model
+            KNOWN_CAUSAL_EDGES.push({
+                id: 'llm-factor',
+                name: factorName,
+                certainty: 0.05,
+                weight: 0.0,
+                current_error: EXPLAINED_ERROR_BY_LLM * 0.9,
+                target_weight: 0.60,
+                bradfordHill: initializeNewFactorBradfordHill(), // Start BH scores low for validation
+                bh_std_dev: 0.0
+            });
+
+            // 3. Re-render the edge panel to show the new factor
+            renderEdges();
+            updateUI(calculateCausalMismatch());
+        }
+
+        // --- Rendering Functions ---
+
+        function formatSigned(value) {
+            return (value >= 0 ? '+' : '') + value.toFixed(3);
+        }
+
+        function renderBradfordHill(edge) {
+            const bhArray = Object.values(edge.bradfordHill);
+
+            return `
+                <div class="mt-4 pt-4 border-t border-gray-200">
+                    <div class="flex justify-between items-center text-sm font-semibold text-slate-600 mb-2">
+                        <span>Bradford Hill Causal Criteria Validation</span>
+                        <span class="text-xs text-red-600 font-mono">BH Std Dev: ${edge.bh_std_dev.toFixed(3)}</span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 text-xs">
+                        ${bhArray.map(criterion => `
+                            <div class="flex flex-col">
+                                <span class="text-slate-500 truncate" title="${criterion.name}">${criterion.name}</span>
+                                <div class="h-1 bg-gray-200 rounded-full mt-0.5">
+                                    <div class="convergence-bar h-full bg-slate-500 rounded-full" style="width: ${(criterion.score * 100).toFixed(0)}%"></div>
+                                </div>
+                                <span class="font-mono text-right text-xs mt-0.5">${(criterion.score * 100).toFixed(0)}%</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderEdges() {
+            const container = document.getElementById('edge-container');
+            container.innerHTML = KNOWN_CAUSAL_EDGES.map(edge => `
+                <div class="border p-4 rounded-lg shadow-md transition duration-300 ${edge.id === 'llm-factor' ? 'bg-teal-50 border-teal-400' : 'bg-slate-50 border-slate-200'}">
+                    
+                    <!-- Main Edge Metrics -->
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-lg font-bold text-slate-800 ${edge.id === 'llm-factor' ? 'text-teal-700' : ''}">${edge.name}</span>
+                        <div class="text-right">
+                            <span class="text-sm font-semibold text-slate-600 block">Certainty (Z): <span id="${edge.id}-certainty-val" class="font-mono text-lg text-teal-600">${(edge.certainty * 100).toFixed(1)}%</span></span>
+                            <span class="text-xs font-medium text-slate-500">Weight (W): <span id="${edge.id}-weight-val" class="font-mono text-slate-800">${formatSigned(edge.weight)}</span></span>
+                        </div>
+                    </div>
+
+                    <!-- Certainty Progress Bar -->
+                    <div class="h-3 bg-gray-300 rounded-full mb-3">
+                        <div id="${edge.id}-certainty-bar" class="convergence-bar h-full ${edge.id === 'llm-factor' ? 'bg-teal-500' : 'bg-slate-500'} rounded-full" style="width: ${(edge.certainty * 100).toFixed(1)}%"></div>
+                    </div>
+                    
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="text-slate-500">Current Edge Error: <span id="${edge.id}-error-val" class="font-mono text-slate-800 font-medium">${edge.current_error.toFixed(3)}</span></span>
+                        <span class="text-slate-500 italic">Target W: <span class="font-mono text-slate-700">${formatSigned(edge.target_weight)}</span></span>
+                    </div>
+
+                    <!-- Bradford Hill Criteria -->
+                    ${renderBradfordHill(edge)}
+
+                </div>
+            `).join('');
+        }
+
+        function updateUI(mismatchData) {
+            document.getElementById('cycle-count').textContent = cycleCount;
+
+            // Update Total Error
+            document.getElementById('total-error-value').textContent = mismatchData.totalError.toFixed(2);
+            const totalErrorBarWidth = Math.min(100, mismatchData.totalError * 100);
+            document.getElementById('total-error-bar').style.width = `${totalErrorBarWidth}%`;
+
+            // Update Mismatch
+            document.getElementById('mismatch-value').textContent = mismatchData.causalMismatchError.toFixed(3);
+            const mismatchBarWidth = Math.min(100, mismatchData.causalMismatchError * 100);
+            document.getElementById('mismatch-bar').style.width = `${mismatchBarWidth}%`;
+
+            // Update Curiosity Status
+            const statusDiv = document.getElementById('curiosity-status');
+            statusDiv.textContent = mismatchData.statusMessage;
+            statusDiv.className = `mt-4 p-3 rounded-lg text-center font-bold text-slate-900 transition-all duration-300 ${mismatchData.statusClass}`;
+
+            // Handle Curiosity Trigger vs. Learning Mode
+            const runBtn = document.getElementById('run-cycle-btn');
+            const llmBtn = document.getElementById('ask-llm-btn');
+            const llmPanel = document.getElementById('llm-panel');
+
+            if (mismatchData.isCurious && !isLLMIntegrated) {
+                runBtn.disabled = true;
+                llmBtn.classList.remove('hidden');
+                llmBtn.disabled = false;
+                llmPanel.classList.remove('hidden');
+                statusDiv.classList.remove('animate-pulse');
+            } else if (isLLMIntegrated) {
+                llmPanel.classList.remove('hidden');
+                runBtn.disabled = false;
+            } else {
+                llmBtn.classList.add('hidden');
+                llmPanel.classList.add('hidden');
+                runBtn.disabled = false;
+            }
+
+            // Update Edge-Specific UI
+            // Note: We re-render the edges to ensure the BH std dev display updates
+            renderEdges();
+
+
+            // Update History Table
+            const historyData = {
+                cycleCount,
+                avgCertainty: mismatchData.avgCertainty.toFixed(3),
+                attributableError: mismatchData.attributableError.toFixed(3),
+                causalMismatchError: mismatchData.causalMismatchError.toFixed(3),
+                isCurious: mismatchData.isCurious || isLLMIntegrated || mismatchData.isBHVarianceMismatch
+            };
+
+            // Only add a new history row if a cycle ran
+            if (cycleCount > 0 && (history.length === 0 || history[history.length - 1].cycleCount !== cycleCount)) {
+                const newRow = `
+                    <tr class="${historyData.isCurious ? 'bg-orange-50 font-semibold' : 'hover:bg-gray-50'}">
+                        <td class="px-4 py-2 whitespace-nowrap text-sm text-slate-900">${historyData.cycleCount}</td>
+                        <td class="px-4 py-2 whitespace-nowrap text-sm text-slate-900">${historyData.avgCertainty}</td>
+                        <td class="px-4 py-2 whitespace-nowrap text-sm text-slate-900">${historyData.attributableError}</td>
+                        <td class="px-4 py-2 whitespace-nowrap text-sm ${historyData.isCurious ? 'text-red-700 font-bold' : 'text-slate-900'}">${historyData.causalMismatchError}</td>
+                        <td class="px-4 py-2 whitespace-nowrap text-center text-sm">${historyData.isCurious ? (mismatchData.isBHVarianceMismatch ? '⚠️ BH-VAR' : '🚨 YES') : (isLLMIntegrated ? '✅ VALIDATING' : '—')}</td>
+                    </tr>
+                 `;
+                document.getElementById('history-body').insertAdjacentHTML('afterbegin', newRow);
+                history.push(historyData);
+            }
+        }
+
+        // --- Main Cycle Runner ---
+
+        function runCycle() {
+            if (isCuriosityTriggered && !isLLMIntegrated) {
+                return;
+            }
+
+            cycleCount++;
+
+            KNOWN_CAUSAL_EDGES.forEach(updateEdge);
+
+            const mismatchData = calculateCausalMismatch();
+
+            updateUI(mismatchData);
+        }
+
+        // --- Initialization ---
+
+        function initialize() {
+            renderEdges();
+            const initialMismatch = calculateCausalMismatch();
+
+            document.getElementById('unmodeled_error_display').textContent = UNMODELED_FACTOR_ERROR.toFixed(2);
+            document.getElementById('total-error-value').textContent = initialMismatch.totalError.toFixed(2);
+            document.getElementById('total-error-bar').style.width = `${Math.min(100, initialMismatch.totalError * 100)}%`;
+
+            updateUI(initialMismatch);
+            document.getElementById('run-cycle-btn').addEventListener('click', runCycle);
+            document.getElementById('ask-llm-btn').addEventListener('click', askLLMForFactor);
+        }
+
+        document.addEventListener('DOMContentLoaded', initialize);
+    </script>
+</body>
+
+</html>
