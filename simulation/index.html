@@ -639,10 +639,9 @@
 
             updateUI(initialMismatch);
             document.getElementById('run-cycle-btn').addEventListener('click', runCycle);
-            const runFive = document.getElementById('run-five-cycles-btn');
-            if (runFive) runFive.addEventListener('click', () => runMultipleCycles(5));
-            const runTen = document.getElementById('run-ten-cycles-btn');
-            if (runTen) runTen.addEventListener('click', () => runMultipleCycles(10));
+            // Note: Run(5) and Run(10) use inline onclick handlers (runMultipleCycles(N)).
+            // We intentionally avoid adding duplicate event listeners here to prevent
+            // double-execution when both inline handlers and listeners are present.
             document.getElementById('ask-llm-btn').addEventListener('click', askLLMForFactor);
         }
 
