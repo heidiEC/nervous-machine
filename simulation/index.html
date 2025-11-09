@@ -89,10 +89,23 @@
                 Validation Cycle: <span id="cycle-count" class="text-teal-600">0</span>
             </div>
             <div class="flex space-x-4 w-full sm:w-auto">
-                <button id="run-cycle-btn"
-                    class="bg-slate-700 hover:bg-slate-800 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-200 w-full sm:w-auto disabled:opacity-50">
-                    Run Next Cycle
-                </button>
+                <div class="flex space-x-2 w-full sm:w-auto">
+                    <button id="run-cycle-btn"
+                        class="bg-slate-700 hover:bg-slate-800 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 disabled:opacity-50"
+                        title="Step through one cycle at a time to see detailed sigmoid learning behavior">
+                        Step (1)
+                    </button>
+                    <button id="run-five-cycles-btn"
+                        class="bg-slate-600 hover:bg-slate-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 disabled:opacity-50"
+                        title="Run 5 cycles at once">
+                        Run (5)
+                    </button>
+                    <button id="run-ten-cycles-btn"
+                        class="bg-slate-600 hover:bg-slate-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 disabled:opacity-50"
+                        title="Run 10 cycles at once to quickly reach curiosity trigger">
+                        Run (10)
+                    </button>
+                </div>
                 <button id="ask-llm-btn"
                     class="hidden bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-200 w-full sm:w-auto disabled:opacity-50"
                     disabled>
@@ -527,23 +540,34 @@
             statusDiv.className = `mt-4 p-3 rounded-lg text-center font-bold text-slate-900 transition-all duration-300 ${mismatchData.statusClass}`;
 
             // Handle Curiosity Trigger vs. Learning Mode
-            const runBtn = document.getElementById('run-cycle-btn');
+            const runCycleBtn = document.getElementById('run-cycle-btn');
+            const runFiveBtn = document.getElementById('run-five-cycles-btn');
+            const runTenBtn = document.getElementById('run-ten-cycles-btn');
             const llmBtn = document.getElementById('ask-llm-btn');
             const llmPanel = document.getElementById('llm-panel');
 
             if (mismatchData.isCurious && !isLLMIntegrated) {
-                runBtn.disabled = true;
-                llmBtn.classList.remove('hidden');
-                llmBtn.disabled = false;
-                llmPanel.classList.remove('hidden');
+                // disable all run controls and surface the LLM option
+                if (runCycleBtn) runCycleBtn.disabled = true;
+                if (runFiveBtn) runFiveBtn.disabled = true;
+                if (runTenBtn) runTenBtn.disabled = true;
+                if (llmBtn) {
+                    llmBtn.classList.remove('hidden');
+                    llmBtn.disabled = false;
+                }
+                if (llmPanel) llmPanel.classList.remove('hidden');
                 statusDiv.classList.remove('animate-pulse');
             } else if (isLLMIntegrated) {
-                llmPanel.classList.remove('hidden');
-                runBtn.disabled = false;
+                if (llmPanel) llmPanel.classList.remove('hidden');
+                if (runCycleBtn) runCycleBtn.disabled = false;
+                if (runFiveBtn) runFiveBtn.disabled = false;
+                if (runTenBtn) runTenBtn.disabled = false;
             } else {
-                llmBtn.classList.add('hidden');
-                llmPanel.classList.add('hidden');
-                runBtn.disabled = false;
+                if (llmBtn) llmBtn.classList.add('hidden');
+                if (llmPanel) llmPanel.classList.add('hidden');
+                if (runCycleBtn) runCycleBtn.disabled = false;
+                if (runFiveBtn) runFiveBtn.disabled = false;
+                if (runTenBtn) runTenBtn.disabled = false;
             }
 
             // Update Edge-Specific UI
@@ -604,6 +628,10 @@
 
             updateUI(initialMismatch);
             document.getElementById('run-cycle-btn').addEventListener('click', runCycle);
+            const runFive = document.getElementById('run-five-cycles-btn');
+            if (runFive) runFive.addEventListener('click', () => runMultipleCycles(5));
+            const runTen = document.getElementById('run-ten-cycles-btn');
+            if (runTen) runTen.addEventListener('click', () => runMultipleCycles(10));
             document.getElementById('ask-llm-btn').addEventListener('click', askLLMForFactor);
         }
 
