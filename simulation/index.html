@@ -102,7 +102,8 @@
                     </button>
                     <button id="run-ten-cycles-btn"
                         class="bg-slate-600 hover:bg-slate-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 disabled:opacity-50"
-                        title="Run 10 cycles at once to quickly reach curiosity trigger" onclick="runMultipleCycles(10)">
+                        title="Run 10 cycles at once to quickly reach curiosity trigger"
+                        onclick="runMultipleCycles(10)">
                         Run (10)
                     </button>
                 </div>
@@ -614,6 +615,16 @@
             const mismatchData = calculateCausalMismatch();
 
             updateUI(mismatchData);
+        }
+
+        // Run multiple cycles in sequence. Stops early if curiosity fires and LLM hasn't been integrated.
+        function runMultipleCycles(count) {
+            for (let i = 0; i < count; i++) {
+                if (isCuriosityTriggered && !isLLMIntegrated) {
+                    break; // stop early when curiosity blocks further learning
+                }
+                runCycle();
+            }
         }
 
         // --- Initialization ---
