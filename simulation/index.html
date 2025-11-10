@@ -8,9 +8,53 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --color-dark-bg: #0A0A1A;
+            --color-light-text: #E0E0F0;
+            --color-accent-indigo: #4C00FF;
+            --color-accent-violet: #8A2BE2;
+            --color-gradient-start: #4c00ff;
+            --color-gradient-end: #8a2be2;
+            --color-cyan: #00FFFF;
+            --color-card-bg: #1a1a33;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f7f7f9;
+            background-color: var(--color-dark-bg);
+            color: var(--color-light-text);
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(76, 0, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(138, 43, 226, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 255, 255, 0.05) 0%, transparent 50%);
+            z-index: -1;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            33% {
+                transform: translate(30px, -30px) rotate(120deg);
+            }
+
+            66% {
+                transform: translate(-20px, 20px) rotate(240deg);
+            }
         }
 
         .convergence-bar {
@@ -51,65 +95,69 @@
 <body class="p-4 sm:p-8">
     <div id="app" class="max-w-4xl mx-auto">
         <header class="text-center mb-10">
-            <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-800">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-white">
                 Causal Curiosity & LLM Integration
             </h1>
-            <p class="mt-2 text-lg text-slate-600">
+            <p class="mt-2 text-lg text-cyan-400">
                 Dissipative Learning, Causal Mismatch, and Validation via Bradford Hill Criteria
             </p>
         </header>
 
         <!-- Configuration -->
-        <div class="bg-white p-6 rounded-xl shadow-2xl mb-8 border-t-4 border-slate-700">
-            <h2 class="text-xl font-bold mb-4 text-slate-700">Model Parameters (ISS Thermal Anomaly)</h2>
+        <div style="background: linear-gradient(135deg, var(--color-card-bg), rgba(26, 26, 51, 0.8));"
+            class="p-6 rounded-xl shadow-2xl mb-8 border-t-4" style="border-top: 4px solid var(--color-accent-violet);">
+            <h2 class="text-xl font-bold mb-4 text-white">Model Parameters (ISS Thermal Anomaly)</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                <p class="text-slate-600">
-                    <span class="font-semibold block text-slate-800">Unmodeled Factor Error:</span>
-                    <span id="unmodeled_error_display" class="text-red-600 font-mono text-lg">0.40</span>
+                <p class="text-gray-300">
+                    <span class="font-semibold block text-white">Unmodeled Factor Error:</span>
+                    <span id="unmodeled_error_display" class="text-violet-400 font-mono text-lg">0.40</span>
                 </p>
-                <p class="text-slate-600">
-                    <span class="font-semibold block text-slate-800">Curiosity Threshold:</span>
+                <p class="text-gray-300">
+                    <span class="font-semibold block text-white">Curiosity Threshold:</span>
                     <span class="font-mono text-lg">0.20</span>
                 </p>
-                <p class="text-slate-600">
-                    <span class="font-semibold block text-slate-800">Stability Threshold (Z):</span>
+                <p class="text-gray-300">
+                    <span class="font-semibold block text-white">Stability Threshold (Z):</span>
                     <span class="font-mono text-lg">0.85</span>
                 </p>
             </div>
-            <p class="mt-4 text-sm text-slate-500 italic">
+            <p class="mt-4 text-sm text-gray-400 italic">
                 The core unexplained error is **0.40**. The system will flag a Mismatch once known factors stabilize (Z
                 > 0.85) but the error remains high (above 0.20).
             </p>
         </div>
 
         <!-- Cycle & Controls -->
-        <div
-            class="flex flex-col sm:flex-row justify-between items-center bg-slate-100 p-6 rounded-xl shadow-inner mb-8">
-            <div class="text-2xl font-extrabold text-slate-700 mb-4 sm:mb-0">
-                Validation Cycle: <span id="cycle-count" class="text-teal-600">0</span>
+        <div class="flex flex-col sm:flex-row justify-between items-center p-6 rounded-xl shadow-inner mb-8"
+            style="background: rgba(71, 71, 125, 0.407);">
+            <div class="text-2xl font-extrabold text-white mb-4 sm:mb-0">
+                Validation Cycle: <span id="cycle-count" class="text-cyan-400">0</span>
             </div>
             <div class="flex space-x-4 w-full sm:w-auto">
                 <div class="flex space-x-2 w-full sm:w-auto">
                     <button id="run-cycle-btn"
-                        class="bg-slate-700 hover:bg-slate-800 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 disabled:opacity-50"
+                        class="text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 disabled:opacity-50"
+                        style="background: linear-gradient(135deg, var(--color-accent-indigo), var(--color-accent-violet));"
                         title="Step through one cycle at a time to see detailed sigmoid learning behavior">
                         Step (1)
                     </button>
                     <button id="run-five-cycles-btn"
-                        class="bg-slate-600 hover:bg-slate-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 disabled:opacity-50"
+                        class="text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 disabled:opacity-50"
+                        style="background: linear-gradient(135deg, var(--color-accent-indigo), var(--color-accent-violet));"
                         title="Run 5 cycles at once" onclick="runMultipleCycles(5)">
                         Run (5)
                     </button>
                     <button id="run-ten-cycles-btn"
-                        class="bg-slate-600 hover:bg-slate-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 disabled:opacity-50"
+                        class="text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 disabled:opacity-50"
+                        style="background: linear-gradient(135deg, var(--color-accent-indigo), var(--color-accent-violet));"
                         title="Run 10 cycles at once to quickly reach curiosity trigger"
                         onclick="runMultipleCycles(10)">
                         Run (10)
                     </button>
                 </div>
                 <button id="ask-llm-btn"
-                    class="hidden bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-200 w-full sm:w-auto disabled:opacity-50"
-                    disabled>
+                    class="hidden text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-200 w-full sm:w-auto disabled:opacity-50"
+                    style="background: linear-gradient(135deg, #d900ff, var(--color-accent-violet));" disabled>
                     Ask LLM Agent
                 </button>
             </div>
@@ -118,67 +166,75 @@
         <!-- Mismatch & Error Panel -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
             <!-- Causal Mismatch Flag -->
-            <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-lg border-l-4 border-orange-400">
-                <h2 class="text-xl font-bold text-slate-800 mb-3 flex items-center">
+            <div class="lg:col-span-2 p-6 rounded-xl shadow-lg border-l-4 border-solid var(--color-accent-violet)"
+                style="background: linear-gradient(135deg, var(--color-card-bg), rgba(26, 26, 51, 0.8));">
+                <h2 class="text-xl font-bold text-white mb-3 flex items-center">
                     Causal Mismatch (E Mismatch)
                 </h2>
-                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <p class="text-sm font-semibold text-slate-700 mb-2">Unexplained Error Gap:</p>
+                <div class="p-4 rounded-lg"
+                    style="background: rgba(10, 10, 26, 0.5); border: 1px solid rgba(76, 0, 255, 0.3);">
+                    <p class="text-sm font-semibold text-gray-300 mb-2">Unexplained Error Gap:</p>
                     <div class="flex items-center space-x-3">
-                        <div class="h-4 bg-slate-200 rounded-full flex-grow relative">
+                        <div class="h-4 rounded-full flex-grow relative" style="background: rgba(100, 100, 120, 0.3);">
                             <!-- Curiosity Threshold Marker (0.20) -->
-                            <div class="absolute h-full border-r-2 border-red-500 border-dashed"
+                            <div class="absolute h-full border-r-2 border-indigo-900 border-dashed"
                                 style="left: 20%; top: 0; transform: translateY(-1px);"></div>
-                            <div id="mismatch-bar" class="convergence-bar h-full bg-orange-400 rounded-full"
-                                style="width: 0%"></div>
+                            <div id="mismatch-bar" class="convergence-bar h-full rounded-full"
+                                style="width: 0%; background: linear-gradient(to right, var(--color-accent-violet), #FF00FF);">
+                            </div>
                         </div>
-                        <span id="mismatch-value" class="certainty-text text-xl font-mono text-orange-700">0.000</span>
+                        <span id="mismatch-value" class="certainty-text text-xl font-mono text-violet-400">0.000</span>
                     </div>
                 </div>
 
                 <div id="curiosity-status"
-                    class="mt-4 p-3 rounded-lg text-center font-bold text-slate-900 bg-slate-200 transition-all duration-300">
+                    class="mt-4 p-3 rounded-lg text-center font-bold text-white transition-all duration-300"
+                    style="background: rgba(100, 100, 120, 0.3);">
                     System in Learning Mode (Model Unstable)
                 </div>
             </div>
 
             <!-- Total Prediction Error -->
-            <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-red-500">
-                <h2 class="text-xl font-bold text-slate-800 mb-3">Total Prediction Error (E Total)</h2>
+            <div class="p-6 rounded-xl shadow-lg border-l-4 border-solid var(--color-accent-violet)"
+                style="background: linear-gradient(135deg, var(--color-card-bg), rgba(26, 26, 51, 0.8));">
+                <h2 class="text-xl font-bold text-white mb-3">Total Prediction Error (E Total)</h2>
                 <div class="flex items-center space-x-3">
-                    <div class="h-6 bg-slate-200 rounded-full flex-grow">
-                        <div id="total-error-bar" class="convergence-bar h-full bg-red-600 rounded-full"
+                    <div class="h-6 rounded-full flex-grow" style="background: rgba(100, 100, 120, 0.3);">
+                        <div id="total-error-bar" class="convergence-bar h-full bg-pink-800 rounded-full"
                             style="width: 80%"></div>
                     </div>
-                    <span id="total-error-value" class="certainty-text text-3xl font-mono text-red-700">0.80</span>
+                    <span id="total-error-value" class="certainty-text text-3xl font-mono text-pink-600">0.80</span>
                 </div>
-                <p class="mt-2 text-sm text-slate-500 italic">
+                <p class="mt-2 text-sm text-gray-400 italic">
                     The observable error decreases, but stabilizes due to the fixed **unmodeled factor**.
                 </p>
             </div>
         </div>
 
         <!-- LLM Suggestion Panel -->
-        <div id="llm-panel" class="hidden bg-teal-50 p-6 rounded-xl shadow-lg border-2 border-teal-400 mb-8">
-            <h2 class="text-xl font-bold mb-4 text-slate-900 flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-teal-600" fill="none"
+        <div id="llm-panel" class="hidden p-6 rounded-xl shadow-lg border-2 border-teal-400 mb-8"
+            style="background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(26, 26, 51, 0.8));">
+            <h2 class="text-xl font-bold mb-4 text-white flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-cyan-400" fill="none"
                     viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M3.636 5.636l.707.707m0 12.728l.707-.707M6.364 17.364l-.707.707M16 12H4m12 0a4 4 0 014 4v2m-2-2a4 4 0 00-4-4m5 0v1a2 2 0 01-2 2h-1.293c-.695 0-1.36.276-1.848.764l-1.04 1.04a2 2 0 01-2.828 0l-1.04-1.04a2 2 0 00-1.848-.764H7a2 2 0 01-2-2v-1" />
                 </svg>
                 LLM Agent Hypothesis (Curiosity Fired)
             </h2>
-            <p id="llm-query" class="text-sm italic text-slate-600 mb-4">Query sent to LLM: "The system shows
+            <p id="llm-query" class="text-sm italic text-gray-300 mb-4">Query sent to LLM: "The system shows
                 persistent, stable error of 0.40 despite learning all known factors. Context: ISS thermal telemetry.
                 What is the most plausible unmodeled causal factor?"</p>
-            <div id="llm-response-box" class="bg-white p-4 rounded-lg shadow border border-teal-300">
-                <p id="llm-response" class="text-slate-800 font-medium italic">... Awaiting Curiosity Signal ...</p>
+            <div id="llm-response-box" class="p-4 rounded-lg shadow"
+                style="background: rgba(10, 10, 26, 0.5); border: 1px solid rgba(0, 255, 255, 0.3);">
+                <p id="llm-response" class="text-gray-300 font-medium italic">... Awaiting Curiosity Signal ...</p>
             </div>
         </div>
 
         <!-- Edge Convergence Visualization -->
-        <div class="bg-white p-6 rounded-xl shadow-lg">
-            <h2 class="text-xl font-bold mb-6 text-slate-700">Known Causal Factors (Dissipative Learning)</h2>
+        <div class="p-6 rounded-xl shadow-lg"
+            style="background: linear-gradient(135deg, var(--color-card-bg), rgba(26, 26, 51, 0.8));">
+            <h2 class="text-xl font-bold mb-6 text-cyan-400">Known Causal Factors (Dissipative Learning)</h2>
             <div id="edge-container" class="space-y-8">
                 <!-- Edge rows will be injected here -->
             </div>
@@ -186,24 +242,25 @@
 
         <!-- History Table -->
         <div class="mt-10">
-            <h2 class="text-xl font-bold mb-4 text-slate-700">Simulation History</h2>
-            <div class="overflow-x-auto bg-white rounded-xl shadow-lg border border-slate-200">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-slate-50">
+            <h2 class="text-xl font-bold mb-4 text-cyan-400">Simulation History</h2>
+            <div class="overflow-x-auto rounded-xl shadow-lg"
+                style="background: linear-gradient(135deg, var(--color-card-bg), rgba(26, 26, 51, 0.8)); border: 1px solid rgba(76, 0, 255, 0.3);">
+                <table class="min-w-full divide-y" style="border-color: rgba(76, 0, 255, 0.3);">
+                    <thead style="background: rgba(10, 10, 26, 0.5);">
                         <tr>
-                            <th class="px-4 py-3 text-left text-xs font-bold text-slate-600 uppercase tracking-wider">
+                            <th class="px-4 py-3 text-left text-xs font-bold text-gray-300 uppercase tracking-wider">
                                 Cycle</th>
-                            <th class="px-4 py-3 text-left text-xs font-bold text-slate-600 uppercase tracking-wider">
+                            <th class="px-4 py-3 text-left text-xs font-bold text-gray-300 uppercase tracking-wider">
                                 Avg Z</th>
-                            <th class="px-4 py-3 text-left text-xs font-bold text-slate-600 uppercase tracking-wider">
+                            <th class="px-4 py-3 text-left text-xs font-bold text-gray-300 uppercase tracking-wider">
                                 Attributable Error</th>
-                            <th class="px-4 py-3 text-left text-xs font-bold text-slate-600 uppercase tracking-wider">
+                            <th class="px-4 py-3 text-left text-xs font-bold text-gray-300 uppercase tracking-wider">
                                 Causal Mismatch</th>
-                            <th class="px-4 py-3 text-center text-xs font-bold text-slate-600 uppercase tracking-wider">
+                            <th class="px-4 py-3 text-center text-xs font-bold text-gray-300 uppercase tracking-wider">
                                 Curiosity Fired?</th>
                         </tr>
                     </thead>
-                    <tbody id="history-body" class="bg-white divide-y divide-gray-100">
+                    <tbody id="history-body" class="divide-y" style="border-color: rgba(76, 0, 255, 0.2);">
                         <!-- History rows will be injected here -->
                     </tbody>
                 </table>
@@ -377,20 +434,20 @@
             // Check for Curiosity Trigger
             if (isLLMIntegrated) {
                 statusMessage = 'Model Updated. Validating LLM Hypothesis and Causal Criteria.';
-                statusClass = 'bg-teal-200 text-teal-800';
+                statusClass = 'bg-cyan-900 text-white';
             } else if (isStable && isMismatchHigh) {
                 isCurious = true;
                 isCuriosityTriggered = true;
-                statusMessage = '🚨 CURIOSITY FIRED: Model Stable, but Mismatch Gap Exists! Seek New Factor!';
-                statusClass = 'bg-orange-400 text-slate-900 font-extrabold animate-pulse';
+                statusMessage = 'CURIOSITY FIRED: Model Stable, but Mismatch Gap Exists! Seek New Factor!';
+                statusClass = 'text-white font-extrabold animate-pulse';
             } else if (isBHVarianceMismatch) {
                 isCurious = true;
                 isCuriosityTriggered = true;
-                statusMessage = '⚠️ CURIOSITY FIRED: BH Variance Mismatch Detected! Possible Confounder/Spurious Edge!';
-                statusClass = 'bg-orange-400 text-slate-900 font-extrabold animate-pulse';
+                statusMessage = 'CURIOSITY FIRED: BH Variance Mismatch Detected! Possible Confounder/Spurious Edge!';
+                statusClass = 'text-white font-extrabold animate-pulse';
             } else if (isStable) {
                 statusMessage = 'Known Model Stable. Checking Mismatch...';
-                statusClass = 'bg-slate-300 text-slate-800';
+                statusClass = 'text-white';
             }
 
             return {
@@ -423,9 +480,9 @@
                 const newFactorName = 'High-Frequency Thermal Stress (Internal Flux)';
 
                 llmResponseBox.innerHTML = `
-                    <span class="font-bold text-teal-700">Hypothesis Received:</span>
-                    <p class="mt-1 text-lg font-mono">${newFactorName}</p>
-                    <p class="text-sm italic text-slate-600 mt-2">LLM's reasoning (simulated): Stable residual error in ISS telemetry or inconsistent validation evidence (BH Variance) suggests an unmodeled, persistent thermal load, likely a high-frequency internal flux that our sensors under-sample. This requires a new causal edge.</p>
+                    <span class="font-bold text-cyan-400">Hypothesis Received:</span>
+                    <p class="mt-1 text-lg font-mono text-white">${newFactorName}</p>
+                    <p class="text-sm italic text-gray-300 mt-2">LLM's reasoning (simulated): Stable residual error in ISS telemetry or inconsistent validation evidence (BH Variance) suggests an unmodeled, persistent thermal load, likely a high-frequency internal flux that our sensors under-sample. This requires a new causal edge.</p>
                 `;
 
                 // 3. Integrate the new factor
@@ -471,19 +528,19 @@
             const bhArray = Object.values(edge.bradfordHill);
 
             return `
-                <div class="mt-4 pt-4 border-t border-gray-200">
-                    <div class="flex justify-between items-center text-sm font-semibold text-slate-600 mb-2">
+                <div class="mt-4 pt-4" style="border-top: 1px solid rgba(76, 0, 255, 0.3);">
+                    <div class="flex justify-between items-center text-sm font-semibold text-gray-300 mb-2">
                         <span>Bradford Hill Causal Criteria Validation</span>
-                        <span class="text-xs text-red-600 font-mono">BH Std Dev: ${edge.bh_std_dev.toFixed(3)}</span>
+                        <span class="text-xs text-pink-600 font-mono">BH Std Dev: ${edge.bh_std_dev.toFixed(3)}</span>
                     </div>
                     <div class="grid grid-cols-3 gap-2 text-xs">
                         ${bhArray.map(criterion => `
                             <div class="flex flex-col">
-                                <span class="text-slate-500 truncate" title="${criterion.name}">${criterion.name}</span>
-                                <div class="h-1 bg-gray-200 rounded-full mt-0.5">
-                                    <div class="convergence-bar h-full bg-slate-500 rounded-full" style="width: ${(criterion.score * 100).toFixed(0)}%"></div>
+                                <span class="text-gray-400 truncate" title="${criterion.name}">${criterion.name}</span>
+                                <div class="h-1 rounded-full mt-0.5" style="background: rgba(100, 100, 120, 0.3);">
+                                    <div class="convergence-bar h-full rounded-full" style="width: ${(criterion.score * 100).toFixed(0)}%; background: linear-gradient(to right, var(--color-accent-indigo), var(--color-accent-violet));"></div>
                                 </div>
-                                <span class="font-mono text-right text-xs mt-0.5">${(criterion.score * 100).toFixed(0)}%</span>
+                                <span class="font-mono text-right text-xs mt-0.5 text-gray-300">${(criterion.score * 100).toFixed(0)}%</span>
                             </div>
                         `).join('')}
                     </div>
@@ -494,25 +551,25 @@
         function renderEdges() {
             const container = document.getElementById('edge-container');
             container.innerHTML = KNOWN_CAUSAL_EDGES.map(edge => `
-                <div class="border p-4 rounded-lg shadow-md transition duration-300 ${edge.id === 'llm-factor' ? 'bg-teal-50 border-teal-400' : 'bg-slate-50 border-slate-200'}">
-                    
+                <div class="p-4 rounded-lg shadow-md transition duration-300" style="background: ${edge.id === 'llm-factor' ? 'linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(26, 26, 51, 0.8))' : 'rgba(10, 10, 26, 0.5)'}; border: 1px solid ${edge.id === 'llm-factor' ? 'rgba(0, 255, 255, 0.5)' : 'rgba(76, 0, 255, 0.3)'};">
+
                     <!-- Main Edge Metrics -->
                     <div class="flex justify-between items-start mb-2">
-                        <span class="text-lg font-bold text-slate-800 ${edge.id === 'llm-factor' ? 'text-teal-700' : ''}">${edge.name}</span>
+                        <span class="text-lg font-bold ${edge.id === 'llm-factor' ? 'text-cyan-400' : 'text-white'}">${edge.name}</span>
                         <div class="text-right">
-                            <span class="text-sm font-semibold text-slate-600 block">Certainty (Z): <span id="${edge.id}-certainty-val" class="font-mono text-lg text-teal-600">${(edge.certainty * 100).toFixed(1)}%</span></span>
-                            <span class="text-xs font-medium text-slate-500">Weight (W): <span id="${edge.id}-weight-val" class="font-mono text-slate-800">${formatSigned(edge.weight)}</span></span>
+                            <span class="text-sm font-semibold text-gray-300 block">Certainty (Z): <span id="${edge.id}-certainty-val" class="font-mono text-lg text-cyan-400">${(edge.certainty * 100).toFixed(1)}%</span></span>
+                            <span class="text-xs font-medium text-gray-400">Weight (W): <span id="${edge.id}-weight-val" class="font-mono text-white">${formatSigned(edge.weight)}</span></span>
                         </div>
                     </div>
 
                     <!-- Certainty Progress Bar -->
-                    <div class="h-3 bg-gray-300 rounded-full mb-3">
-                        <div id="${edge.id}-certainty-bar" class="convergence-bar h-full ${edge.id === 'llm-factor' ? 'bg-teal-500' : 'bg-slate-500'} rounded-full" style="width: ${(edge.certainty * 100).toFixed(1)}%"></div>
+                    <div class="h-3 rounded-full mb-3" style="background: rgba(100, 100, 120, 0.3);">
+                        <div id="${edge.id}-certainty-bar" class="convergence-bar h-full rounded-full" style="width: ${(edge.certainty * 100).toFixed(1)}%; background: ${edge.id === 'llm-factor' ? 'linear-gradient(to right, #00FFFF, #00CCCC)' : 'linear-gradient(to right, var(--color-accent-indigo), var(--color-accent-violet))'}"></div>
                     </div>
-                    
+
                     <div class="flex justify-between items-center text-sm">
-                        <span class="text-slate-500">Current Edge Error: <span id="${edge.id}-error-val" class="font-mono text-slate-800 font-medium">${edge.current_error.toFixed(3)}</span></span>
-                        <span class="text-slate-500 italic">Target W: <span class="font-mono text-slate-700">${formatSigned(edge.target_weight)}</span></span>
+                        <span class="text-gray-300">Current Edge Error: <span id="${edge.id}-error-val" class="font-mono text-white font-medium">${edge.current_error.toFixed(3)}</span></span>
+                        <span class="text-gray-300 italic">Target W: <span class="font-mono text-white">${formatSigned(edge.target_weight)}</span></span>
                     </div>
 
                     <!-- Bradford Hill Criteria -->
@@ -538,7 +595,14 @@
             // Update Curiosity Status
             const statusDiv = document.getElementById('curiosity-status');
             statusDiv.textContent = mismatchData.statusMessage;
-            statusDiv.className = `mt-4 p-3 rounded-lg text-center font-bold text-slate-900 transition-all duration-300 ${mismatchData.statusClass}`;
+            statusDiv.className = `mt-4 p-3 rounded-lg text-center font-bold transition-all duration-300 ${mismatchData.statusClass}`;
+            if (!mismatchData.statusClass.includes('bg-')) {
+                statusDiv.style.background = 'rgba(100, 100, 120, 0.3)';
+            }
+            // Apply gradient for curiosity fired states
+            if (mismatchData.statusClass.includes('animate-pulse')) {
+                statusDiv.style.background = 'linear-gradient(135deg, #8A2BE2, #FF4DFF)';
+            }
 
             // Handle Curiosity Trigger vs. Learning Mode
             const runCycleBtn = document.getElementById('run-cycle-btn');
@@ -588,12 +652,12 @@
             // Only add a new history row if a cycle ran
             if (cycleCount > 0 && (history.length === 0 || history[history.length - 1].cycleCount !== cycleCount)) {
                 const newRow = `
-                    <tr class="${historyData.isCurious ? 'bg-orange-50 font-semibold' : 'hover:bg-gray-50'}">
-                        <td class="px-4 py-2 whitespace-nowrap text-sm text-slate-900">${historyData.cycleCount}</td>
-                        <td class="px-4 py-2 whitespace-nowrap text-sm text-slate-900">${historyData.avgCertainty}</td>
-                        <td class="px-4 py-2 whitespace-nowrap text-sm text-slate-900">${historyData.attributableError}</td>
-                        <td class="px-4 py-2 whitespace-nowrap text-sm ${historyData.isCurious ? 'text-red-700 font-bold' : 'text-slate-900'}">${historyData.causalMismatchError}</td>
-                        <td class="px-4 py-2 whitespace-nowrap text-center text-sm">${historyData.isCurious ? (mismatchData.isBHVarianceMismatch ? '⚠️ BH-VAR' : '🚨 YES') : (isLLMIntegrated ? '✅ VALIDATING' : '—')}</td>
+                    <tr class="${historyData.isCurious ? 'font-semibold' : ''}" style="background: ${historyData.isCurious ? 'rgba(138, 43, 226, 0.2)' : 'transparent'};">
+                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-200">${historyData.cycleCount}</td>
+                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-200">${historyData.avgCertainty}</td>
+                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-200">${historyData.attributableError}</td>
+                        <td class="px-4 py-2 whitespace-nowrap text-sm ${historyData.isCurious ? 'text-violet-400 font-bold' : 'text-gray-200'}">${historyData.causalMismatchError}</td>
+                        <td class="px-4 py-2 whitespace-nowrap text-center text-sm">${historyData.isCurious ? (mismatchData.isBHVarianceMismatch ? 'BH-VAR' : 'YES') : (isLLMIntegrated ? 'VALIDATING' : '—')}</td>
                     </tr>
                  `;
                 document.getElementById('history-body').insertAdjacentHTML('afterbegin', newRow);
