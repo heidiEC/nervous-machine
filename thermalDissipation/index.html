@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research-Driven Causal Curiosity: Space Thermal Physics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-dark-bg: #0A0A1A;
+            --color-light-text: #E0E0F0;
+            --color-accent-indigo: #4C00FF;
+            --color-accent-violet: #8A2BE2;
+            --color-gradient-start: #4c00ff;
+            --color-gradient-end: #8a2be2;
+            --color-cyan: #00FFFF;
+            --color-card-bg: #1a1a33;
+            --color-orange: #FF6B35;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-dark-bg);
+            color: var(--color-light-text);
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(76, 0, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(138, 43, 226, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 255, 255, 0.05) 0%, transparent 50%);
+            z-index: -1;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            33% {
+                transform: translate(30px, -30px) rotate(120deg);
+            }
+
+            66% {
+                transform: translate(-20px, 20px) rotate(240deg);
+            }
+        }
+
+        .convergence-bar {
+            transition: width 0.3s ease-in-out;
+        }
+
+        .certainty-text {
+            min-width: 4rem;
+        }
+
+        .loading-dot {
+            animation: bounce 1s infinite;
+        }
+
+        .loading-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loading-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0);
+            }
+
+            40% {
+                transform: scale(1.0);
+            }
+        }
+
+        .paper-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        .citation-count {
+            background: rgba(255, 107, 53, 0.2);
+            color: #FF6B35;
+            border: 1px solid rgba(255, 107, 53, 0.4);
+        }
+
+        .paper-count {
+            background: rgba(0, 255, 255, 0.2);
+            color: #00FFFF;
+            border: 1px solid rgba(0, 255, 255, 0.4);
+        }
+    </style>
+</head>
+
+<body class="p-4 sm:p-8">
+    <div id="app" class="max-w-6xl mx-auto">
+        <header class="text-center mb-10">
+            <div class="inline-block px-4 py-1 mb-3 rounded-full text-xs font-bold bg-orange-500 text-white">
+
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-white">
+                Research-Driven Causal Discovery
+            </h1>
+            <p class="mt-2 text-lg text-cyan-400">
+                Automated Literature Synthesis for Space Data Center Thermal Physics
+            </p>
+            <p class="mt-1 text-sm text-gray-400">
+                Domain: Thermal Dissipation in Microgravity Environments • 4 Physics Principles
+            </p>
+        </header>
+
+        <!-- Research Context Panel -->
+        <div style="background: linear-gradient(135deg, var(--color-card-bg), rgba(26, 26, 51, 0.8));"
+            class="p-6 rounded-xl shadow-2xl mb-8 border-t-4 border-orange-500">
+            <h2 class="text-xl font-bold mb-4 text-white flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-orange-500" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                Research Corpus Configuration
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div>
+                    <p class="text-gray-300 mb-2">
+                        <span class="font-semibold block text-white">Total Papers Analyzed:</span>
+                        <span id="total-papers" class="text-orange-400 font-mono text-lg">127</span>
+                    </p>
+                    <p class="text-gray-300 mb-2">
+                        <span class="font-semibold block text-white">Unexplained Variance:</span>
+                        <span id="unmodeled_error_display" class="text-violet-400 font-mono text-lg">0.42</span>
+                    </p>
+                    <p class="text-gray-300">
+                        <span class="font-semibold block text-white">Literature Epochs Processed:</span>
+                        <span id="epochs-processed" class="text-cyan-400 font-mono text-lg">0</span>
+                    </p>
+                </div>
+                <div>
+                    <p class="text-gray-300 mb-2">
+                        <span class="font-semibold block text-white">Curiosity Threshold:</span>
+                        <span class="font-mono text-lg">0.22</span>
+                    </p>
+                    <p class="text-gray-300 mb-2">
+                        <span class="font-semibold block text-white">Consensus Threshold (Z):</span>
+                        <span class="font-mono text-lg">0.85</span>
+                    </p>
+                    <p class="text-gray-300">
+                        <span class="font-semibold block text-white">BH Variance Threshold:</span>
+                        <span class="font-mono text-lg">0.20</span>
+                    </p>
+                </div>
+            </div>
+            <div class="mt-4 p-3 rounded-lg"
+                style="background: rgba(10, 10, 26, 0.5); border: 1px solid rgba(255, 107, 53, 0.3);">
+                <p class="text-sm text-gray-300">
+                    <span class="font-bold text-orange-400">Research Question:</span>
+                    How do we accurately predict thermal dissipation in microgravity data centers when terrestrial
+                    physics models show systematic residuals?
+                </p>
+                <p class="text-xs text-gray-400 mt-2 italic">
+                    Known factors from Earth-based research are converging (Z → 0.85), but <span
+                        class="text-violet-400 font-semibold">unexplained variance remains high (0.42)</span>. This
+                    suggests missing physical mechanisms specific to space environments.
+                </p>
+            </div>
+        </div>
+
+        <!-- Cycle & Controls -->
+        <div class="flex flex-col lg:flex-row justify-between items-center p-6 rounded-xl shadow-inner mb-8"
+            style="background: rgba(71, 71, 125, 0.407);">
+            <div class="text-2xl font-extrabold text-white mb-4 lg:mb-0">
+                Literature Epoch: <span id="cycle-count" class="text-cyan-400">0</span>
+            </div>
+            <div class="flex flex-wrap gap-2 w-full lg:w-auto justify-center lg:justify-end">
+                <button id="run-cycle-btn"
+                    class="text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 disabled:opacity-50"
+                    style="background: linear-gradient(135deg, var(--color-accent-indigo), var(--color-accent-violet));"
+                    title="Process one literature batch">
+                    Process Batch (1)
+                </button>
+                <button id="run-five-cycles-btn"
+                    class="text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 disabled:opacity-50"
+                    style="background: linear-gradient(135deg, var(--color-accent-indigo), var(--color-accent-violet));"
+                    onclick="runMultipleCycles(5)">
+                    Process (5)
+                </button>
+                <button id="run-ten-cycles-btn"
+                    class="text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 disabled:opacity-50"
+                    style="background: linear-gradient(135deg, var(--color-accent-indigo), var(--color-accent-violet));"
+                    onclick="runMultipleCycles(10)">
+                    Process (10)
+                </button>
+                <button id="ask-llm-btn"
+                    class="hidden text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 disabled:opacity-50"
+                    style="background: linear-gradient(135deg, #d900ff, var(--color-accent-violet));" disabled>
+                    🔬 Query Cross-Domain Literature
+                </button>
+            </div>
+        </div>
+
+        <!-- Mismatch & Error Panel -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Causal Mismatch Flag -->
+            <div class="lg:col-span-2 p-6 rounded-xl shadow-lg border-l-4 border-violet-500"
+                style="background: linear-gradient(135deg, var(--color-card-bg), rgba(26, 26, 51, 0.8));">
+                <h2 class="text-xl font-bold text-white mb-3 flex items-center">
+                    Knowledge Gap Detection (E<sub>mismatch</sub>)
+                </h2>
+                <div class="p-4 rounded-lg"
+                    style="background: rgba(10, 10, 26, 0.5); border: 1px solid rgba(76, 0, 255, 0.3);">
+                    <p class="text-sm font-semibold text-gray-300 mb-2">Unexplained Model Variance:</p>
+                    <div class="flex items-center space-x-3">
+                        <div class="h-4 rounded-full flex-grow relative" style="background: rgba(100, 100, 120, 0.3);">
+                            <!-- Curiosity Threshold Marker (0.22) -->
+                            <div class="absolute h-full border-r-2 border-indigo-900 border-dashed"
+                                style="left: 22%; top: 0; transform: translateY(-1px);">
+                                <div class="absolute -top-5 -left-6 text-xs text-indigo-400 font-mono">curiosity</div>
+                            </div>
+                            <div id="mismatch-bar" class="convergence-bar h-full rounded-full"
+                                style="width: 0%; background: linear-gradient(to right, var(--color-accent-violet), #FF00FF);">
+                            </div>
+                        </div>
+                        <span id="mismatch-value" class="certainty-text text-xl font-mono text-violet-400">0.000</span>
+                    </div>
+                </div>
+
+                <div id="curiosity-status"
+                    class="mt-4 p-3 rounded-lg text-center font-bold text-white transition-all duration-300"
+                    style="background: rgba(100, 100, 120, 0.3);">
+                    Literature Synthesis In Progress (Consensus Building)
+                </div>
+            </div>
+
+            <!-- Total Prediction Error -->
+            <div class="p-6 rounded-xl shadow-lg border-l-4 border-pink-600"
+                style="background: linear-gradient(135deg, var(--color-card-bg), rgba(26, 26, 51, 0.8));">
+                <h2 class="text-xl font-bold text-white mb-3">Total Model Error (E<sub>total</sub>)</h2>
+                <div class="flex items-center space-x-3 mb-2">
+                    <div class="h-6 rounded-full flex-grow" style="background: rgba(100, 100, 120, 0.3);">
+                        <div id="total-error-bar" class="convergence-bar h-full bg-pink-800 rounded-full"
+                            style="width: 80%"></div>
+                    </div>
+                    <span id="total-error-value" class="certainty-text text-3xl font-mono text-pink-600">0.80</span>
+                </div>
+                <p class="text-sm text-gray-400 italic">
+                    Observable error in predictive models decreases as literature converges, but stabilizes due to
+                    unmodeled physics.
+                </p>
+            </div>
+        </div>
+
+        <!-- LLM Cross-Domain Search Panel -->
+        <div id="llm-panel" class="hidden p-6 rounded-xl shadow-lg border-2 border-teal-400 mb-8"
+            style="background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(26, 26, 51, 0.8));">
+            <h2 class="text-xl font-bold mb-4 text-white flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-cyan-400" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                Cross-Domain Hypothesis Generation
+            </h2>
+            <p id="llm-query" class="text-sm italic text-gray-300 mb-4">
+                <span class="font-bold text-cyan-400">Query:</span> "Terrestrial thermal models converge (Z=0.87) but
+                show persistent residual variance (0.42) in microgravity applications. Current literature covers
+                convection suppression, radiation-dominant regimes, and phase-change materials. What physical mechanisms
+                from adjacent domains (fluid dynamics, materials science, aerospace) might explain this gap?"
+            </p>
+            <div id="llm-response-box" class="p-4 rounded-lg shadow"
+                style="background: rgba(10, 10, 26, 0.5); border: 1px solid rgba(0, 255, 255, 0.3);">
+                <p id="llm-response" class="text-gray-300 font-medium">... Awaiting Curiosity Signal ...</p>
+            </div>
+            <div id="llm-papers-found" class="hidden mt-4 p-4 rounded-lg" style="background: rgba(0, 255, 255, 0.05);">
+                <p class="text-sm font-semibold text-cyan-400 mb-2">Relevant Cross-Domain Papers Identified:</p>
+                <div id="cross-domain-papers" class="space-y-2"></div>
+            </div>
+        </div>
+
+        <!-- Known Physics Principles (Literature Consensus) -->
+        <div class="p-6 rounded-xl shadow-lg mb-8"
+            style="background: linear-gradient(135deg, var(--color-card-bg), rgba(26, 26, 51, 0.8));">
+            <h2 class="text-xl font-bold mb-6 text-cyan-400 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Known Physics Principles (Literature Consensus)
+            </h2>
+            <div id="edge-container" class="space-y-6">
+                <!-- Physics principle rows will be injected here -->
+            </div>
+        </div>
+
+        <!-- History Table -->
+        <div class="mt-10">
+            <h2 class="text-xl font-bold mb-4 text-cyan-400">Research Synthesis History</h2>
+            <div class="overflow-x-auto rounded-xl shadow-lg"
+                style="background: linear-gradient(135deg, var(--color-card-bg), rgba(26, 26, 51, 0.8)); border: 1px solid rgba(76, 0, 255, 0.3);">
+                <table class="min-w-full divide-y" style="border-color: rgba(76, 0, 255, 0.3);">
+                    <thead style="background: rgba(10, 10, 26, 0.5);">
+                        <tr>
+                            <th class="px-4 py-3 text-left text-xs font-bold text-gray-300 uppercase tracking-wider">
+                                Epoch</th>
+                            <th class="px-4 py-3 text-left text-xs font-bold text-gray-300 uppercase tracking-wider">
+                                Avg Consensus (Z)</th>
+                            <th class="px-4 py-3 text-left text-xs font-bold text-gray-300 uppercase tracking-wider">
+                                Explained Variance</th>
+                            <th class="px-4 py-3 text-left text-xs font-bold text-gray-300 uppercase tracking-wider">
+                                Knowledge Gap</th>
+                            <th class="px-4 py-3 text-center text-xs font-bold text-gray-300 uppercase tracking-wider">
+                                Curiosity Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-body" class="divide-y" style="border-color: rgba(76, 0, 255, 0.2);">
+                        <!-- History rows will be injected here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- Configuration Constants ---
+        let UNMODELED_FACTOR_ERROR = 0.42; // Unexplained variance in models
+        const EXPLAINED_ERROR_BY_LLM = 0.35; // How much the new hypothesis explains
+        const CURIOSITY_MISMATCH_THRESHOLD = 0.22;
+        const HIGH_CERTAINTY_THRESHOLD = 0.85; // Literature consensus threshold
+        const BH_VARIANCE_THRESHOLD = 0.20; // High std dev in validation criteria = weak evidence
+
+        // --- State Variables ---
+        let cycleCount = 0;
+        let isCuriosityTriggered = false;
+        let isLLMIntegrated = false;
+        let isReplicationComplete = false;
+        let firstCuriosityFired = false; // Track if knowledge gap has fired
+        let secondCuriosityFired = false; // Track if novel factor validation has been flagged
+        let totalPapersProcessed = 127; // Starting corpus
+
+        // Bradford Hill Criteria adapted for literature validation
+        const BH_CRITERIA_NAMES = [
+            { id: 'strength', name: 'Effect Size (Magnitude)', tooltip: 'How large is the measured effect across studies?' },
+            { id: 'consistency', name: 'Reproducibility', tooltip: 'Do independent labs/datasets agree?' },
+            { id: 'temporality', name: 'Temporal Ordering', tooltip: 'Does cause precede effect in experiments?' },
+            { id: 'plausibility', name: 'Physical Mechanism', tooltip: 'Is there a theoretical explanation?' },
+            { id: 'coherence', name: 'Theory Coherence', tooltip: 'Fits with established physics?' },
+            { id: 'specificity', name: 'Specificity', tooltip: 'Effect specific to this factor?' },
+            { id: 'gradient', name: 'Dose-Response', tooltip: 'Does varying the factor change the effect predictably?' },
+            { id: 'experiment', name: 'Experimental Evidence', tooltip: 'Controlled experiments available?' },
+            { id: 'analogy', name: 'Analogous Systems', tooltip: 'Similar effects in related domains?' }
+        ];
+
+        /**
+         * Initialize Bradford Hill scores for KNOWN terrestrial physics principles
+         * (already well-validated in Earth environments)
+         */
+        const initializeBradfordHill = () => {
+            const bh = {};
+            BH_CRITERIA_NAMES.forEach(({ id, name }) => {
+                let initialScore;
+                if (id === 'temporality' || id === 'plausibility') {
+                    initialScore = 0.75 + Math.random() * 0.15; // Well-understood physics
+                } else {
+                    initialScore = 0.55 + Math.random() * 0.35; // 0.55 to 0.90
+                }
+                bh[id] = { score: initialScore, name: name };
+            });
+            return bh;
+        };
+
+        /**
+         * Initialize BH scores for a NOVEL finding with high theoretical support
+         * but low empirical replication (the "replication crisis" pattern)
+         */
+        const initializeNovelFindingBradfordHill = () => {
+            const bh = {};
+            BH_CRITERIA_NAMES.forEach(({ id, name }) => {
+                let initialScore;
+                if (id === 'plausibility' || id === 'coherence' || id === 'temporality') {
+                    // Strong theoretical mechanism, fits known physics
+                    initialScore = 0.75 + Math.random() * 0.15; // 0.75 to 0.90
+                } else if (id === 'consistency' || id === 'experiment') {
+                    // But low reproducibility - only one lab has shown this
+                    initialScore = 0.15 + Math.random() * 0.15; // 0.15 to 0.30
+                } else {
+                    initialScore = 0.40 + Math.random() * 0.20; // 0.40 to 0.60
+                }
+                bh[id] = { score: initialScore, name: name };
+            });
+            return bh;
+        };
+
+        /**
+         * Initialize Bradford Hill scores for NEW hypotheses from cross-domain search
+         */
+        const initializeNewFactorBradfordHill = () => {
+            const bh = {};
+            BH_CRITERIA_NAMES.forEach(({ id, name }) => {
+                const initialScore = 0.05 + Math.random() * 0.15; // 0.05 to 0.20 - unproven
+                bh[id] = { score: initialScore, name: name };
+            });
+            return bh;
+        };
+
+        /**
+         * Physics principles extracted from literature corpus
+         * Each principle has paper_count (# of papers) and citation_weight (influence)
+         */
+        let KNOWN_CAUSAL_EDGES = [
+            {
+                id: 'convection',
+                name: 'Convection Suppression (Microgravity)',
+                certainty: 0.25,
+                weight: -0.15,
+                current_error: 0.32,
+                target_weight: -0.50,
+                paper_count: 42,
+                citation_weight: 1250,
+                bradfordHill: initializeBradfordHill(),
+                bh_std_dev: 0.0,
+                key_papers: ['Zhang et al. (2019)', 'ISS Fluid Physics (2021)', 'NASA-TM-2020-220465']
+            },
+            {
+                id: 'radiation',
+                name: 'Radiation-Dominant Heat Transfer',
+                certainty: 0.25,
+                weight: 0.20,
+                current_error: 0.28,
+                target_weight: 0.65,
+                paper_count: 38,
+                citation_weight: 980,
+                bradfordHill: initializeBradfordHill(),
+                bh_std_dev: 0.0,
+                key_papers: ['Orbital Thermal Env. (2018)', 'Howell & Siegel (2015)']
+            },
+            {
+                id: 'phase_change',
+                name: 'Phase-Change Material Performance',
+                certainty: 0.25,
+                weight: 0.10,
+                current_error: 0.24,
+                target_weight: 0.40,
+                paper_count: 29,
+                citation_weight: 720,
+                bradfordHill: initializeBradfordHill(),
+                bh_std_dev: 0.0,
+                key_papers: ['Dutil et al. (2011)', 'ESA Materials Study (2020)']
+            },
+        ];
+
+        let history = [];
+
+        // --- Core Nervous Machine Functions (Adapted for Literature) ---
+
+        /**
+         * Learning rate based on literature consensus (Z)
+         * High consensus = slow updates (established physics)
+         */
+        const calculateLearningRate = (z) => {
+            return 1 / (1 + Math.exp(10 * (z - 0.5)));
+        };
+
+        /**
+         * Standard deviation calculation for BH scores
+         */
+        function calculateStdDev(scores) {
+            if (scores.length <= 1) return 0;
+            const mean = scores.reduce((sum, score) => sum + score, 0) / scores.length;
+            const squaredDifferences = scores.map(score => Math.pow(score - mean, 2));
+            const variance = squaredDifferences.reduce((sum, diff) => sum + diff, 0) / scores.length;
+            return Math.sqrt(variance);
+        }
+
+        /**
+         * Update a physics principle based on new literature batch
+         */
+        function updateEdge(edge) {
+            const eta = calculateLearningRate(edge.certainty);
+            const weightDifference = edge.target_weight - edge.weight;
+
+            // Simulated "learning signal" from new papers
+            const simulatedErrorSignal = Math.abs(weightDifference) * 0.5 + Math.random() * 0.05;
+
+            const direction = weightDifference > 0 ? 1 : -1;
+            const deltaW = eta * simulatedErrorSignal * direction;
+            edge.weight += deltaW;
+            edge.weight = Math.max(-1, Math.min(1, edge.weight));
+
+            // Update Consensus (Z): More papers = higher consensus
+            const certaintyGain = (1 - edge.certainty) * eta * 0.35;
+            edge.certainty += certaintyGain;
+            edge.certainty = Math.min(0.99, edge.certainty);
+
+            // Update unexplained variance for this principle
+            const baseReduction = (edge.id === 'llm-factor') ? 0.7 : 0.8;
+            edge.current_error = Math.max(0.01, simulatedErrorSignal * baseReduction * (1 - edge.certainty));
+
+            if (edge.id === 'llm-factor' && edge.certainty > 0.9) {
+                edge.current_error = Math.max(0.005, edge.current_error * 0.5);
+            }
+
+            // Simulate new papers being added each epoch
+            const newPapers = Math.floor(Math.random() * 3) + 1; // 1-3 papers per epoch
+            edge.paper_count += newPapers;
+            edge.citation_weight += Math.floor(Math.random() * 50) + 10;
+            totalPapersProcessed += newPapers;
+
+            // Update Bradford Hill validation scores
+            let bhScores = [];
+            Object.keys(edge.bradfordHill).forEach(key => {
+                let bhScoreGain = certaintyGain * 0.2;
+
+                // Simulate variance issues in 'convection' principle
+                // (Many papers, but weak experimental evidence due to limited ISS access)
+                if (edge.id === 'convection' && edge.certainty > 0.7 &&
+                    (key === 'experiment' || key === 'gradient')) {
+                    bhScoreGain *= 0.1; // Experimental data hard to obtain
+                }
+
+                // NEW: For novel findings (quantum_coupling), consistency/experiment scores
+                // grow very slowly (representing lack of replication)
+                if (edge.id === 'quantum_coupling' &&
+                    (key === 'consistency' || key === 'experiment')) {
+                    bhScoreGain *= 0.08; // Very slow replication
+                }
+
+                edge.bradfordHill[key].score += bhScoreGain * (1 - edge.bradfordHill[key].score);
+                edge.bradfordHill[key].score = Math.min(1.0, edge.bradfordHill[key].score);
+                bhScores.push(edge.bradfordHill[key].score);
+            });
+
+            edge.bh_std_dev = calculateStdDev(bhScores);
+        }
+
+        // --- Curiosity Algorithm (Literature Gap Detection) ---
+
+        function calculateCausalMismatch() {
+            const attributableError = KNOWN_CAUSAL_EDGES.reduce((sum, e) => sum + e.current_error, 0);
+            const totalError = attributableError + UNMODELED_FACTOR_ERROR;
+            const causalMismatchError = Math.max(0, totalError - attributableError);
+
+            const avgCertainty = KNOWN_CAUSAL_EDGES.reduce((sum, e) => sum + e.certainty, 0) / KNOWN_CAUSAL_EDGES.length;
+            const isStable = avgCertainty > HIGH_CERTAINTY_THRESHOLD;
+            const isMismatchHigh = causalMismatchError > CURIOSITY_MISMATCH_THRESHOLD;
+
+            let isCurious = false;
+            let statusMessage = 'Literature Synthesis In Progress (Consensus Building)';
+            let statusClass = 'bg-slate-200';
+            let isBHVarianceMismatch = false;
+            let isReplicationNeeded = false;
+            let curiosityType = null;
+
+            // PHASE 1: Check for Knowledge Gap (fires first, around epoch 8-10)
+            if (!firstCuriosityFired && !isLLMIntegrated && isStable && isMismatchHigh) {
+                isCurious = true;
+                isCuriosityTriggered = true;
+                curiosityType = 'knowledge_gap';
+                statusMessage = 'CURIOSITY FIRED: Literature Converged But Knowledge Gap Persists!';
+                statusClass = 'text-white font-extrabold animate-pulse';
+            }
+            // PHASE 2: After new factor added, check for novel factor needing validation (epoch 15-18)
+            else if (firstCuriosityFired && isLLMIntegrated && !secondCuriosityFired) {
+                // Check if quantum_coupling factor exists and needs validation
+                const quantumEdge = KNOWN_CAUSAL_EDGES.find(e => e.id === 'quantum_coupling');
+                if (quantumEdge) {
+                    const plausibility = quantumEdge.bradfordHill.plausibility?.score || 0;
+                    const consistency = quantumEdge.bradfordHill.consistency?.score || 0;
+                    const experiment = quantumEdge.bradfordHill.experiment?.score || 0;
+
+                    if (quantumEdge.certainty > 0.60 && plausibility > 0.75 &&
+                        (consistency < 0.40 || experiment < 0.40)) {
+                        isReplicationNeeded = true;
+                        curiosityType = 'validation_needed';
+                        statusMessage = 'Novel Factor Detected: Validation Gap - High Plausibility But Low Reproducibility';
+                        statusClass = 'bg-orange-900 text-white';
+                    }
+                }
+            }
+            // PHASE 3: Show when validation improves
+            else if (secondCuriosityFired && isReplicationComplete) {
+                statusMessage = 'Validation Studies Complete. All Factors Converging.';
+                statusClass = 'bg-green-900 text-white';
+            }
+            // General status updates
+            else if (isLLMIntegrated && !secondCuriosityFired) {
+                statusMessage = 'New Factor Integrated. Monitoring Validation Metrics.';
+                statusClass = 'bg-cyan-900 text-white';
+            } else if (isStable) {
+                statusMessage = 'Literature Consensus Reached. Checking for Knowledge Gaps...';
+                statusClass = 'text-white';
+            }
+
+            return {
+                totalError,
+                attributableError,
+                causalMismatchError,
+                isCurious,
+                isStable,
+                avgCertainty,
+                statusMessage,
+                statusClass,
+                isBHVarianceMismatch,
+                isReplicationNeeded,
+                curiosityType
+            };
+        }
+
+        // --- LLM Cross-Domain Search (Simulated) ---
+
+        function askLLMForFactor() {
+            const llmBtn = document.getElementById('ask-llm-btn');
+            const runBtn = document.getElementById('run-cycle-btn');
+            const llmResponseBox = document.getElementById('llm-response');
+            const llmQuery = document.getElementById('llm-query');
+
+            const mismatchData = calculateCausalMismatch();
+            let queryText = '';
+            let hypothesisName = '';
+            let reasoning = '';
+            let buttonText = '';
+
+            // PHASE 1: Knowledge Gap - Add new factor
+            if (mismatchData.curiosityType === 'knowledge_gap') {
+                queryText = `<span class="font-bold text-cyan-400">Query:</span> "Terrestrial thermal models converge (Z=${(mismatchData.avgCertainty * 100).toFixed(0)}%) but show persistent residual variance (${(UNMODELED_FACTOR_ERROR * 100).toFixed(0)}%) in microgravity applications. Current literature covers convection suppression, radiation-dominant regimes, and phase-change materials. What physical mechanisms from adjacent domains (fluid dynamics, materials science, aerospace) might explain this gap?"`;
+                hypothesisName = 'Two-Phase Flow Instabilities (Boiling in Microgravity)';
+                reasoning = `Persistent residual variance in terrestrial thermal models applied to space suggests a phase-transition mechanism not accounted for. Cross-domain literature from fluid dynamics reveals that <strong>two-phase flow instabilities</strong> in microgravity create unpredictable vapor-liquid separation patterns, disrupting heat pipe efficiency. This factor is under-studied in data center thermal literature.`;
+                buttonText = 'Searching cross-domain literature (fluid dynamics, materials science, aerospace)...';
+            }
+            // PHASE 2: Validation Gap - Flag need for validation
+            else if (mismatchData.curiosityType === 'validation_needed') {
+                queryText = `<span class="font-bold text-cyan-400">Query:</span> "A novel factor 'Quantum Tunneling in Nanoscale Thermal Interfaces' shows high theoretical plausibility (mechanism is well-understood) but very low reproducibility (only one lab has demonstrated this). Should we: (A) Propose replication studies, (B) Search for confounders, or (C) Investigate alternative mechanisms?"`;
+                hypothesisName = '📋 Research Registry Entry: Multi-Lab Validation Protocol';
+                reasoning = `The high plausibility score (0.85) combined with low consistency (0.25) and experimental evidence (0.22) suggests this is a <strong>genuine but fragile phenomenon</strong> that needs systematic validation. Recommended action: (1) Coordinated replication across 3+ independent labs, (2) Investigation of potential confounders (measurement artifacts, environmental variables), (3) Pre-registration of validation protocols.`;
+                buttonText = 'Analyzing validation gap and proposing replication protocol...';
+            }
+
+            llmQuery.innerHTML = queryText;
+            llmBtn.disabled = true;
+            runBtn.disabled = true;
+            llmResponseBox.innerHTML = `<span class="flex items-center text-teal-600 font-bold">
+                ${buttonText}
+                <span class="loading-dot ml-2 bg-teal-600 h-2 w-2 rounded-full"></span>
+                <span class="loading-dot ml-1 bg-teal-600 h-2 w-2 rounded-full"></span>
+                <span class="loading-dot ml-1 bg-teal-600 h-2 w-2 rounded-full"></span>
+            </span>`;
+
+            setTimeout(() => {
+                let crossDomainPapers = [];
+
+                if (mismatchData.curiosityType === 'knowledge_gap') {
+                    crossDomainPapers = [
+                        { title: 'Bubble dynamics in reduced gravity', authors: 'Kim et al.', year: 2022, domain: 'Fluid Dynamics', citations: 45 },
+                        { title: 'Flow boiling in microchannels under microgravity', authors: 'Ohta et al.', year: 2021, domain: 'Heat Transfer', citations: 67 },
+                        { title: 'Phase separation in space-based cooling loops', authors: 'ESA Technical Report', year: 2023, domain: 'Aerospace Engineering', citations: 23 }
+                    ];
+                } else {
+                    crossDomainPapers = [
+                        { title: 'Pre-registration protocols for replication studies', authors: 'Open Science Collaboration', year: 2023, domain: 'Metascience', citations: 234 },
+                        { title: 'Identifying confounders in nanoscale thermal measurements', authors: 'Cahill et al.', year: 2022, domain: 'Experimental Physics', citations: 89 },
+                        { title: 'Multi-lab coordination frameworks', authors: 'ManyLabs Consortium', year: 2024, domain: 'Research Methods', citations: 156 }
+                    ];
+                }
+
+                llmResponseBox.innerHTML = `
+                    <span class="font-bold text-cyan-400">${mismatchData.curiosityType === 'knowledge_gap' ? 'Hypothesis Generated' : 'Action Proposed'}:</span>
+                    <p class="mt-1 text-lg font-mono text-white">${hypothesisName}</p>
+                    <p class="text-sm italic text-gray-300 mt-2">
+                        LLM's reasoning: ${reasoning}
+                    </p>
+                `;
+
+                document.getElementById('llm-papers-found').classList.remove('hidden');
+                const papersList = document.getElementById('cross-domain-papers');
+                papersList.innerHTML = crossDomainPapers.map(paper => `
+                    <div class="text-sm p-2 rounded" style="background: rgba(0, 255, 255, 0.05); border-left: 3px solid #00FFFF;">
+                        <p class="font-semibold text-white">${paper.title}</p>
+                        <p class="text-xs text-gray-400">${paper.authors} (${paper.year}) • ${paper.domain} • ${paper.citations} citations</p>
+                    </div>
+                `).join('');
+
+                if (mismatchData.curiosityType === 'knowledge_gap') {
+                    integrateNewFactor(hypothesisName, crossDomainPapers, 'knowledge_gap');
+                } else {
+                    integrateNewFactor(hypothesisName, crossDomainPapers, 'validation_needed');
+                }
+
+                llmBtn.classList.add('hidden');
+                runBtn.disabled = false;
+            }, 3500);
+        }
+
+        function integrateNewFactor(factorName, papers, curiosityType) {
+            const mismatchData = calculateCausalMismatch();
+
+            // Add new papers to corpus
+            totalPapersProcessed += papers.length;
+            document.getElementById('total-papers').textContent = totalPapersProcessed;
+
+            // PHASE 1: Knowledge Gap - Add new factor discovered from cross-domain search
+            if (curiosityType === 'knowledge_gap') {
+                firstCuriosityFired = true;
+                isLLMIntegrated = true;
+
+                // Reduce unexplained variance
+                UNMODELED_FACTOR_ERROR = Math.max(0.01, UNMODELED_FACTOR_ERROR - EXPLAINED_ERROR_BY_LLM);
+                document.getElementById('unmodeled_error_display').textContent = UNMODELED_FACTOR_ERROR.toFixed(2);
+
+                // Add the new physics principle from LLM
+                KNOWN_CAUSAL_EDGES.push({
+                    id: 'llm-factor',
+                    name: factorName,
+                    certainty: 0.05,
+                    weight: 0.0,
+                    current_error: EXPLAINED_ERROR_BY_LLM * 0.9,
+                    target_weight: 0.55,
+                    paper_count: papers.length,
+                    citation_weight: papers.reduce((sum, p) => sum + p.citations, 0),
+                    bradfordHill: initializeNewFactorBradfordHill(),
+                    bh_std_dev: 0.0,
+                    key_papers: papers.map(p => `${p.authors} (${p.year})`)
+                });
+
+                // ALSO add the novel quantum factor that will need validation later
+                KNOWN_CAUSAL_EDGES.push({
+                    id: 'quantum_coupling',
+                    name: 'Quantum Tunneling in Nanoscale Thermal Interfaces',
+                    certainty: 0.40,
+                    weight: 0.05,
+                    current_error: 0.08,
+                    target_weight: 0.30,
+                    paper_count: 8,
+                    citation_weight: 180,
+                    bradfordHill: initializeNovelFindingBradfordHill(),
+                    bh_std_dev: 0.0,
+                    key_papers: ['Volokitin & Persson (2023) - Single Lab Result']
+                });
+            }
+            // PHASE 2: Validation Gap - Improve existing quantum factor's validation
+            else if (curiosityType === 'validation_needed') {
+                secondCuriosityFired = true;
+                isReplicationComplete = true;
+
+                const targetEdge = KNOWN_CAUSAL_EDGES.find(e => e.id === 'quantum_coupling');
+
+                if (targetEdge) {
+                    // Add validation papers to the existing edge
+                    targetEdge.paper_count += papers.length;
+                    targetEdge.citation_weight += papers.reduce((sum, p) => sum + p.citations, 0);
+                    targetEdge.key_papers.push(...papers.map(p => `${p.authors} (${p.year}) [Validation Study]`));
+
+                    // Boost consistency and experimental evidence directly
+                    targetEdge.bradfordHill.consistency.score = Math.min(0.85, targetEdge.bradfordHill.consistency.score + 0.45);
+                    targetEdge.bradfordHill.experiment.score = Math.min(0.82, targetEdge.bradfordHill.experiment.score + 0.50);
+
+                    // Recalculate BH variance - should drop significantly
+                    const bhScores = Object.values(targetEdge.bradfordHill).map(c => c.score);
+                    targetEdge.bh_std_dev = calculateStdDev(bhScores);
+                }
+            }
+
+            renderEdges();
+            updateUI(calculateCausalMismatch());
+        }
+
+        // --- Rendering Functions ---
+
+        function formatSigned(value) {
+            return (value >= 0 ? '+' : '') + value.toFixed(3);
+        }
+
+        function renderBradfordHill(edge) {
+            const bhArray = Object.values(edge.bradfordHill);
+
+            return `
+                <div class="mt-4 pt-4" style="border-top: 1px solid rgba(76, 0, 255, 0.3);">
+                    <div class="flex justify-between items-center text-sm font-semibold text-gray-300 mb-2">
+                        <span>Literature Validation Criteria (Bradford Hill)</span>
+                        <span class="text-xs ${edge.bh_std_dev > BH_VARIANCE_THRESHOLD ? 'text-pink-600' : 'text-gray-400'} font-mono">
+                            Variance: ${edge.bh_std_dev.toFixed(3)}
+                        </span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 text-xs">
+                        ${bhArray.map(criterion => `
+                            <div class="flex flex-col">
+                                <span class="text-gray-400 truncate" title="${criterion.name}">${criterion.name}</span>
+                                <div class="h-2 rounded-full mt-0.5" style="background: rgba(100, 100, 120, 0.3);">
+                                    <div class="convergence-bar h-full rounded-full" style="width: ${(criterion.score * 100).toFixed(0)}%; background: linear-gradient(to right, var(--color-accent-indigo), var(--color-accent-violet));"></div>
+                                </div>
+                                <span class="font-mono text-right text-xs mt-0.5 text-gray-300">${(criterion.score * 100).toFixed(0)}%</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderEdges() {
+            const container = document.getElementById('edge-container');
+            container.innerHTML = KNOWN_CAUSAL_EDGES.map(edge => {
+                // Determine if this edge has a curiosity-triggering pattern
+                const plausibility = edge.bradfordHill.plausibility?.score || 0;
+                const consistency = edge.bradfordHill.consistency?.score || 0;
+                const experiment = edge.bradfordHill.experiment?.score || 0;
+                const hasValidationGap = edge.certainty > 0.60 && plausibility > 0.75 &&
+                    (consistency < 0.40 || experiment < 0.40);
+
+                // Check if this edge has been validated (has [Validation Study] papers)
+                const hasBeenValidated = edge.key_papers.some(p => p.includes('[Validation Study]'));
+
+                // Show validation flag if gap exists and validation not complete
+                const showValidationFlag = hasValidationGap && !hasBeenValidated && isLLMIntegrated;
+
+                const borderColor = hasBeenValidated ? 'rgba(34, 197, 94, 0.7)' : // green for validated
+                    showValidationFlag ? 'rgba(255, 107, 53, 0.7)' :
+                        (edge.id === 'llm-factor' ? 'rgba(0, 255, 255, 0.5)' : 'rgba(76, 0, 255, 0.3)');
+                const glowClass = showValidationFlag ? 'shadow-lg shadow-orange-500/50' :
+                    hasBeenValidated ? 'shadow-lg shadow-green-500/50' : '';
+
+                return `
+                <div class="p-4 rounded-lg shadow-md transition duration-300 ${glowClass}" 
+                     style="background: ${edge.id === 'llm-factor' ? 'linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(26, 26, 51, 0.8))' : 'rgba(10, 10, 26, 0.5)'}; 
+                            border: ${showValidationFlag || hasBeenValidated ? '2px' : '1px'} solid ${borderColor};">
+
+                    ${hasBeenValidated ? `<div class="mb-2 text-xs font-bold text-green-400 flex items-center">
+                        ✅ VALIDATED - Multi-Lab Confirmation Complete
+                    </div>` : ''}
+                    ${showValidationFlag ? `<div class="mb-2 text-xs font-bold text-orange-400 flex items-center">
+                        📋 VALIDATION NEEDED - High Plausibility, Low Reproducibility
+                    </div>` : ''}
+
+                    <!-- Header -->
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <span class="text-lg font-bold ${edge.id === 'llm-factor' ? 'text-cyan-400' : 'text-white'}">${edge.name}</span>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span class="paper-badge paper-count">${edge.paper_count} papers</span>
+                                <span class="paper-badge citation-count">${edge.citation_weight} citations</span>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-sm font-semibold text-gray-300 block">
+                                Consensus (Z): 
+                                <span id="${edge.id}-certainty-val" class="font-mono text-lg text-cyan-400">
+                                    ${(edge.certainty * 100).toFixed(1)}%
+                                </span>
+                            </span>
+                            <span class="text-xs font-medium text-gray-400">
+                                Effect Size: 
+                                <span id="${edge.id}-weight-val" class="font-mono text-white">${formatSigned(edge.weight)}</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Consensus Progress Bar -->
+                    <div class="h-3 rounded-full mb-3" style="background: rgba(100, 100, 120, 0.3);">
+                        <div id="${edge.id}-certainty-bar" class="convergence-bar h-full rounded-full" 
+                             style="width: ${(edge.certainty * 100).toFixed(1)}%; 
+                                    background: ${edge.id === 'llm-factor' ? 'linear-gradient(to right, #00FFFF, #00CCCC)' : 'linear-gradient(to right, var(--color-accent-indigo), var(--color-accent-violet))'}">
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center text-sm mb-2">
+                        <span class="text-gray-300">
+                            Unexplained Variance: 
+                            <span id="${edge.id}-error-val" class="font-mono text-white font-medium">${edge.current_error.toFixed(3)}</span>
+                        </span>
+                        <span class="text-gray-300 italic">
+                            Target Effect: 
+                            <span class="font-mono text-white">${formatSigned(edge.target_weight)}</span>
+                        </span>
+                    </div>
+
+                    <!-- Key Papers -->
+                    <details class="text-xs text-gray-400 mb-2">
+                        <summary class="cursor-pointer hover:text-cyan-400">Key Papers</summary>
+                        <ul class="mt-1 ml-4 list-disc">
+                            ${edge.key_papers.map(paper => `<li>${paper}</li>`).join('')}
+                        </ul>
+                    </details>
+
+                    <!-- Bradford Hill Validation -->
+                    ${renderBradfordHill(edge)}
+
+                </div>
+            `;
+            }).join('');
+        }
+
+        function updateUI(mismatchData) {
+            document.getElementById('cycle-count').textContent = cycleCount;
+            document.getElementById('epochs-processed').textContent = cycleCount;
+
+            // Update Total Error
+            document.getElementById('total-error-value').textContent = mismatchData.totalError.toFixed(2);
+            const totalErrorBarWidth = Math.min(100, mismatchData.totalError * 100);
+            document.getElementById('total-error-bar').style.width = `${totalErrorBarWidth}%`;
+
+            // Update Mismatch
+            document.getElementById('mismatch-value').textContent = mismatchData.causalMismatchError.toFixed(3);
+            const mismatchBarWidth = Math.min(100, mismatchData.causalMismatchError * 100);
+            document.getElementById('mismatch-bar').style.width = `${mismatchBarWidth}%`;
+
+            // Update Curiosity Status
+            const statusDiv = document.getElementById('curiosity-status');
+            statusDiv.textContent = mismatchData.statusMessage;
+            statusDiv.className = `mt-4 p-3 rounded-lg text-center font-bold transition-all duration-300 ${mismatchData.statusClass}`;
+            if (!mismatchData.statusClass.includes('bg-')) {
+                statusDiv.style.background = 'rgba(100, 100, 120, 0.3)';
+            }
+            if (mismatchData.statusClass.includes('animate-pulse')) {
+                statusDiv.style.background = 'linear-gradient(135deg, #8A2BE2, #FF4DFF)';
+            }
+
+            // Control buttons
+            const runCycleBtn = document.getElementById('run-cycle-btn');
+            const runFiveBtn = document.getElementById('run-five-cycles-btn');
+            const runTenBtn = document.getElementById('run-ten-cycles-btn');
+            const llmBtn = document.getElementById('ask-llm-btn');
+            const llmPanel = document.getElementById('llm-panel');
+
+            // Control buttons based on curiosity state
+            if (mismatchData.isCurious && !firstCuriosityFired) {
+                // First curiosity (knowledge gap) - pause for user action
+                if (runCycleBtn) runCycleBtn.disabled = true;
+                if (runFiveBtn) runFiveBtn.disabled = true;
+                if (runTenBtn) runTenBtn.disabled = true;
+                if (llmBtn) {
+                    llmBtn.classList.remove('hidden');
+                    llmBtn.disabled = false;
+                    llmBtn.textContent = '🔬 Query Cross-Domain Literature';
+                }
+                if (llmPanel) llmPanel.classList.remove('hidden');
+            } else if (mismatchData.isReplicationNeeded && !secondCuriosityFired) {
+                // Second curiosity (validation needed) - just flag it, don't block
+                if (llmBtn) {
+                    llmBtn.classList.remove('hidden');
+                    llmBtn.disabled = false;
+                    llmBtn.textContent = '📋 Generate Validation Protocol';
+                }
+                if (llmPanel) llmPanel.classList.remove('hidden');
+                // Keep processing enabled - validation happens in parallel
+                if (runCycleBtn) runCycleBtn.disabled = false;
+                if (runFiveBtn) runFiveBtn.disabled = false;
+                if (runTenBtn) runTenBtn.disabled = false;
+            } else if (isLLMIntegrated || isReplicationComplete) {
+                if (llmPanel) llmPanel.classList.remove('hidden');
+                if (runCycleBtn) runCycleBtn.disabled = false;
+                if (runFiveBtn) runFiveBtn.disabled = false;
+                if (runTenBtn) runTenBtn.disabled = false;
+            } else {
+                if (llmBtn) llmBtn.classList.add('hidden');
+                if (llmPanel) llmPanel.classList.add('hidden');
+                if (runCycleBtn) runCycleBtn.disabled = false;
+                if (runFiveBtn) runFiveBtn.disabled = false;
+                if (runTenBtn) runTenBtn.disabled = false;
+            }
+
+            renderEdges();
+
+            // History
+            const historyData = {
+                cycleCount,
+                avgCertainty: mismatchData.avgCertainty.toFixed(3),
+                attributableError: mismatchData.attributableError.toFixed(3),
+                causalMismatchError: mismatchData.causalMismatchError.toFixed(3),
+                isCurious: mismatchData.isCurious || isLLMIntegrated || mismatchData.isBHVarianceMismatch
+            };
+
+            if (cycleCount > 0 && (history.length === 0 || history[history.length - 1].cycleCount !== cycleCount)) {
+                const statusIcon = historyData.isCurious ?
+                    (mismatchData.isReplicationNeeded && !isReplicationComplete ? '🔬 REPLICATION' :
+                        mismatchData.isBHVarianceMismatch ? '⚠️ VALIDATION GAP' :
+                            '🔬 KNOWLEDGE GAP') :
+                    (isReplicationComplete ? '✅ REPLICATED' :
+                        isLLMIntegrated ? '✅ VALIDATING' : '—');
+
+                const newRow = `
+                    <tr class="${historyData.isCurious ? 'font-semibold' : ''}" 
+                        style="background: ${historyData.isCurious ? 'rgba(138, 43, 226, 0.2)' : 'transparent'};">
+                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-200">${historyData.cycleCount}</td>
+                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-200">${historyData.avgCertainty}</td>
+                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-200">${historyData.attributableError}</td>
+                        <td class="px-4 py-2 whitespace-nowrap text-sm ${historyData.isCurious ? 'text-violet-400 font-bold' : 'text-gray-200'}">
+                            ${historyData.causalMismatchError}
+                        </td>
+                        <td class="px-4 py-2 whitespace-nowrap text-center text-sm">
+                            ${statusIcon}
+                        </td>
+                    </tr>
+                 `;
+                document.getElementById('history-body').insertAdjacentHTML('afterbegin', newRow);
+                history.push(historyData);
+            }
+        }
+
+        // --- Main Cycle Runner ---
+
+        function runCycle() {
+            // Only block if first curiosity (knowledge gap) hasn't been addressed
+            if (isCuriosityTriggered && !firstCuriosityFired) {
+                return;
+            }
+
+            cycleCount++;
+
+            KNOWN_CAUSAL_EDGES.forEach(updateEdge);
+
+            const mismatchData = calculateCausalMismatch();
+
+            updateUI(mismatchData);
+        }
+
+        function runMultipleCycles(count) {
+            for (let i = 0; i < count; i++) {
+                if (isCuriosityTriggered && !firstCuriosityFired) {
+                    break; // Only stop for first curiosity
+                }
+                runCycle();
+            }
+        }
+
+        // --- Initialization ---
+
+        function initialize() {
+            renderEdges();
+            const initialMismatch = calculateCausalMismatch();
+
+            document.getElementById('unmodeled_error_display').textContent = UNMODELED_FACTOR_ERROR.toFixed(2);
+            document.getElementById('total-error-value').textContent = initialMismatch.totalError.toFixed(2);
+            document.getElementById('total-error-bar').style.width = `${Math.min(100, initialMismatch.totalError * 100)}%`;
+
+            updateUI(initialMismatch);
+            document.getElementById('run-cycle-btn').addEventListener('click', runCycle);
+            document.getElementById('ask-llm-btn').addEventListener('click', askLLMForFactor);
+        }
+
+        document.addEventListener('DOMContentLoaded', initialize);
+    </script>
+</body>
+
+</html>
