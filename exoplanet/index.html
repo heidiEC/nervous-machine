@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exoplanet Perturbation Detection - Nervous Machine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-dark-bg: #0A0A1A;
+            --color-light-text: #E0E0F0;
+            --color-accent-indigo: #4C00FF;
+            --color-accent-violet: #8A2BE2;
+            --color-cyan: #00FFFF;
+            --color-card-bg: #1a1a33;
+            --color-orange: #FF6B35;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-dark-bg);
+            color: var(--color-light-text);
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(76, 0, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(138, 43, 226, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 255, 255, 0.05) 0%, transparent 50%);
+            z-index: -1;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            33% {
+                transform: translate(30px, -30px) rotate(120deg);
+            }
+
+            66% {
+                transform: translate(-20px, 20px) rotate(240deg);
+            }
+        }
+
+        .convergence-bar {
+            transition: width 0.3s ease-in-out;
+        }
+
+        .loading-dot {
+            animation: bounce 1s infinite;
+        }
+
+        .loading-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loading-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0);
+            }
+
+            40% {
+                transform: scale(1.0);
+            }
+        }
+
+        .observation-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        .tess-badge {
+            background: rgba(255, 107, 53, 0.2);
+            color: #FF6B35;
+            border: 1px solid rgba(255, 107, 53, 0.4);
+        }
+
+        .aavso-badge {
+            background: rgba(0, 255, 255, 0.2);
+            color: #00FFFF;
+            border: 1px solid rgba(0, 255, 255, 0.4);
+        }
+    </style>
+</head>
+
+<body class="p-4 sm:p-8">
+    <div id="app" class="max-w-6xl mx-auto">
+        <header class="text-center mb-10">
+            <div class="inline-block px-4 py-1 mb-3 rounded-full text-xs font-bold bg-orange-500 text-white">
+                🪐 Exoplanet Perturbation Detection Framework
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-white">
+                TOI-1234: Multi-Planet System Discovery
+            </h1>
+            <p class="mt-2 text-lg text-cyan-400">
+                Automated Detection of Orbital Perturbations via Residual Tracking
+            </p>
+            <p class="mt-1 text-sm text-gray-400">
+                TESS Candidate → RV Confirmation → Perturbation Analysis
+            </p>
+        </header>
+
+        <!-- System Context Panel -->
+        <div style="background: linear-gradient(135deg, var(--color-card-bg), rgba(26, 26, 51, 0.8));"
+            class="p-6 rounded-xl shadow-2xl mb-8 border-t-4 border-orange-500">
+            <h2 class="text-xl font-bold mb-4 text-white flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-orange-500" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                </svg>
+                System Configuration: TOI-1234
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div>
+                    <p class="text-gray-300 mb-2">
+                        <span class="font-semibold block text-white">TESS Observations:</span>
+                        <span id="tess-obs" class="text-orange-400 font-mono text-lg">127</span> transits
+                    </p>
+                    <p class="text-gray-300 mb-2">
+                        <span class="font-semibold block text-white">RV Measurements:</span>
+                        <span id="rv-obs" class="text-cyan-400 font-mono text-lg">45</span> epochs
+                    </p>
+                    <p class="text-gray-300">
+                        <span class="font-semibold block text-white">Current RMS Residual:</span>
+                        <span id="current-rms" class="text-violet-400 font-mono text-lg">4.8</span> m/s
+                    </p>
+                </div>
+                <div>
+                    <p class="text-gray-300 mb-2">
+                        <span class="font-semibold block text-white">Expected Photon Noise:</span>
+                        <span class="font-mono text-lg">2.1 m/s</span>
+                    </p>
+                    <p class="text-gray-300 mb-2">
+                        <span class="font-semibold block text-white">Curiosity Threshold (RMS):</span>
+                        <span class="font-mono text-lg">2.0 m/s</span>
+                    </p>
+                    <p class="text-gray-300">
+                        <span class="font-semibold block text-white">Consensus Threshold (Z):</span>
+                        <span class="font-mono text-lg">0.85</span>
+                    </p>
+                </div>
+            </div>
+            <div class="mt-4 p-3 rounded-lg"
+                style="background: rgba(10, 10, 26, 0.5); border: 1px solid rgba(255, 107, 53, 0.3);">
+                <p class="text-sm text-gray-300">
+                    <span class="font-bold text-orange-400">Science Question:</span>
+                    TESS detected a single transiting planet (P=8.4d, R=2.1 R⊕). Initial RV follow-up confirms the
+                    signal, but residuals remain high (4.8 m/s) despite good Keplerian fit convergence. Is there an
+                    outer companion inducing perturbations?
+                </p>
+            </div>
+        </div>
+
+        <!-- Observation Epoch & Controls -->
+        <div class="flex flex-col lg:flex-row justify-between items-center p-6 rounded-xl shadow-inner mb-8"
+            style="background: rgba(71, 71, 125, 0.407);">
+            <div class="text-2xl font-extrabold text-white mb-4 lg:mb-0">
+                Observation Epoch: <span id="epoch-count" class="text-cyan-400">0</span>
+            </div>
+            <div class="flex flex-wrap gap-2 w-full lg:w-auto justify-center lg:justify-end">
+                <button id="run-epoch-btn"
+                    class="text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 disabled:opacity-50"
+                    style="background: linear-gradient(135deg, var(--color-accent-indigo), var(--color-accent-violet));"
+                    title="Add one epoch of observations">
+                    Add Epoch (1)
+                </button>
+                <button id="run-five-epochs-btn"
+                    class="text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 disabled:opacity-50"
+                    style="background: linear-gradient(135deg, var(--color-accent-indigo), var(--color-accent-violet));"
+                    onclick="runMultipleEpochs(5)">
+                    Add (5)
+                </button>
+                <button id="run-ten-epochs-btn"
+                    class="text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 disabled:opacity-50"
+                    style="background: linear-gradient(135deg, var(--color-accent-indigo), var(--color-accent-violet));"
+                    onclick="runMultipleEpochs(10)">
+                    Add (10)
+                </button>
+                <button id="analyze-perturbation-btn"
+                    class="hidden text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 disabled:opacity-50"
+                    style="background: linear-gradient(135deg, #d900ff, var(--color-accent-violet));" disabled>
+                    🔍 Analyze Perturbation Signal
+                </button>
+            </div>
+        </div>
+
+        <!-- RMS & Detection Panel -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Perturbation Detection -->
+            <div class="lg:col-span-2 p-6 rounded-xl shadow-lg border-l-4 border-violet-500"
+                style="background: linear-gradient(135deg, var(--color-card-bg), rgba(26, 26, 51, 0.8));">
+                <h2 class="text-xl font-bold text-white mb-3 flex items-center">
+                    Perturbation Signal Detection
+                </h2>
+                <div class="p-4 rounded-lg"
+                    style="background: rgba(10, 10, 26, 0.5); border: 1px solid rgba(76, 0, 255, 0.3);">
+                    <p class="text-sm font-semibold text-gray-300 mb-2">Excess RMS (above photon noise):</p>
+                    <div class="flex items-center space-x-3">
+                        <div class="h-4 rounded-full flex-grow relative" style="background: rgba(100, 100, 120, 0.3);">
+                            <!-- Curiosity Threshold Marker (2.0 m/s) -->
+                            <div class="absolute h-full border-r-2 border-indigo-900 border-dashed"
+                                style="left: 20%; top: 0; transform: translateY(-1px);">
+                                <div class="absolute -top-5 -left-10 text-xs text-indigo-400 font-mono">threshold (2.0)
+                                </div>
+                            </div>
+                            <div id="perturbation-bar" class="convergence-bar h-full rounded-full"
+                                style="width: 0%; background: linear-gradient(to right, var(--color-accent-violet), #FF00FF);">
+                            </div>
+                        </div>
+                        <span id="perturbation-value" class="text-xl font-mono text-violet-400">0.0 m/s</span>
+                    </div>
+                </div>
+
+                <div id="curiosity-status"
+                    class="mt-4 p-3 rounded-lg text-center font-bold text-white transition-all duration-300"
+                    style="background: rgba(100, 100, 120, 0.3);">
+                    Fitting Keplerian Orbit (Single Planet Model)
+                </div>
+            </div>
+
+            <!-- Total RMS Error -->
+            <div class="p-6 rounded-xl shadow-lg border-l-4 border-pink-600"
+                style="background: linear-gradient(135deg, var(--color-card-bg), rgba(26, 26, 51, 0.8));">
+                <h2 class="text-xl font-bold text-white mb-3">RV RMS Residual</h2>
+                <div class="flex items-center space-x-3 mb-2">
+                    <div class="h-6 rounded-full flex-grow" style="background: rgba(100, 100, 120, 0.3);">
+                        <div id="total-rms-bar" class="convergence-bar h-full bg-pink-800 rounded-full"
+                            style="width: 48%"></div>
+                    </div>
+                    <span id="total-rms-value" class="text-3xl font-mono text-pink-600">4.8</span>
+                </div>
+                <p class="text-sm text-gray-400 italic">
+                    RMS decreases as Keplerian fit improves, but plateaus due to unmodeled companion.
+                </p>
+            </div>
+        </div>
+
+        <!-- LLM Analysis Panel -->
+        <div id="llm-panel" class="hidden p-6 rounded-xl shadow-lg border-2 border-teal-400 mb-8"
+            style="background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(26, 26, 51, 0.8));">
+            <h2 class="text-xl font-bold mb-4 text-white flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-cyan-400" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                Automated Perturbation Analysis
+            </h2>
+            <p id="llm-query" class="text-sm italic text-gray-300 mb-4">
+                <span class="font-bold text-cyan-400">Query:</span> "Single-planet Keplerian model converged (Z=0.87)
+                with stable orbital parameters (P=8.4d, K=12.3 m/s, e=0.14), but RMS residual remains 4.8 m/s (expected
+                photon noise: 2.1 m/s). Excess RMS = 2.7 m/s. Search literature for: TTVs, outer companions, Rømer
+                delays, stellar activity cycles. What is the most plausible explanation?"
+            </p>
+            <div id="llm-response-box" class="p-4 rounded-lg shadow"
+                style="background: rgba(10, 10, 26, 0.5); border: 1px solid rgba(0, 255, 255, 0.3);">
+                <p id="llm-response" class="text-gray-300 font-medium">... Awaiting Perturbation Signal ...</p>
+            </div>
+            <div id="llm-papers-found" class="hidden mt-4 p-4 rounded-lg" style="background: rgba(0, 255, 255, 0.05);">
+                <p class="text-sm font-semibold text-cyan-400 mb-2">Relevant Literature Found:</p>
+                <div id="cross-domain-papers" class="space-y-2"></div>
+            </div>
+        </div>
+
+        <!-- Orbital Parameters (Causal Factors) -->
+        <div class="p-6 rounded-xl shadow-lg mb-8"
+            style="background: linear-gradient(135deg, var(--color-card-bg), rgba(26, 26, 51, 0.8));">
+            <h2 class="text-xl font-bold mb-6 text-cyan-400 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Orbital Parameters (Dissipative Learning)
+            </h2>
+            <div id="parameter-container" class="space-y-6">
+                <!-- Parameter rows will be injected here -->
+            </div>
+        </div>
+
+        <!-- Observation History Table -->
+        <div class="mt-10">
+            <h2 class="text-xl font-bold mb-4 text-cyan-400">Observation History</h2>
+            <div class="overflow-x-auto rounded-xl shadow-lg"
+                style="background: linear-gradient(135deg, var(--color-card-bg), rgba(26, 26, 51, 0.8)); border: 1px solid rgba(76, 0, 255, 0.3);">
+                <table class="min-w-full divide-y" style="border-color: rgba(76, 0, 255, 0.3);">
+                    <thead style="background: rgba(10, 10, 26, 0.5);">
+                        <tr>
+                            <th class="px-4 py-3 text-left text-xs font-bold text-gray-300 uppercase tracking-wider">
+                                Epoch</th>
+                            <th class="px-4 py-3 text-left text-xs font-bold text-gray-300 uppercase tracking-wider">
+                                Avg Z</th>
+                            <th class="px-4 py-3 text-left text-xs font-bold text-gray-300 uppercase tracking-wider">
+                                RMS (m/s)</th>
+                            <th class="px-4 py-3 text-left text-xs font-bold text-gray-300 uppercase tracking-wider">
+                                Excess RMS</th>
+                            <th class="px-4 py-3 text-center text-xs font-bold text-gray-300 uppercase tracking-wider">
+                                Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-body" class="divide-y" style="border-color: rgba(76, 0, 255, 0.2);">
+                        <!-- History rows will be injected here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- Configuration Constants ---
+        const PHOTON_NOISE_FLOOR = 2.1; // m/s - expected noise from photometry/spectrograph
+        const UNMODELED_COMPANION_RMS = 2.7; // m/s - excess RMS from outer planet
+        const CURIOSITY_THRESHOLD = 2.0; // m/s - excess RMS that triggers curiosity
+        const HIGH_CERTAINTY_THRESHOLD = 0.85;
+        const BH_VARIANCE_THRESHOLD = 0.20;
+
+        // --- State Variables ---
+        let epochCount = 0;
+        let isCuriosityTriggered = false;
+        let isCompanionIntegrated = false;
+        let tessObservations = 127;
+        let rvObservations = 45;
+        let currentRMS = 4.8;
+
+        // Bradford Hill Criteria (adapted for exoplanet validation)
+        const BH_CRITERIA_NAMES = [
+            { id: 'strength', name: 'Signal Strength (K amp)', tooltip: 'RV semi-amplitude magnitude' },
+            { id: 'consistency', name: 'Phase Consistency', tooltip: 'Signal repeats at same phase across seasons' },
+            { id: 'temporality', name: 'Temporal Ordering', tooltip: 'Transit precedes RV phase' },
+            { id: 'plausibility', name: 'Keplerian Mechanics', tooltip: 'Fits orbital dynamics' },
+            { id: 'coherence', name: 'Multi-Instrument Agreement', tooltip: 'TESS + multiple RV spectrographs agree' },
+            { id: 'specificity', name: 'Spectral Line Stability', tooltip: 'Ca II H&K lines show no activity correlation' },
+            { id: 'gradient', name: 'Mass-Period Relation', tooltip: 'Follows known exoplanet demographics' },
+            { id: 'experiment', name: 'Independent Confirmation', tooltip: 'Multiple observatories confirm signal' },
+            { id: 'analogy', name: 'System Analogs', tooltip: 'Similar systems exist in confirmed catalog' }
+        ];
+
+        const initializeBradfordHill = () => {
+            const bh = {};
+            BH_CRITERIA_NAMES.forEach(({ id, name }) => {
+                let initialScore;
+                if (id === 'temporality' || id === 'plausibility') {
+                    initialScore = 0.75 + Math.random() * 0.15;
+                } else {
+                    initialScore = 0.55 + Math.random() * 0.35;
+                }
+                bh[id] = { score: initialScore, name: name };
+            });
+            return bh;
+        };
+
+        const initializeNewCompanionBradfordHill = () => {
+            const bh = {};
+            BH_CRITERIA_NAMES.forEach(({ id, name }) => {
+                const initialScore = 0.05 + Math.random() * 0.15;
+                bh[id] = { score: initialScore, name: name };
+            });
+            return bh;
+        };
+
+        // Orbital parameters (causal factors)
+        let ORBITAL_PARAMETERS = [
+            {
+                id: 'period',
+                name: 'Orbital Period (P)',
+                certainty: 0.30,
+                value: 8.2,
+                current_uncertainty: 0.3,
+                target_value: 8.42,
+                units: 'days',
+                tess_obs: 127,
+                rv_obs: 45,
+                bradfordHill: initializeBradfordHill(),
+                bh_std_dev: 0.0
+            },
+            {
+                id: 'semi_amplitude',
+                name: 'RV Semi-Amplitude (K)',
+                certainty: 0.30,
+                value: 10.5,
+                current_uncertainty: 2.1,
+                target_value: 12.3,
+                units: 'm/s',
+                tess_obs: 0,
+                rv_obs: 45,
+                bradfordHill: initializeBradfordHill(),
+                bh_std_dev: 0.0
+            },
+            {
+                id: 'eccentricity',
+                name: 'Eccentricity (e)',
+                certainty: 0.30,
+                value: 0.08,
+                current_uncertainty: 0.05,
+                target_value: 0.14,
+                units: '',
+                tess_obs: 127,
+                rv_obs: 45,
+                bradfordHill: initializeBradfordHill(),
+                bh_std_dev: 0.0
+            },
+        ];
+
+        let history = [];
+
+        // --- Core Learning Functions ---
+
+        const calculateLearningRate = (z) => {
+            return 1 / (1 + Math.exp(10 * (z - 0.5)));
+        };
+
+        function calculateStdDev(scores) {
+            if (scores.length <= 1) return 0;
+            const mean = scores.reduce((sum, score) => sum + score, 0) / scores.length;
+            const squaredDifferences = scores.map(score => Math.pow(score - mean, 2));
+            const variance = squaredDifferences.reduce((sum, diff) => sum + diff, 0) / scores.length;
+            return Math.sqrt(variance);
+        }
+
+        function updateParameter(param) {
+            const eta = calculateLearningRate(param.certainty);
+            const valueDifference = param.target_value - param.value;
+
+            const simulatedErrorSignal = Math.abs(valueDifference) * 0.5 + Math.random() * 0.05;
+
+            const direction = valueDifference > 0 ? 1 : -1;
+            const deltaValue = eta * simulatedErrorSignal * direction * 0.1;
+            param.value += deltaValue;
+
+            // Update Certainty (Z)
+            const certaintyGain = (1 - param.certainty) * eta * 0.35;
+            param.certainty += certaintyGain;
+            param.certainty = Math.min(0.99, param.certainty);
+
+            // Update uncertainty
+            param.current_uncertainty = Math.max(0.01, simulatedErrorSignal * 0.8 * (1 - param.certainty));
+
+            if (param.id === 'companion-period' && param.certainty > 0.9) {
+                param.current_uncertainty = Math.max(0.005, param.current_uncertainty * 0.5);
+            }
+
+            // Simulate new observations
+            const newTESS = (param.tess_obs > 0) ? Math.floor(Math.random() * 3) + 1 : 0;
+            const newRV = (param.rv_obs > 0) ? Math.floor(Math.random() * 2) : 0;
+            param.tess_obs += newTESS;
+            param.rv_obs += newRV;
+            tessObservations += newTESS;
+            rvObservations += newRV;
+
+            // Update Bradford Hill scores
+            let bhScores = [];
+            Object.keys(param.bradfordHill).forEach(key => {
+                let bhScoreGain = certaintyGain * 0.2;
+
+                // Simulate challenges in getting independent confirmation
+                if (param.id === 'period' && param.certainty > 0.7 && key === 'experiment') {
+                    bhScoreGain *= 0.1;
+                }
+
+                param.bradfordHill[key].score += bhScoreGain * (1 - param.bradfordHill[key].score);
+                param.bradfordHill[key].score = Math.min(1.0, param.bradfordHill[key].score);
+                bhScores.push(param.bradfordHill[key].score);
+            });
+
+            param.bh_std_dev = calculateStdDev(bhScores);
+        }
+
+        // --- Perturbation Detection ---
+
+        function calculatePerturbationSignal() {
+            const avgCertainty = ORBITAL_PARAMETERS.reduce((sum, p) => sum + p.certainty, 0) / ORBITAL_PARAMETERS.length;
+            const isStable = avgCertainty > HIGH_CERTAINTY_THRESHOLD;
+
+            // RMS decreases as parameters converge, but plateaus at photon noise + companion signal
+            const learningProgress = avgCertainty;
+            const fittedRMS = 4.8 * (1 - learningProgress * 0.5); // Decreases from 4.8 to ~2.4
+            currentRMS = Math.max(PHOTON_NOISE_FLOOR + UNMODELED_COMPANION_RMS, fittedRMS);
+
+            const excessRMS = Math.max(0, currentRMS - PHOTON_NOISE_FLOOR);
+            const isPerturbationSignificant = excessRMS > CURIOSITY_THRESHOLD;
+
+            let isCurious = false;
+            let statusMessage = 'Fitting Keplerian Orbit (Single Planet Model)';
+            let statusClass = 'bg-slate-200';
+
+            if (isCompanionIntegrated) {
+                statusMessage = 'Two-Planet Model Converging. RMS Approaching Photon Noise Floor.';
+                statusClass = 'bg-cyan-900 text-white';
+            } else if (isStable && isPerturbationSignificant) {
+                isCurious = true;
+                isCuriosityTriggered = true;
+                statusMessage = 'PERTURBATION DETECTED: Keplerian Fit Stable But Excess RMS Persists!';
+                statusClass = 'text-white font-extrabold animate-pulse';
+            } else if (isStable) {
+                statusMessage = 'Keplerian Parameters Converged. Checking for Perturbations...';
+                statusClass = 'text-white';
+            }
+
+            return {
+                currentRMS,
+                excessRMS,
+                isCurious,
+                isStable,
+                avgCertainty,
+                statusMessage,
+                statusClass
+            };
+        }
+
+        // --- LLM Perturbation Analysis ---
+
+        function analyzePerturbation() {
+            const analyzeBtn = document.getElementById('analyze-perturbation-btn');
+            const runBtn = document.getElementById('run-epoch-btn');
+            const llmResponseBox = document.getElementById('llm-response');
+
+            analyzeBtn.disabled = true;
+            runBtn.disabled = true;
+            llmResponseBox.innerHTML = `<span class="flex items-center text-teal-600 font-bold">
+                Searching literature for: TTVs, outer companions, Rømer delays, stellar activity...
+                <span class="loading-dot ml-2 bg-teal-600 h-2 w-2 rounded-full"></span>
+                <span class="loading-dot ml-1 bg-teal-600 h-2 w-2 rounded-full"></span>
+                <span class="loading-dot ml-1 bg-teal-600 h-2 w-2 rounded-full"></span>
+            </span>`;
+
+            setTimeout(() => {
+                const companionPeriod = 156;
+                const companionK = 4.2;
+
+                const literaturePapers = [
+                    { title: 'Long-period companions in compact systems: Population analysis', authors: 'Winn et al.', year: 2023, domain: 'Exoplanet Demographics', citations: 89 },
+                    { title: 'Detecting non-transiting planets via RV residuals', authors: 'Kipping & Teachey', year: 2022, domain: 'Detection Methods', citations: 134 },
+                    { title: 'Multi-planet systems with period ratios near 20:1', authors: 'Fabrycky et al.', year: 2024, domain: 'Architecture Studies', citations: 67 }
+                ];
+
+                llmResponseBox.innerHTML = `
+                    <span class="font-bold text-cyan-400">Hypothesis Generated:</span>
+                    <p class="mt-1 text-lg font-mono text-white">Outer Non-Transiting Companion (P ≈ ${companionPeriod}d, K ≈ ${companionK} m/s)</p>
+                    <p class="text-sm italic text-gray-300 mt-2">
+                        Analysis: The 2.7 m/s excess RMS with stable Keplerian parameters suggests an <strong>outer companion</strong> inducing long-period RV variations. Cross-domain literature search reveals similar systems where period ratio P_outer/P_inner ≈ 18-20 show this RMS signature. The companion is likely non-transiting (high impact parameter) but detectable via RV perturbations. Recommended action: Extend RV baseline to 300+ days to phase-fold the outer signal.
+                    </p>
+                `;
+
+                document.getElementById('llm-papers-found').classList.remove('hidden');
+                const papersList = document.getElementById('cross-domain-papers');
+                papersList.innerHTML = literaturePapers.map(paper => `
+                    <div class="text-sm p-2 rounded" style="background: rgba(0, 255, 255, 0.05); border-left: 3px solid #00FFFF;">
+                        <p class="font-semibold text-white">${paper.title}</p>
+                        <p class="text-xs text-gray-400">${paper.authors} (${paper.year}) • ${paper.domain} • ${paper.citations} citations</p>
+                    </div>
+                `).join('');
+
+                integrateCompanion(companionPeriod, companionK, literaturePapers);
+
+                analyzeBtn.classList.add('hidden');
+                runBtn.disabled = false;
+            }, 3500);
+        }
+
+        function integrateCompanion(period, semiAmplitude, papers) {
+            isCompanionIntegrated = true;
+
+            ORBITAL_PARAMETERS.push({
+                id: 'companion-period',
+                name: `Outer Companion Period (P_c)`,
+                certainty: 0.05,
+                value: period * 0.8,
+                current_uncertainty: period * 0.3,
+                target_value: period,
+                units: 'days',
+                tess_obs: 0,
+                rv_obs: 12,
+                bradfordHill: initializeNewCompanionBradfordHill(),
+                bh_std_dev: 0.0
+            });
+
+            ORBITAL_PARAMETERS.push({
+                id: 'companion-K',
+                name: `Outer Companion K (K_c)`,
+                certainty: 0.05,
+                value: semiAmplitude * 0.6,
+                current_uncertainty: semiAmplitude * 0.5,
+                target_value: semiAmplitude,
+                units: 'm/s',
+                tess_obs: 0,
+                rv_obs: 12,
+                bradfordHill: initializeNewCompanionBradfordHill(),
+                bh_std_dev: 0.0
+            });
+
+            renderParameters();
+            updateUI(calculatePerturbationSignal());
+        }
+
+        // --- Rendering Functions ---
+
+        function renderBradfordHill(param) {
+            const bhArray = Object.values(param.bradfordHill);
+
+            return `
+                <div class="mt-4 pt-4" style="border-top: 1px solid rgba(76, 0, 255, 0.3);">
+                    <div class="flex justify-between items-center text-sm font-semibold text-gray-300 mb-2">
+                        <span>Bradford Hill Validation Criteria</span>
+                        <span class="text-xs ${param.bh_std_dev > BH_VARIANCE_THRESHOLD ? 'text-pink-600' : 'text-gray-400'} font-mono">
+                            Variance: ${param.bh_std_dev.toFixed(3)}
+                        </span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 text-xs">
+                        ${bhArray.map(criterion => `
+                            <div class="flex flex-col">
+                                <span class="text-gray-400 truncate" title="${criterion.name}">${criterion.name}</span>
+                                <div class="h-2 rounded-full mt-0.5" style="background: rgba(100, 100, 120, 0.3);">
+                                    <div class="convergence-bar h-full rounded-full" style="width: ${(criterion.score * 100).toFixed(0)}%; background: linear-gradient(to right, var(--color-accent-indigo), var(--color-accent-violet));"></div>
+                                </div>
+                                <span class="font-mono text-right text-xs mt-0.5 text-gray-300">${(criterion.score * 100).toFixed(0)}%</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderParameters() {
+            const container = document.getElementById('parameter-container');
+            container.innerHTML = ORBITAL_PARAMETERS.map(param => {
+                const isNewCompanion = param.id.includes('companion');
+
+                return `
+                <div class="p-4 rounded-lg shadow-md transition duration-300" 
+                     style="background: ${isNewCompanion ? 'linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(26, 26, 51, 0.8))' : 'rgba(10, 10, 26, 0.5)'}; 
+                            border: 1px solid ${isNewCompanion ? 'rgba(0, 255, 255, 0.5)' : 'rgba(76, 0, 255, 0.3)'};">
+
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <span class="text-lg font-bold ${isNewCompanion ? 'text-cyan-400' : 'text-white'}">${param.name}</span>
+                            <div class="flex items-center gap-2 mt-1">
+                                ${param.tess_obs > 0 ? `<span class="observation-badge tess-badge">${param.tess_obs} TESS</span>` : ''}
+                                ${param.rv_obs > 0 ? `<span class="observation-badge aavso-badge">${param.rv_obs} RV</span>` : ''}
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-sm font-semibold text-gray-300 block">
+                                Certainty (Z): 
+                                <span class="font-mono text-lg text-cyan-400">
+                                    ${(param.certainty * 100).toFixed(1)}%
+                                </span>
+                            </span>
+                            <span class="text-xs font-medium text-gray-400">
+                                Value: 
+                                <span class="font-mono text-white">${param.value.toFixed(2)} ${param.units}</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="h-3 rounded-full mb-3" style="background: rgba(100, 100, 120, 0.3);">
+                        <div class="convergence-bar h-full rounded-full" 
+                             style="width: ${(param.certainty * 100).toFixed(1)}%; 
+                                    background: ${isNewCompanion ? 'linear-gradient(to right, #00FFFF, #00CCCC)' : 'linear-gradient(to right, var(--color-accent-indigo), var(--color-accent-violet))'}">
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center text-sm mb-2">
+                        <span class="text-gray-300">
+                            Uncertainty: 
+                            <span class="font-mono text-white font-medium">±${param.current_uncertainty.toFixed(3)} ${param.units}</span>
+                        </span>
+                        <span class="text-gray-300 italic">
+                            Target: 
+                            <span class="font-mono text-white">${param.target_value.toFixed(2)} ${param.units}</span>
+                        </span>
+                    </div>
+
+                    ${renderBradfordHill(param)}
+
+                </div>
+            `;
+            }).join('');
+        }
+
+        function updateUI(perturbationData) {
+            document.getElementById('epoch-count').textContent = epochCount;
+            document.getElementById('tess-obs').textContent = tessObservations;
+            document.getElementById('rv-obs').textContent = rvObservations;
+
+            // Update RMS displays
+            document.getElementById('current-rms').textContent = currentRMS.toFixed(1);
+            document.getElementById('total-rms-value').textContent = currentRMS.toFixed(1);
+            const rmsBarWidth = Math.min(100, (currentRMS / 10) * 100);
+            document.getElementById('total-rms-bar').style.width = `${rmsBarWidth}%`;
+
+            // Update Perturbation Signal
+            document.getElementById('perturbation-value').textContent = `${perturbationData.excessRMS.toFixed(1)} m/s`;
+            const perturbBarWidth = Math.min(100, (perturbationData.excessRMS / 10) * 100);
+            document.getElementById('perturbation-bar').style.width = `${perturbBarWidth}%`;
+
+            // Update Status
+            const statusDiv = document.getElementById('curiosity-status');
+            statusDiv.textContent = perturbationData.statusMessage;
+            statusDiv.className = `mt-4 p-3 rounded-lg text-center font-bold transition-all duration-300 ${perturbationData.statusClass}`;
+            if (!perturbationData.statusClass.includes('bg-')) {
+                statusDiv.style.background = 'rgba(100, 100, 120, 0.3)';
+            }
+            if (perturbationData.statusClass.includes('animate-pulse')) {
+                statusDiv.style.background = 'linear-gradient(135deg, #8A2BE2, #FF4DFF)';
+            }
+
+            // Control buttons
+            const runBtn = document.getElementById('run-epoch-btn');
+            const runFiveBtn = document.getElementById('run-five-epochs-btn');
+            const runTenBtn = document.getElementById('run-ten-epochs-btn');
+            const analyzeBtn = document.getElementById('analyze-perturbation-btn');
+            const llmPanel = document.getElementById('llm-panel');
+
+            if (perturbationData.isCurious && !isCompanionIntegrated) {
+                if (runBtn) runBtn.disabled = true;
+                if (runFiveBtn) runFiveBtn.disabled = true;
+                if (runTenBtn) runTenBtn.disabled = true;
+                if (analyzeBtn) {
+                    analyzeBtn.classList.remove('hidden');
+                    analyzeBtn.disabled = false;
+                }
+                if (llmPanel) llmPanel.classList.remove('hidden');
+            } else {
+                if (analyzeBtn) analyzeBtn.classList.add('hidden');
+                if (llmPanel && !isCompanionIntegrated) llmPanel.classList.add('hidden');
+                if (runBtn) runBtn.disabled = false;
+                if (runFiveBtn) runFiveBtn.disabled = false;
+                if (runTenBtn) runTenBtn.disabled = false;
+            }
+
+            renderParameters();
+
+            // History
+            if (epochCount > 0 && (history.length === 0 || history[history.length - 1].epochCount !== epochCount)) {
+                const statusIcon = perturbationData.isCurious ? '🔍 ANALYZING' : (isCompanionIntegrated ? '✅ TWO-PLANET' : '—');
+
+                const newRow = `
+                    <tr class="${perturbationData.isCurious ? 'font-semibold' : ''}" 
+                        style="background: ${perturbationData.isCurious ? 'rgba(138, 43, 226, 0.2)' : 'transparent'};">
+                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-200">${epochCount}</td>
+                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-200">${perturbationData.avgCertainty.toFixed(3)}</td>
+                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-200">${currentRMS.toFixed(2)}</td>
+                        <td class="px-4 py-2 whitespace-nowrap text-sm ${perturbationData.isCurious ? 'text-violet-400 font-bold' : 'text-gray-200'}">
+                            ${perturbationData.excessRMS.toFixed(2)}
+                        </td>
+                        <td class="px-4 py-2 whitespace-nowrap text-center text-sm">
+                            ${statusIcon}
+                        </td>
+                    </tr>
+                 `;
+                document.getElementById('history-body').insertAdjacentHTML('afterbegin', newRow);
+                history.push({ epochCount, ...perturbationData });
+            }
+        }
+
+        // --- Main Epoch Runner ---
+
+        function runEpoch() {
+            if (isCuriosityTriggered && !isCompanionIntegrated) {
+                return;
+            }
+
+            epochCount++;
+
+            ORBITAL_PARAMETERS.forEach(updateParameter);
+
+            const perturbationData = calculatePerturbationSignal();
+
+            updateUI(perturbationData);
+        }
+
+        function runMultipleEpochs(count) {
+            for (let i = 0; i < count; i++) {
+                if (isCuriosityTriggered && !isCompanionIntegrated) {
+                    break;
+                }
+                runEpoch();
+            }
+        }
+
+        // --- Initialization ---
+
+        function initialize() {
+            renderParameters();
+            const initialPerturbation = calculatePerturbationSignal();
+            updateUI(initialPerturbation);
+
+            document.getElementById('run-epoch-btn').addEventListener('click', runEpoch);
+            document.getElementById('analyze-perturbation-btn').addEventListener('click', analyzePerturbation);
+        }
+
+        document.addEventListener('DOMContentLoaded', initialize);
+    </script>
+</body>
+
+</html>
