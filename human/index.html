@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E2E Causal Autonomy Simulation (Nervous Human)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-dark-bg: #0A0A1A;
+            --color-light-text: #E0E0F0;
+            --color-accent-indigo: #4C00FF;
+            --color-accent-violet: #8A2BE2;
+            --color-gradient-start: #4c00ff;
+            --color-gradient-end: #8a2be2;
+            --color-cyan: #00FFFF;
+            --color-card-bg: #1a1a33;
+            --color-autonomy: #00FF99;
+            /* New color for Autonomy focus */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-dark-bg);
+            color: var(--color-light-text);
+            position: relative;
+        }
+
+        /* (Re-using original floating background effect for style) */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(76, 0, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(138, 43, 226, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 255, 153, 0.05) 0%, transparent 50%);
+            z-index: -1;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            33% {
+                transform: translate(30px, -30px) rotate(120deg);
+            }
+
+            66% {
+                transform: translate(-20px, 20px) rotate(240deg);
+            }
+        }
+
+        .convergence-bar {
+            transition: width 0.3s ease-in-out;
+        }
+
+        .certainty-text {
+            min-width: 4rem;
+        }
+
+        /* Loading dots animation for LLM */
+        .loading-dot {
+            animation: bounce 1s infinite;
+        }
+
+        .loading-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loading-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0);
+            }
+
+            40% {
+                transform: scale(1.0);
+            }
+        }
+    </style>
+</head>
+
+<body class="p-4 sm:p-8">
+    <div id="app" class="max-w-4xl mx-auto">
+        <header class="text-center mb-10">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-white">
+                Nervous Human: Causal Autonomy Framework
+            </h1>
+            <p class="mt-2 text-lg" style="color: var(--color-autonomy);">
+                Societal Prior Alignment, Well-being Error, and LLM-Driven Value Capture
+            </p>
+        </header>
+
+        <div style="background: linear-gradient(135deg, var(--color-card-bg), rgba(26, 26, 51, 0.8)); border-top: 4px solid var(--color-autonomy);"
+            class="p-6 rounded-xl shadow-2xl mb-8">
+            <h2 class="text-xl font-bold mb-4 text-white">Model Parameters (Personal Well-being)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                <p class="text-gray-300">
+                    <span class="font-semibold block text-white">Systemic Friction Error:</span>
+                    <span id="unmodeled_error_display" class="font-mono text-lg"
+                        style="color: var(--color-autonomy);">0.40</span>
+                </p>
+                <p class="text-gray-300">
+                    <span class="font-semibold block text-white">Curiosity Threshold:</span>
+                    <span class="font-mono text-lg">0.20</span>
+                </p>
+                <p class="text-gray-300">
+                    <span class="font-semibold block text-white">Action Stability Threshold (Z):</span>
+                    <span class="font-mono text-lg">0.85</span>
+                </p>
+            </div>
+            <p class="mt-4 text-sm text-gray-400 italic">
+                The core unexplained **Personal Well-being Error** is initially **0.40** (Systemic Friction).
+            </p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row justify-between items-center p-6 rounded-xl shadow-inner mb-8"
+            style="background: rgba(0, 255, 153, 0.2);">
+            <div class="text-2xl font-extrabold text-white mb-4 sm:mb-0">
+                Decision Cycle: <span id="cycle-count" style="color: var(--color-autonomy);">0</span>
+            </div>
+            <div class="flex space-x-4 w-full sm:w-auto">
+                <div class="flex space-x-2 w-full sm:w-auto">
+                    <button id="run-cycle-btn"
+                        class="text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 disabled:opacity-50"
+                        style="background: linear-gradient(135deg, var(--color-accent-indigo), var(--color-accent-violet));"
+                        title="Step through one cycle at a time to see detailed sigmoid learning behavior">
+                        Step (1)
+                    </button>
+                    <button id="run-five-cycles-btn"
+                        class="text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 disabled:opacity-50"
+                        style="background: linear-gradient(135deg, var(--color-accent-indigo), var(--color-accent-violet));"
+                        title="Run 5 cycles at once" onclick="runMultipleCycles(5)">
+                        Run (5)
+                    </button>
+                    <button id="run-ten-cycles-btn"
+                        class="text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 disabled:opacity-50"
+                        style="background: linear-gradient(135deg, var(--color-accent-indigo), var(--color-accent-violet));"
+                        title="Run 10 cycles at once to quickly reach curiosity trigger"
+                        onclick="runMultipleCycles(10)">
+                        Run (10)
+                    </button>
+                </div>
+                <button id="ask-llm-btn"
+                    class="hidden text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-200 w-full sm:w-auto disabled:opacity-50"
+                    style="background: linear-gradient(135deg, var(--color-autonomy), #00CCCC);" disabled>
+                    Analyze Well-being Gap
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <div class="lg:col-span-2 p-6 rounded-xl shadow-lg border-l-4 border-solid"
+                style="background: linear-gradient(135deg, var(--color-card-bg), rgba(26, 26, 51, 0.8)); border-left-color: var(--color-autonomy);">
+                <h2 class="text-xl font-bold text-white mb-3 flex items-center">
+                    Personal Mismatch ($\epsilon_{\text{P}}$ Mismatch)
+                </h2>
+                <div class="p-4 rounded-lg"
+                    style="background: rgba(10, 10, 26, 0.5); border: 1px solid rgba(0, 255, 153, 0.3);">
+                    <p class="text-sm font-semibold text-gray-300 mb-2">Unexplained Well-being Gap (Curiosity Trigger):
+                    </p>
+                    <div class="flex items-center space-x-3">
+                        <div class="h-4 rounded-full flex-grow relative" style="background: rgba(100, 100, 120, 0.3);">
+                            <div class="absolute h-full border-r-2 border-green-700 border-dashed"
+                                style="left: 20%; top: 0; transform: translateY(-1px);"></div>
+                            <div id="mismatch-bar" class="convergence-bar h-full rounded-full"
+                                style="width: 0%; background: linear-gradient(to right, var(--color-autonomy), #00CCCC);">
+                            </div>
+                        </div>
+                        <span id="mismatch-value" class="certainty-text text-xl font-mono"
+                            style="color: var(--color-autonomy);">0.000</span>
+                    </div>
+                </div>
+
+                <div id="curiosity-status"
+                    class="mt-4 p-3 rounded-lg text-center font-bold text-white transition-all duration-300"
+                    style="background: rgba(100, 100, 120, 0.3);">
+                    System in Status Quo Learning (Action Patterns Unstable)
+                </div>
+            </div>
+
+            <div class="p-6 rounded-xl shadow-lg border-l-4 border-solid"
+                style="background: linear-gradient(135deg, var(--color-card-bg), rgba(26, 26, 51, 0.8)); border-left-color: var(--color-accent-violet);">
+                <h2 class="text-xl font-bold text-white mb-3">Total Well-being Error ($\epsilon_{\text{P}}$)</h2>
+                <div class="flex items-center space-x-3">
+                    <div class="h-6 rounded-full flex-grow" style="background: rgba(100, 100, 120, 0.3);">
+                        <div id="total-error-bar" class="convergence-bar h-full bg-red-600 rounded-full"
+                            style="width: 80%"></div>
+                    </div>
+                    <span id="total-error-value" class="certainty-text text-3xl font-mono text-red-600">0.80</span>
+                </div>
+                <p class="mt-2 text-sm text-gray-400 italic">
+                    The observable error decreases, but stabilizes due to the fixed **Systemic Friction** factor.
+                </p>
+            </div>
+        </div>
+
+        <div id="llm-panel" class="hidden p-6 rounded-xl shadow-lg border-2"
+            style="background: linear-gradient(135deg, rgba(0, 255, 153, 0.1), rgba(26, 26, 51, 0.8)); border-color: var(--color-autonomy);">
+            <h2 class="text-xl font-bold mb-4 text-white flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" style="color: var(--color-autonomy);"
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M3.636 5.636l.707.707m0 12.728l.707-.707M6.364 17.364l-.707.707M16 12H4m12 0a4 4 0 014 4v2m-2-2a4 4 0 00-4-4m5 0v1a2 2 0 01-2 2h-1.293c-.695 0-1.36.276-1.848.764l-1.04 1.04a2 2 0 01-2.828 0l-1.04-1.04a2 2 0 00-1.848-.764H7a2 2 0 01-2-2v-1" />
+                </svg>
+                LLM Agent Hypothesis (Curiosity Fired)
+            </h2>
+            <p id="llm-query" class="text-sm italic text-gray-300 mb-4">Query sent to LLM: "I have stabilized my known
+                actions (high Z) but my well-being error ($\epsilon_{\text{P}}$) persists at 0.40. What is the most
+                plausible **unmodeled Causal Prior** (e.g., Value Capture, Societal Alignment)?"</p>
+            <div id="llm-response-box" class="p-4 rounded-lg shadow"
+                style="background: rgba(10, 10, 26, 0.5); border: 1px solid rgba(0, 255, 153, 0.3);">
+                <p id="llm-response" class="text-gray-300 font-medium italic">... Awaiting Curiosity Signal ...</p>
+            </div>
+        </div>
+
+        <div class="p-6 rounded-xl shadow-lg"
+            style="background: linear-gradient(135deg, var(--color-card-bg), rgba(26, 26, 51, 0.8));">
+            <h2 class="text-xl font-bold mb-6" style="color: var(--color-autonomy);">Known Causal Factors (Status Quo
+                Learning)</h2>
+            <div id="edge-container" class="space-y-8">
+            </div>
+        </div>
+
+        <div class="mt-10">
+            <h2 class="text-xl font-bold mb-4" style="color: var(--color-autonomy);">Autonomy History Log</h2>
+            <div class="overflow-x-auto rounded-xl shadow-lg"
+                style="background: linear-gradient(135deg, var(--color-card-bg), rgba(26, 26, 51, 0.8)); border: 1px solid rgba(76, 0, 255, 0.3);">
+                <table class="min-w-full divide-y" style="border-color: rgba(76, 0, 255, 0.3);">
+                    <thead style="background: rgba(10, 10, 26, 0.5);">
+                        <tr>
+                            <th class="px-4 py-3 text-left text-xs font-bold text-gray-300 uppercase tracking-wider">
+                                Cycle</th>
+                            <th class="px-4 py-3 text-left text-xs font-bold text-gray-300 uppercase tracking-wider">
+                                Avg Z</th>
+                            <th class="px-4 py-3 text-left text-xs font-bold text-gray-300 uppercase tracking-wider">
+                                Attributable Error</th>
+                            <th class="px-4 py-3 text-left text-xs font-bold text-gray-300 uppercase tracking-wider">
+                                Causal Mismatch</th>
+                            <th class="px-4 py-3 text-center text-xs font-bold text-gray-300 uppercase tracking-wider">
+                                Curiosity Fired?</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-body" class="divide-y" style="border-color: rgba(76, 0, 255, 0.2);">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- Configuration Constants ---
+        let UNMODELED_FACTOR_ERROR = 0.40; // Systemic Risk (Corporate/Societal Friction)
+        const EXPLAINED_ERROR_BY_LLM = 0.35; // How much error the new Causal Prior (Value Capture) explains
+        const CURIOSITY_MISMATCH_THRESHOLD = 0.20;
+        const HIGH_CERTAINTY_THRESHOLD = 0.85;
+        const BH_VARIANCE_THRESHOLD = 0.20;
+
+        // --- State Variables ---
+        let cycleCount = 0;
+        let isCuriosityTriggered = false;
+        let isLLMIntegrated = false;
+
+        // Bradford Hill Criteria names (9)
+        const BH_CRITERIA_NAMES = [
+            { id: 'strength', name: 'Strength (Effect Size)' },
+            { id: 'consistency', name: 'Consistency (Reproducibility)' },
+            { id: 'temporality', name: 'Temporality (Ordering)' },
+            { id: 'plausibility', name: 'Plausibility (Mechanism)' },
+            { id: 'coherence', name: 'Coherence (Fits Knowledge)' },
+            { id: 'specificity', name: 'Specificity (Unique)' },
+            { id: 'gradient', name: 'Dose-Response (Gradient)' },
+            { id: 'experiment', name: 'Experiment (Evidence)' },
+            { id: 'analogy', name: 'Analogy (Similarity)' }
+        ];
+
+        /**
+         * Initializes Bradford Hill scores for a *known* factor.
+         */
+        const initializeBradfordHill = () => {
+            const bh = {};
+            BH_CRITERIA_NAMES.forEach(({ id, name }) => {
+                let initialScore;
+                if (id === 'temporality' || id === 'plausibility') {
+                    initialScore = 0.7 + Math.random() * 0.2;
+                } else {
+                    initialScore = 0.5 + Math.random() * 0.4; // 0.5 to 0.9
+                }
+                bh[id] = { score: initialScore, name: name };
+            });
+            return bh;
+        };
+
+        /**
+         * Initializes Bradford Hill scores for a *new, unvalidated* factor.
+         */
+        const initializeNewFactorBradfordHill = () => {
+            const bh = {};
+            BH_CRITERIA_NAMES.forEach(({ id, name }) => {
+                const initialScore = 0.05 + Math.random() * 0.2; // 0.05 to 0.25
+                bh[id] = { score: initialScore, name: name };
+            });
+            return bh;
+        };
+
+        // Initial Causal Factors for the Autonomous Human (FIXED initial errors)
+        let KNOWN_CAUSAL_EDGES = [
+            // Initial current_error is set high, mimicking a high initial contribution to the total error
+            { id: 'high_value_skill', name: 'Time on High-Value Skill (Growth)', certainty: 0.30, weight: 0.1, current_error: 0.30, target_weight: 0.55, bradfordHill: initializeBradfordHill(), bh_std_dev: 0.0 },
+            { id: 'corporate_compliance', name: 'Corporate Compliance Hours (Maintenance)', certainty: 0.30, weight: -0.1, current_error: 0.25, target_weight: -0.40, bradfordHill: initializeBradfordHill(), bh_std_dev: 0.0 },
+            { id: 'health_investment', name: 'Investment in Physical/Mental Health', certainty: 0.30, weight: 0.15, current_error: 0.20, target_weight: 0.35, bradfordHill: initializeBradfordHill(), bh_std_dev: 0.0 },
+        ]; // Total initial Attributable Error = 0.30 + 0.25 + 0.20 = 0.75
+
+        let history = [];
+
+        // --- Core Nervous Machine Functions ---
+
+        /**
+         * Calculates the learning rate (eta) based on Certainty (Z).
+         */
+        const calculateLearningRate = (z) => {
+            return 1 / (1 + Math.exp(10 * (z - 0.5)));
+        };
+
+        /**
+         * Calculates the standard deviation of an array of scores.
+         */
+        function calculateStdDev(scores) {
+            if (scores.length <= 1) return 0;
+            const mean = scores.reduce((sum, score) => sum + score, 0) / scores.length;
+            const squaredDifferences = scores.map(score => Math.pow(score - mean, 2));
+            const variance = squaredDifferences.reduce((sum, diff) => sum + diff, 0) / scores.length;
+            return Math.sqrt(variance);
+        }
+
+        /**
+         * Simulates one Dissipative Learning step for a single edge.
+         */
+        function updateEdge(edge) {
+            const eta = calculateLearningRate(edge.certainty);
+            const weightDifference = edge.target_weight - edge.weight;
+
+            const simulatedErrorSignal = Math.abs(weightDifference) * 0.5 + Math.random() * 0.05;
+
+            const direction = weightDifference > 0 ? 1 : -1;
+            const deltaW = eta * simulatedErrorSignal * direction;
+            edge.weight += deltaW;
+            edge.weight = Math.max(-1, Math.min(1, edge.weight));
+
+            const certaintyGain = (1 - edge.certainty) * eta * 0.35;
+            edge.certainty += certaintyGain;
+            edge.certainty = Math.min(0.99, edge.certainty);
+
+            const baseReduction = (edge.id === 'llm-prior') ? 0.7 : 0.8;
+            edge.current_error = Math.max(0.01, simulatedErrorSignal * baseReduction * (1 - edge.certainty));
+
+            if (edge.id === 'llm-prior' && edge.certainty > 0.9) {
+                edge.current_error = Math.max(0.005, edge.current_error * 0.5);
+            }
+
+            // Update Bradford Hill Criteria Scores
+            let bhScores = [];
+            Object.keys(edge.bradfordHill).forEach(key => {
+                let bhScoreGain = certaintyGain * 0.2;
+
+                if (edge.id === 'high_value_skill' && edge.certainty > 0.7 && key !== 'temporality' && key !== 'plausibility') {
+                    bhScoreGain *= 0.1;
+                }
+
+                edge.bradfordHill[key].score += bhScoreGain * (1 - edge.bradfordHill[key].score);
+                edge.bradfordHill[key].score = Math.min(1.0, edge.bradfordHill[key].score);
+                bhScores.push(edge.bradfordHill[key].score);
+            });
+
+            edge.bh_std_dev = calculateStdDev(bhScores);
+        }
+
+        // --- Curiosity Algorithm Core (FIXED: Logic is correct, but re-checked) ---
+
+        function calculateCausalMismatch() {
+            // Attributable Error: The portion of the total error explained/resolved by the known actions
+            const attributableError = KNOWN_CAUSAL_EDGES.reduce((sum, e) => sum + e.current_error, 0);
+
+            // Total Error: The observable Well-being error
+            const totalError = attributableError + UNMODELED_FACTOR_ERROR;
+
+            // Causal Mismatch: The unmodeled systemic friction that current learning cannot resolve
+            const causalMismatchError = Math.max(0, totalError - attributableError); // Always UNMODELED_FACTOR_ERROR
+
+            const avgCertainty = KNOWN_CAUSAL_EDGES.reduce((sum, e) => sum + e.certainty, 0) / KNOWN_CAUSAL_EDGES.length;
+            const isStable = avgCertainty > HIGH_CERTAINTY_THRESHOLD;
+            const isMismatchHigh = causalMismatchError > CURIOSITY_MISMATCH_THRESHOLD;
+
+            let isCurious = false;
+            let statusMessage = 'System in Status Quo Learning (Action Patterns Unstable)';
+            let statusClass = 'bg-slate-200';
+            let isBHVarianceMismatch = false;
+
+            if (isStable && !isLLMIntegrated) {
+                isBHVarianceMismatch = KNOWN_CAUSAL_EDGES.some(edge =>
+                    edge.certainty > HIGH_CERTAINTY_THRESHOLD &&
+                    edge.bh_std_dev > BH_VARIANCE_THRESHOLD
+                );
+            }
+
+            // Check for Curiosity Trigger
+            if (isLLMIntegrated) {
+                statusMessage = 'Prior Updated. Validating LLM-Suggested Causal Prior.';
+                statusClass = 'bg-green-800 text-white';
+            } else if (isStable && isMismatchHigh) {
+                isCurious = true;
+                isCuriosityTriggered = true;
+                statusMessage = 'CURIOSITY FIRED: Actions Stable, but WELL-BEING GAP Exists! Seek New Causal Prior!';
+                statusClass = 'text-white font-extrabold animate-pulse';
+            } else if (isBHVarianceMismatch) {
+                isCurious = true;
+                isCuriosityTriggered = true;
+                statusMessage = 'CURIOSITY FIRED: BH Variance Mismatch Detected! Possible Confounder/Spurious Edge!';
+                statusClass = 'text-white font-extrabold animate-pulse';
+            } else if (isStable) {
+                statusMessage = 'Known Actions Stable. Well-being at a Plateau.';
+                statusClass = 'text-white';
+            }
+
+            return {
+                totalError,
+                attributableError,
+                causalMismatchError,
+                isCurious,
+                isStable,
+                avgCertainty,
+                statusMessage,
+                statusClass,
+                isBHVarianceMismatch
+            };
+        }
+
+        // --- LLM Interaction Functions (Simulated) ---
+
+        function askLLMForFactor() {
+            const llmBtn = document.getElementById('ask-llm-btn');
+            const runBtn = document.getElementById('run-cycle-btn');
+            const llmResponseBox = document.getElementById('llm-response');
+
+            llmBtn.disabled = true;
+            runBtn.disabled = true;
+            llmResponseBox.innerHTML = `<span class="flex items-center text-green-500 font-bold">Querying Gemini Agent... <span class="loading-dot ml-2 bg-green-500 h-2 w-2 rounded-full"></span><span class="loading-dot ml-1 bg-green-500 h-2 w-2 rounded-full"></span><span class="loading-dot ml-1 bg-green-500 h-2 w-2 rounded-full"></span></span>`;
+
+            setTimeout(() => {
+                const newFactorName = 'Value Capture Prior (Autonomous Value Creation)';
+
+                llmResponseBox.innerHTML = `
+                    <span class="font-bold text-green-400">Hypothesis Received:</span>
+                    <p class="mt-1 text-lg font-mono text-white">${newFactorName}</p>
+                    <p class="text-sm italic text-gray-300 mt-2">LLM's reasoning (simulated): Stable individual actions with persistent well-being error indicates the model is missing a fundamental **Causal Prior** related to societal alignment and value capture, not just optimizing daily tasks. Integrating this prior is necessary to resolve systemic friction.</p>
+                `;
+
+                integrateNewFactor(newFactorName);
+
+                llmBtn.classList.add('hidden');
+                runBtn.disabled = false;
+                document.getElementById('run-five-cycles-btn').disabled = false;
+                document.getElementById('run-ten-cycles-btn').disabled = false;
+            }, 3000);
+        }
+
+        function integrateNewFactor(factorName) {
+            isLLMIntegrated = true;
+
+            UNMODELED_FACTOR_ERROR = Math.max(0.01, UNMODELED_FACTOR_ERROR - EXPLAINED_ERROR_BY_LLM);
+            document.getElementById('unmodeled_error_display').textContent = UNMODELED_FACTOR_ERROR.toFixed(2);
+
+            KNOWN_CAUSAL_EDGES.push({
+                id: 'llm-prior',
+                name: factorName,
+                certainty: 0.05,
+                weight: 0.0,
+                current_error: EXPLAINED_ERROR_BY_LLM * 0.9,
+                target_weight: 0.90,
+                bradfordHill: initializeNewFactorBradfordHill(),
+                bh_std_dev: 0.0
+            });
+
+            renderEdges();
+            updateUI(calculateCausalMismatch());
+        }
+
+        // --- Rendering Functions ---
+
+        function formatSigned(value) {
+            return (value >= 0 ? '+' : '') + value.toFixed(3);
+        }
+
+        function renderBradfordHill(edge) {
+            const bhArray = Object.values(edge.bradfordHill);
+            const edgeColor = edge.id === 'llm-prior' ? 'var(--color-autonomy)' : 'var(--color-accent-violet)';
+
+            return `
+                <div class="mt-4 pt-4" style="border-top: 1px solid rgba(76, 0, 255, 0.3);">
+                    <div class="flex justify-between items-center text-sm font-semibold text-gray-300 mb-2">
+                        <span>Bradford Hill Causal Criteria Validation</span>
+                        <span class="text-xs text-pink-600 font-mono">BH Std Dev: ${edge.bh_std_dev.toFixed(3)}</span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 text-xs">
+                        ${bhArray.map(criterion => `
+                            <div class="flex flex-col">
+                                <span class="text-gray-400 truncate" title="${criterion.name}">${criterion.name}</span>
+                                <div class="h-1 rounded-full mt-0.5" style="background: rgba(100, 100, 120, 0.3);">
+                                    <div class="convergence-bar h-full rounded-full" style="width: ${(criterion.score * 100).toFixed(0)}%; background: ${edgeColor};"></div>
+                                </div>
+                                <span class="font-mono text-right text-xs mt-0.5 text-gray-300">${(criterion.score * 100).toFixed(0)}%</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderEdges() {
+            const container = document.getElementById('edge-container');
+            container.innerHTML = KNOWN_CAUSAL_EDGES.map(edge => {
+                const isLlmPrior = edge.id === 'llm-prior';
+                const mainColor = isLlmPrior ? 'var(--color-autonomy)' : 'var(--color-accent-violet)';
+                const bgColor = isLlmPrior ? 'linear-gradient(135deg, rgba(0, 255, 153, 0.1), rgba(26, 26, 51, 0.8))' : 'rgba(10, 10, 26, 0.5)';
+                const borderColor = isLlmPrior ? 'rgba(0, 255, 153, 0.5)' : 'rgba(76, 0, 255, 0.3)';
+
+                return `
+                    <div class="p-4 rounded-lg shadow-md transition duration-300" style="background: ${bgColor}; border: 1px solid ${borderColor};">
+
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-lg font-bold" style="color: ${isLlmPrior ? mainColor : 'white'};">${edge.name}</span>
+                            <div class="text-right">
+                                <span class="text-sm font-semibold text-gray-300 block">Certainty (Z): <span id="${edge.id}-certainty-val" class="font-mono text-lg" style="color: ${mainColor};">${(edge.certainty * 100).toFixed(1)}%</span></span>
+                                <span class="text-xs font-medium text-gray-400">Weight (W): <span id="${edge.id}-weight-val" class="font-mono text-white">${formatSigned(edge.weight)}</span></span>
+                            </div>
+                        </div>
+
+                        <div class="h-3 rounded-full mb-3" style="background: rgba(100, 100, 120, 0.3);">
+                            <div id="${edge.id}-certainty-bar" class="convergence-bar h-full rounded-full" style="width: ${(edge.certainty * 100).toFixed(1)}%; background: ${mainColor}"></div>
+                        </div>
+
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-gray-300">Current Edge Error: <span id="${edge.id}-error-val" class="font-mono text-white font-medium">${edge.current_error.toFixed(3)}</span></span>
+                            <span class="text-gray-300 italic">Target W: <span class="font-mono text-white">${formatSigned(edge.target_weight)}</span></span>
+                        </div>
+
+                        ${renderBradfordHill(edge)}
+
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateUI(mismatchData) {
+            document.getElementById('cycle-count').textContent = cycleCount;
+
+            // Update Total Error
+            document.getElementById('total-error-value').textContent = mismatchData.totalError.toFixed(2);
+            const totalErrorBarWidth = Math.min(100, mismatchData.totalError * 100 / 1.15); // Scale bar to max initial error
+            document.getElementById('total-error-bar').style.width = `${totalErrorBarWidth}%`;
+
+            // Update Mismatch
+            document.getElementById('mismatch-value').textContent = mismatchData.causalMismatchError.toFixed(3);
+            const mismatchBarWidth = Math.min(100, mismatchData.causalMismatchError * 100 / 0.40); // Scale bar to max initial mismatch (0.40)
+            document.getElementById('mismatch-bar').style.width = `${mismatchBarWidth}%`;
+
+            // Update Curiosity Status
+            const statusDiv = document.getElementById('curiosity-status');
+            statusDiv.textContent = mismatchData.statusMessage;
+            statusDiv.className = `mt-4 p-3 rounded-lg text-center font-bold transition-all duration-300 ${mismatchData.statusClass}`;
+
+            if (mismatchData.statusClass.includes('animate-pulse')) {
+                statusDiv.style.background = 'linear-gradient(135deg, var(--color-autonomy), #00CCCC)';
+            } else if (mismatchData.statusClass.includes('bg-green-800')) {
+                statusDiv.style.background = 'linear-gradient(135deg, #00A36A, #00FF99)';
+            } else {
+                statusDiv.style.background = 'rgba(100, 100, 120, 0.3)';
+            }
+
+            // Handle Curiosity Trigger vs. Learning Mode
+            const runCycleBtn = document.getElementById('run-cycle-btn');
+            const runFiveBtn = document.getElementById('run-five-cycles-btn');
+            const runTenBtn = document.getElementById('run-ten-cycles-btn');
+            const llmBtn = document.getElementById('ask-llm-btn');
+            const llmPanel = document.getElementById('llm-panel');
+
+            if (mismatchData.isCurious && !isLLMIntegrated) {
+                if (runCycleBtn) runCycleBtn.disabled = true;
+                if (runFiveBtn) runFiveBtn.disabled = true;
+                if (runTenBtn) runTenBtn.disabled = true;
+                if (llmBtn) {
+                    llmBtn.classList.remove('hidden');
+                    llmBtn.disabled = false;
+                }
+                if (llmPanel) llmPanel.classList.remove('hidden');
+                statusDiv.classList.remove('animate-pulse');
+            } else if (isLLMIntegrated) {
+                if (llmPanel) llmPanel.classList.remove('hidden');
+                if (runCycleBtn) runCycleBtn.disabled = false;
+                if (runFiveBtn) runFiveBtn.disabled = false;
+                if (runTenBtn) runTenBtn.disabled = false;
+            } else {
+                if (llmBtn) llmBtn.classList.add('hidden');
+                if (llmPanel) llmPanel.classList.add('hidden');
+                if (runCycleBtn) runCycleBtn.disabled = false;
+                if (runFiveBtn) runFiveBtn.disabled = false;
+                if (runTenBtn) runTenBtn.disabled = false;
+            }
+
+            renderEdges();
+
+
+            // Update History Table
+            const historyData = {
+                cycleCount,
+                avgCertainty: mismatchData.avgCertainty.toFixed(3),
+                attributableError: mismatchData.attributableError.toFixed(3),
+                causalMismatchError: mismatchData.causalMismatchError.toFixed(3),
+                isCurious: mismatchData.isCurious || isLLMIntegrated || mismatchData.isBHVarianceMismatch
+            };
+
+            if (cycleCount > 0 && (history.length === 0 || history[history.length - 1].cycleCount !== cycleCount)) {
+                const newRow = `
+                    <tr class="${historyData.isCurious ? 'font-semibold' : ''}" style="background: ${historyData.isCurious ? 'rgba(0, 255, 153, 0.1)' : 'transparent'};">
+                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-200">${historyData.cycleCount}</td>
+                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-200">${historyData.avgCertainty}</td>
+                        <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-200">${historyData.attributableError}</td>
+                        <td class="px-4 py-2 whitespace-nowrap text-sm ${historyData.isCurious ? 'text-green-400 font-bold' : 'text-gray-200'}">${historyData.causalMismatchError}</td>
+                        <td class="px-4 py-2 whitespace-nowrap text-center text-sm">${historyData.isCurious ? (mismatchData.isBHVarianceMismatch ? 'BH-VAR' : 'YES') : (isLLMIntegrated ? 'VALIDATING' : '—')}</td>
+                    </tr>
+                 `;
+                document.getElementById('history-body').insertAdjacentHTML('afterbegin', newRow);
+                history.push(historyData);
+            }
+        }
+
+        // --- Main Cycle Runner ---
+
+        function runCycle() {
+            if (isCuriosityTriggered && !isLLMIntegrated) {
+                return;
+            }
+
+            cycleCount++;
+
+            KNOWN_CAUSAL_EDGES.forEach(updateEdge);
+
+            const mismatchData = calculateCausalMismatch();
+
+            updateUI(mismatchData);
+        }
+
+        function runMultipleCycles(count) {
+            for (let i = 0; i < count; i++) {
+                if (isCuriosityTriggered && !isLLMIntegrated) {
+                    break;
+                }
+                runCycle();
+            }
+        }
+
+        // --- Initialization ---
+
+        function initialize() {
+            renderEdges();
+            const initialMismatch = calculateCausalMismatch();
+
+            document.getElementById('unmodeled_error_display').textContent = UNMODELED_FACTOR_ERROR.toFixed(2);
+
+            // FIX: Initial rendering of total error and mismatch
+            document.getElementById('total-error-value').textContent = initialMismatch.totalError.toFixed(2);
+            document.getElementById('total-error-bar').style.width = `${Math.min(100, initialMismatch.totalError * 100 / 1.15)}%`; // Set initial bar width
+            document.getElementById('mismatch-value').textContent = initialMismatch.causalMismatchError.toFixed(3);
+            document.getElementById('mismatch-bar').style.width = `${Math.min(100, initialMismatch.causalMismatchError * 100 / 0.40)}%`; // Set initial bar width
+
+            updateUI(initialMismatch);
+
+            // FIX: Ensure event listeners are correctly bound for cycle buttons
+            document.getElementById('run-cycle-btn').addEventListener('click', runCycle);
+            document.getElementById('ask-llm-btn').addEventListener('click', askLLMForFactor);
+        }
+
+        document.addEventListener('DOMContentLoaded', initialize);
+    </script>
+</body>
+
+</html>
