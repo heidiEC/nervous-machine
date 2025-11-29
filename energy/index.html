@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Center AI Inference: Causal Energy Optimization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 100%);
+            color: #e0e0f0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px 20px;
+            background: rgba(76, 0, 255, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(76, 0, 255, 0.3);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #00ffff;
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #8a2be2;
+            margin-bottom: 15px;
+        }
+
+        .description {
+            font-size: 1rem;
+            color: #b0b0c0;
+            max-width: 900px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .panel {
+            background: rgba(26, 26, 51, 0.8);
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid rgba(76, 0, 255, 0.3);
+            margin-bottom: 25px;
+        }
+
+        h2 {
+            color: #00ffff;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 2px solid rgba(76, 0, 255, 0.5);
+            padding-bottom: 10px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #4c00ff, #8a2be2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(76, 0, 255, 0.5);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .metric-box {
+            background: rgba(138, 43, 226, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(138, 43, 226, 0.4);
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            color: #b0b0c0;
+            margin-bottom: 5px;
+        }
+
+        .metric-value {
+            font-size: 1.8rem;
+            color: #00ffff;
+            font-weight: 700;
+        }
+
+        .metric-unit {
+            font-size: 1rem;
+            color: #8a2be2;
+            margin-left: 5px;
+        }
+
+        .status-box {
+            background: rgba(138, 43, 226, 0.2);
+            border: 2px solid rgba(138, 43, 226, 0.4);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+
+        .status-indicator.learning {
+            background: #00ff00;
+        }
+
+        .status-indicator.converged {
+            background: #ffd700;
+        }
+
+        .status-indicator.curious {
+            background: #00ffff;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .status-text {
+            font-size: 1.2rem;
+            color: #00ffff;
+            font-weight: 600;
+        }
+
+        .factor-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .factor {
+            background: rgba(76, 0, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #8a2be2;
+        }
+
+        .factor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .factor-name {
+            font-weight: 600;
+            color: #00ffff;
+            font-size: 1rem;
+        }
+
+        .factor-certainty {
+            font-size: 0.9rem;
+            color: #ffd700;
+            font-weight: 500;
+        }
+
+        .factor-value {
+            font-size: 0.95rem;
+            color: #b0b0c0;
+            margin-bottom: 5px;
+        }
+
+        .inference-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .stat-card {
+            background: rgba(76, 0, 255, 0.1);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(76, 0, 255, 0.3);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #b0b0c0;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.3rem;
+            color: #00ffff;
+            font-weight: 700;
+        }
+
+        .alert-box {
+            background: rgba(255, 0, 0, 0.1);
+            border: 2px solid #ff0000;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .alert-box.curiosity {
+            background: rgba(0, 255, 255, 0.1);
+            border-color: #00ffff;
+        }
+
+        .alert-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ff0000;
+            margin-bottom: 10px;
+        }
+
+        .alert-box.curiosity .alert-title {
+            color: #00ffff;
+        }
+
+        .alert-content {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #e0e0f0;
+        }
+
+        .hypothesis-box {
+            background: rgba(138, 43, 226, 0.1);
+            border-left: 3px solid #8a2be2;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 4px;
+        }
+
+        .hypothesis-label {
+            font-size: 0.9rem;
+            color: #8a2be2;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .hypothesis-text {
+            font-size: 0.95rem;
+            color: #e0e0f0;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        .methodology-box {
+            background: rgba(76, 0, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Data Center AI Inference Energy Optimization</h1>
+            <p class="subtitle">Dissipative Learning • Causal Mismatch Detection • Adaptive Energy Management</p>
+            <p class="description">
+                <strong>Science Question:</strong> A data center runs LLM inference workloads. Known factors (GPU
+                utilization,
+                batch size, model parameters, cooling efficiency) predict baseline power consumption. But actual energy
+                draw
+                consistently exceeds predictions. What causal factors are we missing?
+            </p>
+        </header>
+
+        <!-- Controls and Key Metrics -->
+        <div class="panel">
+            <h2>Simulation Controls</h2>
+            <div class="controls">
+                <button id="runCycleBtn">Run Single Cycle</button>
+                <button id="run10CyclesBtn">Run 10 Cycles</button>
+                <button id="resetBtn">Reset</button>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-box">
+                    <div class="metric-label">Learning Cycles</div>
+                    <div class="metric-value"><span id="cycleCount">0</span></div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-label">Avg Certainty</div>
+                    <div class="metric-value"><span id="avgCertainty">0.00</span></div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-label">Current Power</div>
+                    <div class="metric-value"><span id="currentPower">0</span><span class="metric-unit">kW</span></div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-label">Predicted</div>
+                    <div class="metric-value"><span id="predictedPower">0</span><span class="metric-unit">kW</span>
+                    </div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-label">Error</div>
+                    <div class="metric-value"><span id="errorPower">0</span><span class="metric-unit">kW</span></div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-label">RMS Error</div>
+                    <div class="metric-value"><span id="rmsError">0</span><span class="metric-unit">kW</span></div>
+                </div>
+            </div>
+
+            <div class="status-box">
+                <span class="status-indicator learning" id="statusIndicator"></span>
+                <div>
+                    <div class="metric-label" style="margin-bottom: 5px;">System Status</div>
+                    <div class="status-text" id="systemStatus">Ready - Click "Run Single Cycle" to begin</div>
+                </div>
+            </div>
+
+            <div class="methodology-box">
+                <strong style="color: #00ffff;">Methodology:</strong>
+                <span style="color: #b0b0c0;">
+                    Dissipative learning with sigmoid-modulated learning rate η = 1/(1 + e^(10(Z - 0.5))).
+                    Model learns known factors (GPU util, batch size, model params, cooling).
+                    Hidden factor: Memory bandwidth saturation causes additional 50-80 kW overhead.
+                    Curiosity fires when Z > 0.80 but error remains > 10 kW.
+                </span>
+            </div>
+        </div>
+
+        <!-- Known Causal Factors -->
+        <div class="panel">
+            <h2>Known Causal Factors</h2>
+            <div class="factor-grid" id="factorsDisplay"></div>
+        </div>
+
+        <!-- Current Inference Load -->
+        <div class="panel">
+            <h2>Current Inference Load</h2>
+            <div class="inference-stats" id="inferenceStats"></div>
+        </div>
+
+        <!-- Alerts Container -->
+        <div id="alertsContainer"></div>
+    </div>
+
+    <script>
+        // ========== SIMULATION STATE ==========
+        const state = {
+            cycle: 0,
+            curiosityFired: false,
+
+            // Known causal factors (what the model learns)
+            factors: {
+                gpu_utilization: {
+                    value: 0,
+                    certainty: 0.3,
+                    weight: 0.5,
+                    trueWeight: 0.45,
+                    bradfordHill: {
+                        strength: 0.3,
+                        consistency: 0.3,
+                        specificity: 0.3,
+                        temporality: 0.9,
+                        gradient: 0.3,
+                        plausibility: 0.9,
+                        coherence: 0.8,
+                        experiment: 0.3,
+                        analogy: 0.7
+                    }
+                },
+                batch_size: {
+                    value: 0,
+                    certainty: 0.3,
+                    weight: 0.3,
+                    trueWeight: 0.28,
+                    bradfordHill: {
+                        strength: 0.3,
+                        consistency: 0.3,
+                        specificity: 0.3,
+                        temporality: 0.9,
+                        gradient: 0.3,
+                        plausibility: 0.8,
+                        coherence: 0.7,
+                        experiment: 0.3,
+                        analogy: 0.6
+                    }
+                },
+                model_parameters: {
+                    value: 0,
+                    certainty: 0.3,
+                    weight: 0.4,
+                    trueWeight: 0.38,
+                    bradfordHill: {
+                        strength: 0.3,
+                        consistency: 0.3,
+                        specificity: 0.3,
+                        temporality: 0.9,
+                        gradient: 0.3,
+                        plausibility: 0.9,
+                        coherence: 0.8,
+                        experiment: 0.3,
+                        analogy: 0.8
+                    }
+                },
+                cooling_efficiency: {
+                    value: 0,
+                    certainty: 0.3,
+                    weight: 0.2,
+                    trueWeight: 0.22,
+                    bradfordHill: {
+                        strength: 0.3,
+                        consistency: 0.3,
+                        specificity: 0.3,
+                        temporality: 0.9,
+                        gradient: 0.3,
+                        plausibility: 0.8,
+                        coherence: 0.7,
+                        experiment: 0.3,
+                        analogy: 0.7
+                    }
+                }
+            },
+
+            // Hidden factor (the system doesn't know about this initially)
+            hiddenFactor: {
+                memory_bandwidth: 0,
+                value: 0, // For consistency with other factors in weight updates
+                contribution: 0,
+                discovered: false,
+                weight: 0,
+                certainty: 0.3,
+                bradfordHill: {
+                    strength: 0.3,
+                    consistency: 0.3,
+                    specificity: 0.3,
+                    temporality: 0.9,
+                    gradient: 0.3,
+                    plausibility: 0.9,
+                    coherence: 0.8,
+                    experiment: 0.3,
+                    analogy: 0.8
+                }
+            },
+
+            // Inference characteristics
+            inference: {
+                requests_per_second: 0,
+                avg_tokens_per_request: 0,
+                context_window_size: 0,
+                cache_hit_rate: 0
+            },
+
+            // Energy tracking
+            actualPower: 0,
+            predictedPower: 0,
+            baselinePower: 150,
+
+            // Learning
+            errors: [],
+            certainties: [],
+
+            // Thresholds
+            curiosityThreshold: 10,
+            certaintyThreshold: 0.80
+        };
+
+        // ========== SIMULATION LOGIC ==========
+        function generateInferenceLoad() {
+            const baseRPS = 1000 + Math.sin(state.cycle * 0.1) * 300;
+            const spike = state.cycle % 50 === 0 ? 500 : 0;
+
+            state.inference.requests_per_second = Math.max(500, baseRPS + spike + (Math.random() * 200 - 100));
+            state.inference.avg_tokens_per_request = 150 + Math.random() * 100;
+            state.inference.context_window_size = 2048 + Math.random() * 2048;
+            state.inference.cache_hit_rate = 0.6 + Math.random() * 0.3;
+
+            const totalTokens = state.inference.requests_per_second * state.inference.avg_tokens_per_request;
+            state.factors.gpu_utilization.value = Math.min(1, totalTokens / 300000);
+            state.factors.batch_size.value = Math.min(1, state.inference.requests_per_second / 2000);
+            state.factors.model_parameters.value = 0.7 + Math.random() * 0.3;
+            state.factors.cooling_efficiency.value = 0.8 - (state.factors.gpu_utilization.value * 0.2);
+
+            const memoryPressure = (state.inference.context_window_size / 4096) * (1 - state.inference.cache_hit_rate);
+            state.hiddenFactor.memory_bandwidth = memoryPressure;
+            state.hiddenFactor.value = memoryPressure;
+            state.hiddenFactor.contribution = 50 + (memoryPressure * 30); // 50-80 kW additional overhead
+        }
+
+        function calculateActualPower() {
+            let power = state.baselinePower;
+
+            power += state.factors.gpu_utilization.value * state.factors.gpu_utilization.trueWeight * 200;
+            power += state.factors.batch_size.value * state.factors.batch_size.trueWeight * 150;
+            power += state.factors.model_parameters.value * state.factors.model_parameters.trueWeight * 100;
+            power += state.factors.cooling_efficiency.value * state.factors.cooling_efficiency.trueWeight * 80;
+            power += state.hiddenFactor.contribution;
+            power += (Math.random() * 10 - 5);
+
+            return power;
+        }
+
+        function calculatePredictedPower() {
+            let power = state.baselinePower;
+
+            power += state.factors.gpu_utilization.value * state.factors.gpu_utilization.weight * 200;
+            power += state.factors.batch_size.value * state.factors.batch_size.weight * 150;
+            power += state.factors.model_parameters.value * state.factors.model_parameters.weight * 100;
+            power += state.factors.cooling_efficiency.value * state.factors.cooling_efficiency.weight * 80;
+
+            if (state.hiddenFactor.discovered) {
+                power += state.hiddenFactor.value * state.hiddenFactor.weight * 100;
+            }
+
+            return power;
+        }
+
+        function updateFactorWeights() {
+            const allFactors = state.hiddenFactor.discovered
+                ? [...Object.entries(state.factors), ['memory_bandwidth', state.hiddenFactor]]
+                : Object.entries(state.factors);
+
+            for (const [key, factor] of allFactors) {
+                const Z = isNaN(factor.certainty) ? 0.3 : Math.max(0.3, Math.min(0.95, factor.certainty));
+                const learningRate = 1 / (1 + Math.exp(10 * (Z - 0.5)));
+
+                if (isNaN(learningRate) || !isFinite(learningRate)) {
+                    console.warn(`Invalid learning rate for ${key}: ${learningRate}`);
+                    continue;
+                }
+
+                const error = state.actualPower - state.predictedPower;
+                const factorValue = isNaN(factor.value) ? 0 : factor.value;
+                const gradient = error * factorValue * 0.01;
+
+                if (isNaN(gradient) || !isFinite(gradient)) {
+                    console.warn(`Invalid gradient for ${key}: ${gradient}`);
+                    continue;
+                }
+
+                const maxWeightDrift = key === 'memory_bandwidth' ? 0.3 : 0.10; // Tighter constraint to prevent compensation
+
+                let initialWeight;
+                if (key === 'memory_bandwidth') {
+                    initialWeight = 0.35;
+                } else {
+                    initialWeight = factor.trueWeight || 0.5;
+                }
+
+                const currentWeight = isNaN(factor.weight) ? initialWeight : factor.weight;
+                let newWeight = currentWeight + (learningRate * gradient);
+
+                if (isNaN(newWeight) || !isFinite(newWeight)) {
+                    console.error(`[CYCLE ${state.cycle}] Invalid weight for ${key}`, { newWeight, currentWeight, gradient });
+                    newWeight = currentWeight;
+                }
+
+                if (!state.hiddenFactor.discovered || key !== 'memory_bandwidth') {
+                    newWeight = Math.max(
+                        initialWeight - maxWeightDrift,
+                        Math.min(initialWeight + maxWeightDrift, newWeight)
+                    );
+                } else {
+                    newWeight = Math.max(0, Math.min(1, newWeight));
+                }
+
+                factor.weight = isNaN(newWeight) ? initialWeight : newWeight;
+
+                const errorMagnitude = state.actualPower > 0
+                    ? Math.min(1.0, Math.abs(error) / state.actualPower)
+                    : 0;
+
+                const strengthIncrease = (1 - errorMagnitude) * 0.02;
+                const newStrength = factor.bradfordHill.strength + strengthIncrease;
+                factor.bradfordHill.strength = isNaN(newStrength) ? factor.bradfordHill.strength : Math.min(0.95, newStrength);
+
+                if (errorMagnitude < 0.15) {
+                    const newConsistency = factor.bradfordHill.consistency + 0.02;
+                    factor.bradfordHill.consistency = isNaN(newConsistency) ? factor.bradfordHill.consistency : Math.min(0.95, newConsistency);
+                } else {
+                    const newConsistency = factor.bradfordHill.consistency - 0.01;
+                    factor.bradfordHill.consistency = isNaN(newConsistency) ? factor.bradfordHill.consistency : Math.max(0.3, newConsistency);
+                }
+
+                const newSpecificity = factor.bradfordHill.specificity + 0.015;
+                factor.bradfordHill.specificity = isNaN(newSpecificity) ? factor.bradfordHill.specificity : Math.min(0.95, newSpecificity);
+
+                const newGradient = factor.bradfordHill.gradient + 0.015;
+                factor.bradfordHill.gradient = isNaN(newGradient) ? factor.bradfordHill.gradient : Math.min(0.95, newGradient);
+
+                const newExperiment = factor.bradfordHill.experiment + 0.01;
+                factor.bradfordHill.experiment = isNaN(newExperiment) ? factor.bradfordHill.experiment : Math.min(0.95, newExperiment);
+
+                const avgBH = Object.values(factor.bradfordHill).reduce((sum, v) => sum + (isNaN(v) ? 0 : v), 0) / 9;
+                if (errorMagnitude < 0.15 && avgBH > 0.5) {
+                    const newCertainty = factor.certainty + 0.03;
+                    factor.certainty = isNaN(newCertainty) ? factor.certainty : Math.min(0.95, newCertainty);
+                } else {
+                    const newCertainty = factor.certainty + 0.01;
+                    factor.certainty = isNaN(newCertainty) ? factor.certainty : Math.max(0.3, newCertainty);
+                }
+            }
+        }
+
+        function checkCuriosity() {
+            const avgCertainty = Object.values(state.factors)
+                .reduce((sum, f) => sum + (isNaN(f.certainty) ? 0.3 : f.certainty), 0) / Object.keys(state.factors).length;
+
+            const validErrors = state.errors.filter(e => !isNaN(e) && isFinite(e));
+            const rmsError = validErrors.length > 0
+                ? Math.sqrt(
+                    validErrors.slice(-10).reduce((sum, e) => sum + e * e, 0) /
+                    Math.min(validErrors.length, 10)
+                )
+                : 0;
+
+            // Enhanced debug logging
+            if (state.cycle % 10 === 0 || avgCertainty > 0.75) {
+                console.log(`Cycle ${state.cycle}: avgZ=${avgCertainty.toFixed(3)}, rmsError=${rmsError.toFixed(1)}, threshold=${state.curiosityThreshold}, fired=${state.curiosityFired}`);
+                console.log(`  Weights: GPU=${state.factors.gpu_utilization.weight.toFixed(3)}, Batch=${state.factors.batch_size.weight.toFixed(3)}, Model=${state.factors.model_parameters.weight.toFixed(3)}, Cooling=${state.factors.cooling_efficiency.weight.toFixed(3)}`);
+                console.log(`  Power: Actual=${state.actualPower.toFixed(1)}, Predicted=${state.predictedPower.toFixed(1)}, Error=${(state.actualPower - state.predictedPower).toFixed(1)}`);
+                console.log(`  Hidden contribution: ${state.hiddenFactor.contribution.toFixed(1)} kW`);
+            }
+
+            if (avgCertainty > state.certaintyThreshold && rmsError > state.curiosityThreshold && !state.curiosityFired) {
+                state.curiosityFired = true;
+                triggerCuriosity(avgCertainty, rmsError);
+            }
+        }
+
+        function triggerCuriosity(avgZ, rmsError) {
+            const alertsContainer = document.getElementById('alertsContainer');
+
+            const alert = document.createElement('div');
+            alert.className = 'alert-box curiosity panel';
+            alert.innerHTML = `
+                <div class="alert-title">⚡ Curiosity Triggered: Knowledge Gap Detected</div>
+                <div class="alert-content">
+                    <p>
+                        <strong>Condition Met:</strong> Model certainty (Z = ${avgZ.toFixed(3)}) exceeds threshold (${state.certaintyThreshold}) 
+                        but energy prediction error remains high (${rmsError.toFixed(1)} kW > ${state.curiosityThreshold} kW threshold).
+                    </p>
+                    <p style="margin-top: 10px;">
+                        The model is confident about known factors (GPU utilization, batch size, model parameters, cooling efficiency) 
+                        but cannot explain ${rmsError.toFixed(1)} kW of consistent overhead.
+                    </p>
+                </div>
+                <div class="hypothesis-box">
+                    <div class="hypothesis-label">LLM Hypothesis Generation</div>
+                    <div class="hypothesis-text">
+                        Query: "AI inference system shows ${rmsError.toFixed(1)} kW unexplained power overhead despite known factors. 
+                        Context: Large language model inference with context windows averaging ${Math.round(state.inference.context_window_size)} tokens, 
+                        cache hit rate ${(state.inference.cache_hit_rate * 100).toFixed(0)}%. What is the most plausible unmodeled causal factor?"
+                    </div>
+                </div>
+                <div class="hypothesis-box" style="background: rgba(0, 255, 255, 0.1); border-color: #00ffff;">
+                    <div class="hypothesis-label" style="color: #00ffff;">Most Likely Hypothesis</div>
+                    <div class="hypothesis-text">
+                        <strong>Memory bandwidth saturation.</strong> Large context windows (${Math.round(state.inference.context_window_size)} tokens) 
+                        with low cache hit rates (${(state.inference.cache_hit_rate * 100).toFixed(0)}%) force frequent memory transfers. 
+                        HBM bandwidth becomes bottleneck → GPU underutilization → inefficient power draw. 
+                        Literature shows this can account for 50-80 kW additional overhead in LLM inference workloads.
+                    </div>
+                </div>
+                <div style="margin-top: 15px; padding: 15px; background: rgba(0, 255, 255, 0.15); border-radius: 6px; border: 2px solid #00ffff;">
+                    <strong style="color: #00ffff; font-size: 1.1rem;">NEW FACTOR ADDED TO MODEL</strong>
+                    <p style="margin-top: 10px; color: #e0e0f0;">
+                        Memory bandwidth is now tracked as a causal factor. Watch the prediction error decrease as the model 
+                        learns the relationship between memory pressure and power consumption.
+                    </p>
+                </div>
+            `;
+
+            alertsContainer.appendChild(alert);
+
+            state.hiddenFactor.discovered = true;
+            state.hiddenFactor.weight = 0.3;
+
+            document.getElementById('systemStatus').textContent = 'New Factor Discovered: Memory Bandwidth';
+            document.getElementById('statusIndicator').className = 'status-indicator curious';
+        }
+
+        function runSingleCycle() {
+            state.cycle++;
+
+            generateInferenceLoad();
+
+            state.actualPower = calculateActualPower();
+            state.predictedPower = calculatePredictedPower();
+
+            const error = state.actualPower - state.predictedPower;
+            state.errors.push(error);
+
+            updateFactorWeights();
+
+            const avgCertainty = Object.values(state.factors)
+                .reduce((sum, f) => sum + f.certainty, 0) / Object.keys(state.factors).length;
+            state.certainties.push(avgCertainty);
+
+            checkCuriosity();
+            updateDisplay();
+        }
+
+        function runMultipleCycles(count) {
+            for (let i = 0; i < count; i++) {
+                runSingleCycle();
+            }
+        }
+
+        function updateDisplay() {
+            // Update factors display
+            const factorsDisplay = document.getElementById('factorsDisplay');
+            factorsDisplay.innerHTML = '';
+
+            for (const [key, factor] of Object.entries(state.factors)) {
+                const avgBH = Object.values(factor.bradfordHill).reduce((sum, v) => sum + v, 0) / 9;
+
+                const div = document.createElement('div');
+                div.className = 'factor';
+                div.innerHTML = `
+                    <div class="factor-header">
+                        <div class="factor-name">${key.replace(/_/g, ' ').toUpperCase()}</div>
+                        <div class="factor-certainty">Z = ${factor.certainty.toFixed(3)}</div>
+                    </div>
+                    <div class="factor-value">Value: ${factor.value.toFixed(3)} | Weight: ${factor.weight.toFixed(3)} (true: ${factor.trueWeight.toFixed(3)})</div>
+                    <div class="factor-value" style="color: #ffd700;">
+                        Bradford Hill: ${avgBH.toFixed(3)} 
+                        (S:${factor.bradfordHill.strength.toFixed(2)} C:${factor.bradfordHill.consistency.toFixed(2)} P:${factor.bradfordHill.plausibility.toFixed(2)})
+                    </div>
+                `;
+                factorsDisplay.appendChild(div);
+            }
+
+            if (state.hiddenFactor.discovered) {
+                const avgBH = Object.values(state.hiddenFactor.bradfordHill).reduce((sum, v) => sum + v, 0) / 9;
+
+                const div = document.createElement('div');
+                div.className = 'factor';
+                div.style.borderLeft = '3px solid #00ffff';
+                div.style.background = 'rgba(0, 255, 255, 0.1)';
+                div.innerHTML = `
+                    <div class="factor-header">
+                        <div class="factor-name" style="color: #00ffff;">⚡ MEMORY BANDWIDTH (DISCOVERED)</div>
+                        <div class="factor-certainty">Z = ${state.hiddenFactor.certainty.toFixed(3)}</div>
+                    </div>
+                    <div class="factor-value">Value: ${state.hiddenFactor.value.toFixed(3)} | Weight: ${state.hiddenFactor.weight.toFixed(3)}</div>
+                    <div class="factor-value" style="color: #00ffff;">
+                        Bradford Hill: ${avgBH.toFixed(3)} 
+                        (S:${state.hiddenFactor.bradfordHill.strength.toFixed(2)} C:${state.hiddenFactor.bradfordHill.consistency.toFixed(2)} P:${state.hiddenFactor.bradfordHill.plausibility.toFixed(2)})
+                    </div>
+                `;
+                factorsDisplay.appendChild(div);
+            }
+
+            // Update inference stats
+            const inferenceStats = document.getElementById('inferenceStats');
+            inferenceStats.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-label">Requests/sec</div>
+                    <div class="stat-value">${Math.round(state.inference.requests_per_second)}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Avg Tokens/Request</div>
+                    <div class="stat-value">${Math.round(state.inference.avg_tokens_per_request)}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Context Window</div>
+                    <div class="stat-value">${Math.round(state.inference.context_window_size)}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Cache Hit Rate</div>
+                    <div class="stat-value">${(state.inference.cache_hit_rate * 100).toFixed(0)}%</div>
+                </div>
+            `;
+
+            // Update metrics
+            document.getElementById('currentPower').textContent = isNaN(state.actualPower) ? '0.0' : state.actualPower.toFixed(1);
+            document.getElementById('predictedPower').textContent = isNaN(state.predictedPower) ? '0.0' : state.predictedPower.toFixed(1);
+            const errorPower = Math.abs(state.actualPower - state.predictedPower);
+            document.getElementById('errorPower').textContent = isNaN(errorPower) ? '0.0' : errorPower.toFixed(1);
+
+            const avgCertainty = Object.values(state.factors)
+                .reduce((sum, f) => sum + (isNaN(f.certainty) ? 0.3 : f.certainty), 0) / Object.keys(state.factors).length;
+            document.getElementById('avgCertainty').textContent = isNaN(avgCertainty) ? '0.000' : avgCertainty.toFixed(3);
+
+            const validErrors = state.errors.filter(e => !isNaN(e) && isFinite(e));
+            const rmsError = validErrors.length > 0
+                ? Math.sqrt(
+                    validErrors.slice(-10).reduce((sum, e) => sum + e * e, 0) /
+                    Math.min(validErrors.length, 10)
+                )
+                : 0;
+            document.getElementById('rmsError').textContent = isNaN(rmsError) ? '0.0' : rmsError.toFixed(1);
+
+            document.getElementById('cycleCount').textContent = state.cycle;
+
+            // Update status
+            if (!state.curiosityFired) {
+                if (avgCertainty < 0.6) {
+                    document.getElementById('systemStatus').textContent = 'Learning: Low Certainty (Agile Updates)';
+                    document.getElementById('statusIndicator').className = 'status-indicator learning';
+                } else if (avgCertainty >= state.certaintyThreshold && rmsError > state.curiosityThreshold) {
+                    document.getElementById('systemStatus').textContent = `Curiosity Imminent! Z=${avgCertainty.toFixed(3)}, Error=${rmsError.toFixed(1)} kW`;
+                    document.getElementById('statusIndicator').className = 'status-indicator curious';
+                } else if (avgCertainty >= 0.75) {
+                    document.getElementById('systemStatus').textContent = `High Certainty (Z=${avgCertainty.toFixed(3)}) - Error: ${rmsError.toFixed(1)} kW`;
+                    document.getElementById('statusIndicator').className = 'status-indicator converged';
+                } else {
+                    document.getElementById('systemStatus').textContent = 'Learning: Moderate Certainty';
+                    document.getElementById('statusIndicator').className = 'status-indicator learning';
+                }
+            }
+        }
+
+        // ========== CONTROLS ==========
+        document.getElementById('runCycleBtn').addEventListener('click', () => {
+            runSingleCycle();
+        });
+
+        document.getElementById('run10CyclesBtn').addEventListener('click', () => {
+            runMultipleCycles(10);
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            state.cycle = 0;
+            state.curiosityFired = false;
+            state.errors = [];
+            state.certainties = [];
+
+            state.hiddenFactor.discovered = false;
+            state.hiddenFactor.weight = 0;
+            state.hiddenFactor.certainty = 0.3;
+            state.hiddenFactor.bradfordHill = {
+                strength: 0.3,
+                consistency: 0.3,
+                specificity: 0.3,
+                temporality: 0.9,
+                gradient: 0.3,
+                plausibility: 0.9,
+                coherence: 0.8,
+                experiment: 0.3,
+                analogy: 0.8
+            };
+
+            for (const factor of Object.values(state.factors)) {
+                factor.certainty = 0.3;
+                factor.weight = 0.5;
+                factor.bradfordHill = {
+                    strength: 0.3,
+                    consistency: 0.3,
+                    specificity: 0.3,
+                    temporality: 0.9,
+                    gradient: 0.3,
+                    plausibility: 0.9,
+                    coherence: 0.8,
+                    experiment: 0.3,
+                    analogy: 0.7
+                };
+            }
+
+            document.getElementById('alertsContainer').innerHTML = '';
+            document.getElementById('systemStatus').textContent = 'Ready - Click "Run Single Cycle" to begin';
+            document.getElementById('statusIndicator').className = 'status-indicator learning';
+
+            updateDisplay();
+        });
+
+        // ========== INITIALIZATION ==========
+        updateDisplay();
+    </script>
+</body>
+
+</html>
