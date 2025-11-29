@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nervous Machine: Dissipative Causal Learning for Mission-Critical Edge Systems</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Roboto+Mono:wght@400&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Roboto+Mono:wght@400&display=swap"
+        rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <style>
         /* General Body & Root Styling */
@@ -43,7 +46,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
+            background:
                 radial-gradient(circle at 20% 80%, rgba(76, 0, 255, 0.1) 0%, transparent 50%),
                 radial-gradient(circle at 80% 20%, rgba(138, 43, 226, 0.1) 0%, transparent 50%),
                 radial-gradient(circle at 40% 40%, rgba(0, 255, 255, 0.05) 0%, transparent 50%);
@@ -52,9 +55,19 @@
         }
 
         @keyframes float {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            33% { transform: translate(30px, -30px) rotate(120deg); }
-            66% { transform: translate(-20px, 20px) rotate(240deg); }
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            33% {
+                transform: translate(30px, -30px) rotate(120deg);
+            }
+
+            66% {
+                transform: translate(-20px, 20px) rotate(240deg);
+            }
         }
 
         /* Container for content width */
@@ -65,7 +78,9 @@
         }
 
         /* Typography */
-        h1, h2, h3 {
+        h1,
+        h2,
+        h3 {
             font-weight: 700;
             margin-top: 0;
             margin-bottom: calc(1.5 * var(--spacing-unit));
@@ -185,7 +200,7 @@
             justify-content: center;
             text-align: center;
             overflow: hidden;
-            background: 
+            background:
                 linear-gradient(135deg, rgba(10, 10, 26, 0.8), rgba(26, 26, 51, 0.9)),
                 radial-gradient(circle at 30% 70%, rgba(76, 0, 255, 0.3) 0%, transparent 50%),
                 radial-gradient(circle at 70% 30%, rgba(138, 43, 226, 0.3) 0%, transparent 50%);
@@ -204,6 +219,7 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -224,7 +240,7 @@
         }
 
         .hero-content h1 {
-            font-size: 3.8rem;
+            font-size: 3.6rem;
             color: #FFFFFF;
             margin-bottom: 1.5rem;
             text-shadow: 0 0 30px rgba(76, 0, 255, 0.5), 0 0 60px rgba(138, 43, 226, 0.3);
@@ -503,10 +519,21 @@
 
         /* Responsive Adjustments */
         @media (max-width: 768px) {
-            h1 { font-size: 2.8rem; }
-            h2 { font-size: 2rem; }
-            h3 { font-size: 1.4rem; }
-            p { font-size: 1rem; }
+            h1 {
+                font-size: 2.8rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            h3 {
+                font-size: 1.4rem;
+            }
+
+            p {
+                font-size: 1rem;
+            }
 
             header .container {
                 flex-direction: column;
@@ -582,15 +609,18 @@
         }
     </style>
 </head>
+
 <body>
     <header>
         <div class="container">
             <h1 class="logo">Nervous Machine</h1>
             <nav>
                 <ul>
-                    <li><a href="#vision">Our Vision</a></li>
-                    <li><a href="#use-cases">Intelligence</a></li>
-                    <li><a href="#principles">Core Principles</a></li>
+                    <li><a
+                            href="https://www.techrxiv.org/users/975562/articles/1343063-the-pure-error-signal-dissipative-causal-learning-for-intrinsically-safe-autonomy">Research</a>
+                    </li>
+                    <li><a href="https://nervousmachine.substack.com">Substack</a></li>
+                    <li><a href="/simulation">Simulation</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
             </nav>
@@ -599,115 +629,81 @@
 
     <section id="hero" class="hero-section">
         <div class="hero-content">
-            <h2>AI that learns from physics, not proxy metrics.</h2>
-            <h1>Deploys where cloud AI can't. Improves itself autonomously. </h1>
-            <p class="tagline">Built for spacecraft · defense platforms · scientific discovery where prediction error = feedback from reality.</p>
-        </div>
-    </section>
-
-    <section id="vision" class="content-section">
-        <div class="container">
-            <h2>Our Vision: AI that learns real-world empirical lessons to solve real-world problems.</h2>
-            <p>On Earth, in space, and DDIL environments.</p>
+            <h2>Your Edge AI, Evolved</h2>
+            <h1>Causal Engines for Physical AI</h1>
+            <p class="tagline">Building systems that discover missing factors, improve autonomously, and share learnings
+                across
+                networks.</p>
+            <div class="cta-buttons">
+                <a href="/exoplanet" class="button">Exoplanet Demo</a>
+                <a href="/simulation" class="button">Thermal Demo</a>
+                <a href="https://nervousmachine.substack.com" class="button" target="_blank">Technical Articles</a>
+            </div>
         </div>
     </section>
 
     <section id="use-cases" class="content-section light-bg">
         <div class="container">
-            <h2>Intelligence Where You Need It</h2>
-            
+            <h2>Three Core Capabilities</h2>
+            <p>Physics as the teacher. Reality as the test. Networks as the accelerant.</p>
+
             <div class="use-cases-grid">
                 <div class="use-case">
-                    <h3>Aerospace</h3>
-                    <p>We power autonomous last-mile learning in space where simulations hit the limits of empirical lessons, novel situations, and instrumentation gaps. Each mission gets safer and smarter.</p>
+                    <h3>Automated Research</h3>
+                    <p>Find new causal factors and physical laws in real-world domains. System ingests literature,
+                        tracks validation, detects gaps, generates hypotheses.</p>
                 </div>
-                
+
                 <div class="use-case">
-                    <h3>Defense</h3>
-                    <p>Informed by global intelligence, but serialized for edge devices in DDIL environments. The system anticipates surprises, and autonomously prioritizes safe, reliable, millisecond operations.</p>
+                    <h3>Autonomous Control</h3>
+                    <p>Self-improving systems for spacecraft, robots, satellites, data centers. Learn from operational
+                        reality via pure error signals. Adapt autonomously, quantify uncertainty.</p>
                 </div>
-                
+
                 <div class="use-case">
-                    <h3>Research Labs</h3>
-                    <p>Fast feedback loops with physics-grounded vectors over reward signals. Each experiment infuses the world model with intelligence from the physical world.</p>
+                    <h3>Learning Networks</h3>
+                    <p>Lean intelligence for robot fleets, R&D teams, scientific collaborations. Share foundational
+                        causal learnings without sharing raw data. Learn once and broadcast across the network</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="case-study" class="content-section">
+    <section id="principles" class="content-section light-bg">
         <div class="container">
-            <h2>The Learning Loop in a Physical System</h2>
-            <p>We demonstrate the prediction-error loop live with the real-time formation of a hurricane.</p>
-            
-            <div class="case-study-grid">
-                <div class="case-study-step">
-                    <div class="step-image">
-                        <img src="images/screenshot1.png" alt="Causal hypothesis of hurricane Imelda strength trajectory is autonomously developed via MCP" />
-                    </div>
-                    <div class="step-content">
-                        <h3>Microcontroller Diagnostics</h3>
-                        <p><strong>Instant Analysis:</strong> System provides weighted probable causes, diagnostic procedures, and cost estimates for embedded hardware failures.</p>
-                    </div>
-                </div>
-
-                <div class="case-study-step">
-                    <div class="step-image">
-                        <img src="images/screenshot5.png" alt="Safety interlock system troubleshooting interface" />
-                    </div>
-                    <div class="step-content">
-                        <h3>Safety-Critical Systems</h3>
-                        <p><strong>Mission-Critical Support:</strong> Safety interlock diagnostics with immediate stop protocols and systematic troubleshooting for regulatory compliance.</p>
-                    </div>
-                </div>
-
-                <div class="case-study-step">
-                    <div class="step-image">
-                        <img src="images/screenshot3.png" alt="PLC system causal analysis and network visualization" />
-                    </div>
-                    <div class="step-content">
-                        <h3>Industrial Control Systems</h3>
-                        <p><strong>Complex System Analysis:</strong> PLC troubleshooting with causal network visualization showing interconnected system dependencies and failure modes.</p>
-                    </div>
-                </div>
-
-                <div class="case-study-step">
-                    <div class="step-image">
-                        <img src="images/screenshot4.png" alt="Expert escalation chat with human engineer consultation" />
-                    </div>
-                    <div class="step-content">
-                        <h3>Expert Escalation</h3>
-                        <p><strong>Human-in-the-Loop:</strong> Complex edge cases automatically escalate to expert engineers with full diagnostic context, enabling sophisticated analysis and defect detection.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="case-study-outcome">
-                <h3>System-Agnostic Learning</h3>
-                <p>From microcontrollers to PLCs to safety interlocks - every diagnosis strengthens the global knowledge base. Your entire embedded ecosystem becomes more intelligent with each interaction.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="principles" class="content-section">
-        <div class="container">
-            <h2>How We Build Intelligence That Actually Works</h2>
+            <h2>The Causal Learning Loop</h2>
+            <p>The mechanisms that enable systems to discover missing
+                factors, improve autonomously, and share knowledge</p>
             <div class="principles-grid">
                 <div class="principle-item">
-                    <h3>Real-World Learning</h3>
-                    <p>Our AI learns from actual industrial operations, not just textbooks. It understands how your specific equipment behaves in your specific environment.</p>
+                    <h3>Hypothesis Generation</h3>
+                    <p>LLM + domain literature generate initial causal graph. System starts with best available
+                        knowledge from scientific papers and validated datasets.</p>
                 </div>
                 <div class="principle-item">
-                    <h3>Why, Not Just What</h3>
-                    <p>We don't just identify problems - we understand why they happen. This means better solutions and prevention of similar issues across your entire operation.</p>
+                    <h3>Reality Testing</h3>
+                    <p>Sensors measure actual outcomes. Pure error signals (ε = |predicted - actual|) from reality.
+                        This is the ground truth.</p>
                 </div>
                 <div class="principle-item">
-                    <h3>Gets Smarter Over Time</h3>
-                    <p>Every interaction teaches the system something new. Your knowledge base becomes more valuable with every problem solved and every question answered.</p>
+                    <h3>Adaptive Learning</h3>
+                    <p>Learning rate η inversely proportional to certainty Z. Agile where ignorant (low Z = high η),
+                        stable where certain (high Z = low η). Sample-efficient by design.</p>
                 </div>
                 <div class="principle-item">
-                    <h3>Reliable & Explainable</h3>
-                    <p>No black box decisions. Our AI shows its reasoning, explains its confidence levels, and knows when to ask for human help.</p>
+                    <h3>Gap Detection</h3>
+                    <p>High certainty + high error = missing factor. Curiosity triggers autonomously. System knows when
+                        it's confidently encountering a knowledge gap.</p>
+                </div>
+                <div class="principle-item">
+                    <h3>Network Propagation</h3>
+                    <p>Validated relationships (Z > 0.85) shared across network. Learn once, benefit everywhere. All
+                        partners improve from collective knowledge.</p>
+                </div>
+                <div class="principle-item">
+                    <h3>Continuous Improvement</h3>
+                    <p>Loop repeats with operational data. Systems improve autonomously from reality. No retraining
+                        needed. Learning is built into the architecture.</p>
                 </div>
             </div>
         </div>
@@ -715,8 +711,7 @@
 
     <section id="contact" class="content-section light-bg">
         <div class="container">
-            <h2>Get In Touch</h2>
-            <p>Discover how Nervous Machine has transformed technical support, decreasing MTTR from weeks to seconds.</p>
+            <h2>Join Our Network</h2>
             <div style="text-align: center; margin-top: 2rem;">
                 <a href="mailto:heidi@everychart.io" class="button">Request a Demo</a>
             </div>
@@ -729,4 +724,5 @@
         </div>
     </footer>
 </body>
+
 </html>
