@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E2E Causal Curiosity Simulation</title>
+    <title>E2E Causal Learning & Error Gap Simulation</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -96,10 +96,10 @@
     <div id="app" class="max-w-4xl mx-auto">
         <header class="text-center mb-10">
             <h1 class="text-3xl sm:text-4xl font-extrabold text-white">
-                Causal Curiosity & LLM Integration
+                Causal Learning & Meta-analysis
             </h1>
             <p class="mt-2 text-lg text-cyan-400">
-                Dissipative Learning, Causal Mismatch, and Validation via Bradford Hill Criteria
+                Dissipative Learning, Error Gap Analysis, and Validation via Bradford Hill Criteria
             </p>
         </header>
 
@@ -220,9 +220,9 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M3.636 5.636l.707.707m0 12.728l.707-.707M6.364 17.364l-.707.707M16 12H4m12 0a4 4 0 014 4v2m-2-2a4 4 0 00-4-4m5 0v1a2 2 0 01-2 2h-1.293c-.695 0-1.36.276-1.848.764l-1.04 1.04a2 2 0 01-2.828 0l-1.04-1.04a2 2 0 00-1.848-.764H7a2 2 0 01-2-2v-1" />
                 </svg>
-                LLM Agent Hypothesis (Curiosity Fired)
+                Curiosity Fired: Meta-analysis triggered
             </h2>
-            <p id="llm-query" class="text-sm italic text-gray-300 mb-4">Query sent to LLM: "The system shows
+            <p id="llm-query" class="text-sm italic text-gray-300 mb-4">Error Gap Analysis: "The system shows
                 persistent, stable error of 0.40 despite learning all known factors. Context: ISS thermal telemetry.
                 What is the most plausible unmodeled causal factor?"</p>
             <div id="llm-response-box" class="p-4 rounded-lg shadow"
@@ -480,7 +480,6 @@
                 const newFactorName = 'High-Frequency Thermal Stress (Internal Flux)';
 
                 llmResponseBox.innerHTML = `
-                    <span class="font-bold text-cyan-400">Hypothesis Received:</span>
                     <p class="mt-1 text-lg font-mono text-white">${newFactorName}</p>
                     <p class="text-sm italic text-gray-300 mt-2">LLM's reasoning (simulated): Stable residual error in ISS telemetry or inconsistent validation evidence (BH Variance) suggests an unmodeled, persistent thermal load, likely a high-frequency internal flux that our sensors under-sample. This requires a new causal edge.</p>
                 `;
