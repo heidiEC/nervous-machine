@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nervous Machine | Industrial Atlas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            background-color: #0b0b0b;
+            color: #ffaa00;
+            /* Industrial Amber */
+            font-family: 'Space Mono', monospace;
+            overflow: hidden;
+            margin: 0;
+        }
+
+        #dashboard {
+            display: grid;
+            grid-template-columns: 450px 1fr;
+            height: 100vh;
+        }
+
+        /* --- LEFT PANEL: PLC TERMINAL --- */
+        #terminal-panel {
+            background: rgba(15, 15, 15, 0.95);
+            border-right: 1px solid rgba(255, 170, 0, 0.2);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+        }
+
+        .term-header {
+            color: #888;
+            font-size: 0.8rem;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #log-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            font-size: 0.75rem;
+            line-height: 1.4;
+            color: #aaa;
+            scrollbar-width: none;
+        }
+
+        #log-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .log-entry {
+            margin-bottom: 4px;
+            animation: fadeIn 0.1s;
+        }
+
+        .log-sys {
+            color: #aaa;
+        }
+
+        .log-warn {
+            color: #ffaa00;
+            font-weight: bold;
+        }
+
+        .log-err {
+            color: #ff4444;
+        }
+
+        .log-success {
+            color: #00ff00;
+        }
+
+        .log-vector {
+            color: #00ffff;
+            background: rgba(0, 255, 255, 0.05);
+            padding: 2px 5px;
+            border-left: 2px solid #00ffff;
+            margin: 5px 0;
+            display: block;
+            font-size: 0.7rem;
+        }
+
+        /* --- RIGHT PANEL: FLOOR TWIN --- */
+        #floor-panel {
+            position: relative;
+            background: linear-gradient(to bottom, #1a1a1a 0%, #050505 100%);
+            perspective: 1200px;
+            overflow: hidden;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .overlay-stat {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            text-align: right;
+            pointer-events: none;
+        }
+
+        .big-stat {
+            font-size: 2.5rem;
+            color: #ffaa00;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 170, 0, 0.3);
+        }
+
+        .label {
+            color: #666;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 15px;
+            background: #ffaa00;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="dashboard">
+        <div id="terminal-panel">
+            <div class="term-header">
+                <span>INDUSTRIAL_CAUSAL_ENGINE_V2</span>
+                <span style="color: #00ff00;">CONNECTED (PLC-Modbus)</span>
+            </div>
+            <div id="log-container"></div>
+            <div style="margin-top: 10px; color: #ffaa00;">
+                > <span id="current-task">MONITORING</span><span class="cursor"></span>
+            </div>
+        </div>
+
+        <div id="floor-panel">
+            <canvas id="factoryCanvas"></canvas>
+            <div class="overlay-stat">
+                <div class="label">Active Machine Zones</div>
+                <div id="zone-count" class="big-stat">0</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('factoryCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+
+        // --- 3D ISO MATH ---
+        function projectIso(x, y, z) {
+            // Simple isometric projection
+            const scale = 0.8;
+            const x2d = (x - z) * Math.cos(0.523599) * scale + width / 2;
+            const y2d = (x + z) * Math.sin(0.523599) * scale - (y * scale) + height / 2;
+            return { x: x2d, y: y2d, scale: scale };
+        }
+
+        function rotateY(x, z, theta) {
+            return [
+                x * Math.cos(theta) - z * Math.sin(theta),
+                x * Math.sin(theta) + z * Math.cos(theta)
+            ];
+        }
+
+        // --- CONFIG ---
+        let cameraAngle = 0.785; // Fixed 45-degree angle initially
+        let voxels = [];
+        let machines = [];
+
+        // ZONES (The "Regimes" of the Factory)
+        const ZONES = {
+            CURING: { x: -200, z: -200, color: '#FF4444', label: 'OVEN_ZN' }, // Heat
+            STAMPING: { x: 200, z: -200, color: '#FFFF00', label: 'PRESS_ZN' }, // Vibration
+            ASSEMBLY: { x: 0, z: 200, color: '#00FFFF', label: 'ASSY_ZN' }   // Clean
+        };
+
+        function resize() {
+            width = canvas.width = document.getElementById('floor-panel').clientWidth;
+            height = canvas.height = document.getElementById('floor-panel').clientHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // --- LOGGING ---
+        const logBox = document.getElementById('log-container');
+        const taskBox = document.getElementById('current-task');
+        const counterBox = document.getElementById('zone-count');
+        let activeZones = 0;
+
+        function log(msg, type = 'sys') {
+            const div = document.createElement('div');
+            div.className = `log-entry log-${type}`;
+            div.innerHTML = `[${new Date().toLocaleTimeString('en-US', { hour12: false, minute: "2-digit", second: "2-digit", fractionalSecondDigits: 2 })}] ${msg}`;
+            logBox.appendChild(div);
+            logBox.scrollTop = logBox.scrollHeight;
+        }
+
+        // --- SCENARIO: LAB-TO-FAB HANDOFF ---
+        const SCENARIOS = [
+            {
+                name: "Recipe Upload",
+                steps: [
+                    { msg: "Receiving 'Golden Vector' from R&D Lab...", delay: 500 },
+                    { msg: "Spec: Cure 20min @ 150C (Context: Low Vib)", type: "vector", delay: 1000 },
+                    { msg: "Analyzing Target Zone: STAMPING_PRESS_B", delay: 1500 },
+                    { msg: "WARN: Context Mismatch Detected!", type: "warn", delay: 2000 },
+                    { msg: "Local Vibration > Threshold (5G)", type: "vector", delay: 2200 },
+                    { msg: "Activating Zone Visualization...", type: "success", delay: 2500 }
+                ]
+            },
+            {
+                name: "Generative Correction",
+                steps: [
+                    { msg: "Computing Compensation Vector...", delay: 4000 },
+                    { msg: "Hypothesis: Increase Temp +5C to offset micro-cracking", type: "vector", delay: 4500 },
+                    { msg: "Broadcasting Firmware Update to PLC-09...", type: "success", delay: 5000 },
+                    { msg: "Monitoring Quality Drift in Assembly...", delay: 5500 },
+                    { msg: "Zone Stable. Z-Score: 0.98", type: "success", delay: 6000 }
+                ]
+            }
+        ];
+
+        // --- VISUAL ELEMENTS ---
+        class Machine {
+            constructor(x, z, w, h, d, color) {
+                this.x = x; this.z = z;
+                this.w = w; this.h = h; this.d = d;
+                this.color = color;
+            }
+
+            draw(ctx) {
+                // Draw wireframe block
+                const [rx, rz] = rotateY(this.x, this.z, cameraAngle);
+                const p = projectIso(rx, 0, rz);
+
+                // Simplified cube drawing relative to projected center
+                const s = 1; // scale factor
+                // Not perfect 3D but good enough for icon
+
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = 0.1;
+
+                // Base footprint
+                // We'll just draw a "Ghost" footprint on the grid
+                const corners = [
+                    { x: this.x - this.w / 2, z: this.z - this.d / 2 },
+                    { x: this.x + this.w / 2, z: this.z - this.d / 2 },
+                    { x: this.x + this.w / 2, z: this.z + this.d / 2 },
+                    { x: this.x - this.w / 2, z: this.z + this.d / 2 }
+                ];
+
+                ctx.beginPath();
+                corners.forEach((c, i) => {
+                    const [rotX, rotZ] = rotateY(c.x, c.z, cameraAngle);
+                    const proj = projectIso(rotX, 0, rotZ);
+                    if (i === 0) ctx.moveTo(proj.x, proj.y);
+                    else ctx.lineTo(proj.x, proj.y);
+                });
+                ctx.closePath();
+                ctx.fill();
+                ctx.strokeStyle = this.color;
+                ctx.lineWidth = 2;
+                ctx.globalAlpha = 0.5;
+                ctx.stroke();
+
+                // Vertical lines for height
+                ctx.beginPath();
+                corners.forEach(c => {
+                    const [rotX, rotZ] = rotateY(c.x, c.z, cameraAngle);
+                    const bottom = projectIso(rotX, 0, rotZ);
+                    const top = projectIso(rotX, this.h, rotZ);
+                    ctx.moveTo(bottom.x, bottom.y);
+                    ctx.lineTo(top.x, top.y);
+                });
+                ctx.stroke();
+
+                // Top face
+                ctx.beginPath();
+                corners.forEach((c, i) => {
+                    const [rotX, rotZ] = rotateY(c.x, c.z, cameraAngle);
+                    const proj = projectIso(rotX, this.h, rotZ);
+                    if (i === 0) ctx.moveTo(proj.x, proj.y);
+                    else ctx.lineTo(proj.x, proj.y);
+                });
+                ctx.closePath();
+                ctx.stroke();
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        class Voxel {
+            constructor(x, y, z, color) {
+                this.x = x; this.y = y; this.z = z;
+                this.color = color;
+                this.size = 0;
+                this.active = false;
+            }
+
+            activate() { this.active = true; }
+
+            draw(ctx) {
+                if (!this.active) return;
+                if (this.size < 10) this.size += 0.5;
+
+                const [rx, rz] = rotateY(this.x, this.z, cameraAngle);
+                const p = projectIso(rx, this.y, rz);
+
+                // Pulsing cube
+                const pulse = 1 + Math.sin(Date.now() * 0.005) * 0.2;
+                const s = this.size * pulse;
+
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = 0.6;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, s / 2, 0, Math.PI * 2); // Represent voxel as node point
+                ctx.fill();
+
+                // Drop line
+                ctx.strokeStyle = this.color;
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(p.x, p.y);
+                const floor = projectIso(rx, 0, rz);
+                ctx.lineTo(floor.x, floor.y);
+                ctx.stroke();
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        // INIT WORLD
+        machines.push(new Machine(ZONES.CURING.x, ZONES.CURING.z, 80, 60, 80, ZONES.CURING.color));
+        machines.push(new Machine(ZONES.STAMPING.x, ZONES.STAMPING.z, 80, 100, 80, ZONES.STAMPING.color));
+        machines.push(new Machine(ZONES.ASSEMBLY.x, ZONES.ASSEMBLY.z, 150, 40, 150, ZONES.ASSEMBLY.color));
+
+        function spawnVoxels(zoneKey) {
+            const zone = ZONES[zoneKey];
+            // Create cloud around machine
+            for (let i = 0; i < 15; i++) {
+                const v = new Voxel(
+                    zone.x + (Math.random() - 0.5) * 80,
+                    20 + Math.random() * 80,
+                    zone.z + (Math.random() - 0.5) * 80,
+                    zone.color
+                );
+                v.activate();
+                voxels.push(v);
+            }
+            activeZones++;
+            counterBox.innerText = activeZones;
+        }
+
+        // --- ANIMATION ---
+        function draw() {
+            ctx.fillStyle = '#0b0b0b';
+            ctx.fillRect(0, 0, width, height);
+
+            // Slow rotation
+            cameraAngle += 0.002;
+
+            // Draw Floor Grid
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = '#222';
+            const gridSize = 600;
+            const step = 50;
+
+            ctx.beginPath();
+            for (let i = -gridSize; i <= gridSize; i += step) {
+                // Lines along X
+                let [sx, sz] = rotateY(-gridSize, i, cameraAngle);
+                let [ex, ez] = rotateY(gridSize, i, cameraAngle);
+                let p1 = projectIso(sx, 0, sz);
+                let p2 = projectIso(ex, 0, ez);
+                ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y);
+
+                // Lines along Z
+                [sx, sz] = rotateY(i, -gridSize, cameraAngle);
+                [ex, ez] = rotateY(i, gridSize, cameraAngle);
+                p1 = projectIso(sx, 0, sz);
+                p2 = projectIso(ex, 0, ez);
+                ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y);
+            }
+            ctx.stroke();
+
+            // Draw Machines (Back to Front sort)
+            // Simple sort based on rotated Z depth
+            const allObjects = [...machines, ...voxels];
+            allObjects.sort((a, b) => {
+                let [ax, az] = rotateY(a.x, a.z, cameraAngle);
+                let [bx, bz] = rotateY(b.x, b.z, cameraAngle);
+                return bz - az; // Painter's algo
+            });
+
+            allObjects.forEach(obj => obj.draw(ctx));
+
+            requestAnimationFrame(draw);
+        }
+
+        // --- RUN SCRIPT ---
+        async function runScript() {
+            draw();
+
+            for (const scenario of SCENARIOS) {
+                taskBox.innerText = scenario.name.toUpperCase();
+
+                for (const step of scenario.steps) {
+                    await new Promise(r => setTimeout(r, step.delay - (scenario.steps.indexOf(step) > 0 ? scenario.steps[scenario.steps.indexOf(step) - 1].delay : 0)));
+                    log(step.msg, step.type || 'sys');
+
+                    if (step.type === 'warn') spawnVoxels('STAMPING');
+                    if (step.type === 'success' && scenario.name === 'Generative Correction') spawnVoxels('ASSEMBLY');
+                }
+                await new Promise(r => setTimeout(r, 1000));
+            }
+            taskBox.innerText = "OPTIMIZED";
+        }
+
+        runScript();
+
+    </script>
+</body>
+
+</html>

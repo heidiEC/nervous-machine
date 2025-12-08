@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nervous Machine: Grid Node Geomagnetic Sim (v2)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-dark-bg: #0A0A1A;
+            --color-light-text: #E0E0F0;
+            --color-accent-indigo: #4C00FF;
+            --color-accent-violet: #8A2BE2;
+            --color-gradient-start: #4c00ff;
+            --color-gradient-end: #8a2be2;
+            --color-cyan: #00FFFF;
+            --color-card-bg: #1a1a33;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-dark-bg);
+            color: var(--color-light-text);
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(76, 0, 255, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(138, 43, 226, 0.2) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .card {
+            background-color: var(--color-card-bg);
+            border: 1px solid rgba(76, 0, 255, 0.5);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, var(--color-accent-indigo), var(--color-accent-violet));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .progress-bar-fill {
+            transition: width 0.5s ease-in-out;
+            background: linear-gradient(90deg, var(--color-cyan), var(--color-accent-indigo));
+        }
+
+        .pulse {
+            animation: pulse 1s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from {
+                opacity: 0.7;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body class="p-8">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-4xl font-bold mb-6 gradient-text">Nervous Machine: Grid Node Geomagnetic Causal Engine (v2)</h1>
+        <p class="mb-8 text-lg text-gray-400">Simulation: **Grid Node** learns to filter both **Local Static Noise** and
+            **Predictable ULF Space Noise** to isolate the **Unpredictable CME Signal**.</p>
+
+
+
+        [Image of solar storm hitting earth magnetosphere]
+
+
+        <div id="status_message"
+            class="card p-4 mb-8 rounded-xl text-center text-xl font-semibold transition-all duration-500">
+            System Initializing...
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            <div class="md:col-span-2 card p-6 rounded-xl">
+                <h2 class="text-2xl font-semibold mb-4 text-cyan-400">Grid Node Magnetic Perturbation Analysis</h2>
+                <div class="mb-4">
+                    <p class="text-sm text-gray-400">Total Aggregated Anomaly ($\Delta$B in nT) - *The full, unfiltered
+                        signal from space and ground*</p>
+                    <div class="text-4xl font-mono" id="total-error-value">0.00</div>
+                    <div class="mt-2 h-3 bg-gray-700 rounded-full">
+                        <div id="total-error-bar" class="progress-bar-fill h-3 rounded-full" style="width: 0%;"></div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-4 mt-6">
+                    <div>
+                        <p class="text-sm text-gray-400">Learned Static Fingerprint:</p>
+                        <ul class="list-disc list-inside ml-2">
+                            <li id="causal_factor_1_display" class="font-mono text-sm">Urban EM Noise (Avg): 0.00 nT
+                            </li>
+                            <li id="causal_factor_2_display" class="font-mono text-sm">Regional Geology Effect: 0.00 nT
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-400">Learned Dynamic Floor:</p>
+                        <li id="causal_factor_3_display" class="font-mono text-sm">Quiet-Time ULF Floor: 0.00 nT</li>
+                        <p class="text-xs text-gray-500 mt-1">*Predictable daily space variations.</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-gray-400">Unmodeled Residual (The CME Signal):</p>
+                        <div class="text-2xl font-mono text-red-500" id="unmodeled_error_display">0.00</div>
+                        <p class="text-xs text-gray-500">*The unexpected, high-impact factor.</p>
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-4 border-t border-gray-700">
+                    <h3 class="text-lg font-semibold mb-2">Network Insight (Causal Vector)</h3>
+                    <pre class="bg-gray-800 p-3 rounded text-xs overflow-x-auto" id="causal_vector_output">
+// Causal Vector Abstraction: Minimal, validated insight propagated across the network.
+{
+  "coordinate": "40.71, -74.00 (Grid Node)",
+  "anomaly_type": "GEOMAGNETIC_ANOMALY",
+  "delta_B_nT": 0.00,
+  "unmodeled_residual_nT": 0.00,
+  "confidence_score": 0.00,
+  "curiosity_trigger": false,
+  "learned_factors": []
+}
+                    </pre>
+                </div>
+            </div>
+
+            <div class="card p-6 rounded-xl flex flex-col justify-between">
+                <div>
+                    <h2 class="text-2xl font-semibold mb-4 text-white">Causal Engine Controls</h2>
+                    <p class="text-sm text-gray-400 mb-4">The Grid Node is learning its magnetic environment, filtering
+                        noise to isolate the CME.</p>
+
+                    <div class="flex flex-col space-y-3">
+                        <button id="run-cycle-btn"
+                            class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-200">
+                            Run 1 Cycle (Process 1 Hour of Data)
+                        </button>
+                        <button onclick="runMultipleCycles(5)"
+                            class="bg-violet-600 hover:bg-violet-700 text-white font-bold py-2 px-4 rounded transition duration-200">
+                            Run 5 Cycles (Propagate CME Wavefront)
+                        </button>
+                    </div>
+
+                    <div class="mt-8">
+                        <h3 class="text-lg font-semibold mb-2 text-yellow-400">Curiosity & Expert Integration</h3>
+                        <p class="text-sm text-gray-400 mb-3" id="llm-status-text">
+                            Curiosity is <span class="text-green-400">dormant</span>. Waiting for a high-certainty,
+                            high-error anomaly.
+                        </p>
+                        <button id="ask-llm-btn" disabled
+                            class="bg-gray-500 text-white font-bold py-2 px-4 rounded transition duration-200 opacity-50 cursor-not-allowed">
+                            Consult Expert for New Factor
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-gray-700">
+                    <p class="text-xs text-gray-500">The CME signal is not a statistical anomaly—it's a **causal
+                        mismatch** that violates the laws of the known local model.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Core Constants (Space Weather Physics) ---
+        const BASELINE_FIELD_nT = 0.0;
+        const GEOMAGNETIC_STORM_START_nT = 250.0;
+        const LEARNING_RATE = 0.1; // Slower learning rate to better show ULF learning
+        const CURIOSITY_THRESHOLD_ERROR = 0.35;
+
+        // --- Causal Factors (The Knowns) ---
+        let URBAN_EM_NOISE_MODEL = 0.0;
+        let GEOLOGY_CONDUCTIVITY_MODEL = 0.0;
+        let QUIET_TIME_ULF_MODEL = 0.0; // New learned factor
+
+        // --- Simulation State ---
+        let UNMODELED_FACTOR_ERROR = GEOMAGNETIC_STORM_START_nT;
+        let CURIOSITY_FACTOR_LEARNED = false;
+        let isCuriosityTriggered = false;
+        let isExpertIntegrated = false;
+        let cycleCount = 0;
+
+        // --- Simulated Actual Reality (The True Physics) ---
+        function getActualUrbanNoise() {
+            // Stable local noise for this Grid Node (e.g., Manhattan)
+            return 150.0 + (Math.random() * 5.0);
+        }
+
+        function getActualGeologyEffect() {
+            // Stable regional factor
+            return 80.0;
+        }
+
+        function getActualQuietTimeULF(cycle) {
+            // Simulate a predictable, low-frequency daily fluctuation (like a sine wave over 24 cycles/hours)
+            // Range is +/- 30 nT around the baseline.
+            return 30.0 * Math.sin((cycle % 24) * (2 * Math.PI / 24));
+        }
+
+        function getActualCMEImpact(cycle) {
+            // The unmodeled CME impact starts ramping up at cycle 6
+            if (cycle < 6) return 0.0;
+            return Math.min(GEOMAGNETIC_STORM_START_nT, (cycle - 5) * 60.0);
+        }
+
+        // --- Core Engine Logic ---
+
+        function calculateCausalMismatch() {
+            cycleCount++;
+
+            // 1. Get the components of the true field at this Grid Node.
+            const actualCME = getActualCMEImpact(cycleCount);
+            const actualNoise = getActualUrbanNoise();
+            const actualGeology = getActualGeologyEffect();
+            const actualULF = getActualQuietTimeULF(cycleCount);
+
+            // 2. The Total Measured Anomaly (What the network sees)
+            const totalMeasuredAnomaly = BASELINE_FIELD_nT + actualNoise + actualGeology + actualULF + actualCME;
+
+            // 3. The Modeled/Expected Anomaly (What the Grid Node currently accounts for)
+            const totalModeledAnomaly = BASELINE_FIELD_nT + URBAN_EM_NOISE_MODEL + GEOLOGY_CONDUCTIVITY_MODEL + QUIET_TIME_ULF_MODEL;
+
+            // 4. Calculate the Unmodeled Error (The Residual)
+            let modeledCME = 0;
+            if (CURIOSITY_FACTOR_LEARNED) {
+                // If the expert factor is integrated, model 95% of the CME.
+                modeledCME = actualCME * 0.95;
+            }
+
+            // The remaining UNMODELED ERROR is the CME minus what we've learned about the CME.
+            UNMODELED_FACTOR_ERROR = actualCME - modeledCME;
+            if (!isCuriosityTriggered) {
+                // Before curiosity fires, the unmodeled error is the *entire CME signal*.
+                UNMODELED_FACTOR_ERROR = actualCME;
+            }
+
+            return {
+                totalAnomaly: totalMeasuredAnomaly,
+                causalMismatch: totalMeasuredAnomaly - totalModeledAnomaly,
+                totalModeledAnomaly: totalModeledAnomaly
+            };
+        }
+
+        function networkLearning() {
+            const mismatch = calculateCausalMismatch();
+            const totalError = mismatch.causalMismatch;
+            const actualULF = getActualQuietTimeULF(cycleCount);
+            const actualNoise = getActualUrbanNoise();
+            const actualGeology = getActualGeologyEffect();
+
+
+            // Heuristic to update models based on residual error 
+            // The Grid Node learns its stable local fingerprint over the first few cycles (hours/days)
+            if (cycleCount < 6) {
+                URBAN_EM_NOISE_MODEL += LEARNING_RATE * (actualNoise - URBAN_EM_NOISE_MODEL) * 0.5;
+                GEOLOGY_CONDUCTIVITY_MODEL += LEARNING_RATE * (actualGeology - GEOLOGY_CONDUCTIVITY_MODEL) * 0.5;
+                // Learn the ULF floor
+                QUIET_TIME_ULF_MODEL += LEARNING_RATE * (actualULF - QUIET_TIME_ULF_MODEL) * 0.9;
+            }
+            // Once the CME starts (cycle 6), the Grid Node's model of its local environment (B_noise + B_ULF) is suddenly WRONG.
+
+            // --- Curiosity Trigger (The "Missing Factor" Detection) ---
+            // If the Unmodeled Error (normalized against the known max storm) is high.
+            const normalizedError = UNMODELED_FACTOR_ERROR / GEOMAGNETIC_STORM_START_nT;
+
+            if (normalizedError > CURIOSITY_THRESHOLD_ERROR && !isCuriosityTriggered && cycleCount >= 6) {
+                isCuriosityTriggered = true;
+                console.log("CURIOSITY TRIGGERED: CME Wavefront Detected!");
+            }
+        }
+
+        function consultExpertForFactor() {
+            if (!isCuriosityTriggered || isExpertIntegrated) return;
+
+            // Simulates consulting the Astrophysics/Space Weather expert to identify the missing factor (The CME)
+            isExpertIntegrated = true;
+            CURIOSITY_FACTOR_LEARNED = true;
+
+            // Recalculate the unmodeled error based on the new CME model integration
+            const actualCME = getActualCMEImpact(cycleCount);
+            UNMODELED_FACTOR_ERROR = actualCME - CausalCMEModel(actualCME);
+
+            updateUI(calculateCausalMismatch());
+
+            document.getElementById('ask-llm-btn').textContent = "CME Factor Integrated (Storm Modeled)";
+            document.getElementById('ask-llm-btn').classList.remove('bg-red-600', 'hover:bg-red-700');
+            document.getElementById('ask-llm-btn').classList.add('bg-green-600', 'cursor-default', 'opacity-100');
+            document.getElementById('ask-llm-btn').disabled = true;
+            document.getElementById('llm-status-text').innerHTML = `
+                New Factor Discovered: **Coronal Mass Ejection (CME) Impact**.<br>
+                The residual error is now only **${UNMODELED_FACTOR_ERROR.toFixed(2)} nT** (95% modeled).
+            `;
+            document.getElementById('status_message').classList.remove('bg-yellow-800', 'pulse', 'bg-red-800', 'bg-indigo-800');
+            document.getElementById('status_message').classList.add('bg-green-800');
+            document.getElementById('status_message').textContent = `ALERT: Space Weather Event Modeled. 95% Prediction Accuracy Achieved.`;
+
+        }
+
+        // --- UI Rendering ---
+
+        function updateUI(mismatchData) {
+            const totalAnomaly = mismatchData.totalAnomaly;
+            const maxAnomaly = BASELINE_FIELD_nT + GEOMAGNETIC_STORM_START_nT + getActualUrbanNoise() + getActualGeologyEffect() + 30; // Max possible value
+            const anomalyPercent = (totalAnomaly / maxAnomaly) * 100;
+
+            document.getElementById('unmodeled_error_display').textContent = UNMODELED_FACTOR_ERROR.toFixed(2);
+            document.getElementById('total-error-value').textContent = totalAnomaly.toFixed(2);
+            document.getElementById('total-error-bar').style.width = `${Math.min(100, anomalyPercent)}%`;
+
+            document.getElementById('causal_factor_1_display').textContent = `Urban EM Noise (Avg): ${URBAN_EM_NOISE_MODEL.toFixed(2)} nT`;
+            document.getElementById('causal_factor_2_display').textContent = `Regional Geology Effect: ${GEOLOGY_CONDUCTIVITY_MODEL.toFixed(2)} nT`;
+            document.getElementById('causal_factor_3_display').textContent = `Quiet-Time ULF Floor: ${QUIET_TIME_ULF_MODEL.toFixed(2)} nT`;
+
+            let statusText = `Cycle ${cycleCount}: Grid Node is learning its local static and predictable dynamic factors (ULF floor).`;
+            document.getElementById('status_message').classList.remove('bg-red-800', 'bg-green-800', 'bg-indigo-800', 'pulse');
+            document.getElementById('status_message').classList.add('bg-indigo-800');
+
+            if (cycleCount >= 6 && !isCuriosityTriggered) {
+                // The storm is starting, but the network is only just beginning to see the error, and hasn't triggered curiosity yet.
+                statusText = `Cycle ${cycleCount}: Anomaly increasing. Residual error rising from **${mismatchData.causalMismatch.toFixed(2)} nT** (Storm arriving).`;
+            } else if (isCuriosityTriggered && !isExpertIntegrated) {
+                const gStormRating = Math.min(5, (UNMODELED_FACTOR_ERROR / 100.0)).toFixed(1);
+                statusText = `WARNING (G${gStormRating} Storm): Causal mismatch detected. Unmodeled factor is **${UNMODELED_FACTOR_ERROR.toFixed(2)} nT**. NETWORK NEEDS NEW PHYSICAL LAW INTEGRATION.`;
+                document.getElementById('status_message').classList.remove('bg-indigo-800');
+                document.getElementById('status_message').classList.add('bg-red-800', 'pulse');
+                document.getElementById('ask-llm-btn').disabled = false;
+                document.getElementById('ask-llm-btn').classList.remove('bg-gray-500', 'opacity-50', 'cursor-not-allowed');
+                document.getElementById('ask-llm-btn').classList.add('bg-red-600', 'hover:bg-red-700');
+                document.getElementById('llm-status-text').innerHTML = `
+                    Curiosity is **TRIGGERED**! The unmodeled error is > ${CURIOSITY_THRESHOLD_ERROR * 100}%.<br>
+                    Hypothesis: Possible **Coronal Mass Ejection (CME)** wave front impact.
+                `;
+            } else if (isExpertIntegrated) {
+                statusText = `ALERT: Space Weather Event Modeled. 95% Prediction Accuracy Achieved.`;
+                document.getElementById('status_message').classList.remove('bg-red-800', 'pulse');
+                document.getElementById('status_message').classList.add('bg-green-800');
+            }
+
+
+            document.getElementById('status_message').textContent = statusText;
+
+            // Update Causal Vector Output (This is the abstraction)
+            const learnedFactors = ["LocalMagneticFingerprint", "RegionalGeology", "QuietTimeULFModel", ...(CURIOSITY_FACTOR_LEARNED ? ["CME_Impact_Model"] : [])];
+
+            const causalVector = {
+                coordinate: "40.71, -74.00 (Grid Node)",
+                anomaly_type: "GEOMAGNETIC_ANOMALY",
+                cycle_count: cycleCount,
+                measured_B_nT: totalAnomaly.toFixed(2),
+                modeled_B_nT: mismatchData.totalModeledAnomaly.toFixed(2),
+                unmodeled_residual_nT: UNMODELED_FACTOR_ERROR.toFixed(2),
+                confidence_score: CURIOSITY_FACTOR_LEARNED ? 0.99 : 0.85,
+                curiosity_trigger: isCuriosityTriggered,
+                learned_factors: learnedFactors,
+            };
+            document.getElementById('causal_vector_output').textContent = JSON.stringify(causalVector, null, 2);
+        }
+
+        function runCycle() {
+            networkLearning();
+            updateUI(calculateCausalMismatch());
+        }
+
+        function runMultipleCycles(count) {
+            for (let i = 0; i < count; i++) {
+                if (isCuriosityTriggered && !isExpertIntegrated) {
+                    break;
+                }
+                runCycle();
+            }
+        }
+
+        // --- Initialization ---
+
+        function initialize() {
+            const initialMismatch = calculateCausalMismatch();
+
+            document.getElementById('unmodeled_error_display').textContent = UNMODELED_FACTOR_ERROR.toFixed(2);
+            document.getElementById('total-error-value').textContent = initialMismatch.totalAnomaly.toFixed(2);
+
+            updateUI(initialMismatch);
+            document.getElementById('run-cycle-btn').addEventListener('click', runCycle);
+            document.getElementById('ask-llm-btn').addEventListener('click', consultExpertForFactor);
+
+            document.getElementById('status_message').textContent = `Welcome to the Geomagnetic Causal Engine. Press 'Run Cycle' to begin learning the local fingerprint.`;
+        }
+
+        document.addEventListener('DOMContentLoaded', initialize);
+    </script>
+</body>
+
+</html>

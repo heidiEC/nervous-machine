@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nervous Machine: Orbital Thermal Learning Network Sim</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-dark-bg: #0A0A1A;
+            --color-light-text: #E0E0F0;
+            --color-accent-indigo: #4C00FF;
+            --color-accent-violet: #8A2BE2;
+            --color-gradient-start: #4c00ff;
+            --color-gradient-end: #8a2be2;
+            --color-cyan: #00FFFF;
+            --color-card-bg: #1a1a33;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-dark-bg);
+            color: var(--color-light-text);
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(76, 0, 255, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(138, 43, 226, 0.2) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .card {
+            background-color: var(--color-card-bg);
+            border: 1px solid rgba(76, 0, 255, 0.5);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, var(--color-accent-indigo), var(--color-accent-violet));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .progress-bar-fill {
+            transition: width 0.5s ease-in-out;
+            background: linear-gradient(90deg, var(--color-cyan), var(--color-accent-indigo));
+        }
+
+        .pulse {
+            animation: pulse 1s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from {
+                opacity: 0.7;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body class="p-8">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-4xl font-bold mb-6 gradient-text">Nervous Machine: Orbital Thermal Learning Network</h1>
+        <p class="mb-8 text-lg text-gray-400">Simulation: **Orbital Grid Node ($1 \text{km}^3$ volume in LEO)** uses
+            aggregated thermal data from **passing satellites** to isolate a **New Thermal Coupling Anomaly** from
+            predictable solar and constellation factors.</p>
+
+        <div id="status_message"
+            class="card p-4 mb-8 rounded-xl text-center text-xl font-semibold transition-all duration-500">
+            System Initializing...
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            <div class="md:col-span-2 card p-6 rounded-xl">
+                <h2 class="text-2xl font-semibold mb-4 text-cyan-400">Orbital Thermal Anomaly Analysis (Node 400km, 10E)
+                </h2>
+                <div class="mb-4">
+                    <p class="text-sm text-gray-400">Total Aggregated Thermal Anomaly ($\Delta$T in $\text{°C}$) -
+                        *Average reading from all satellites passing through this volume*</p>
+                    <div class="text-4xl font-mono" id="total-error-value">0.00</div>
+                    <div class="mt-2 h-3 bg-gray-700 rounded-full">
+                        <div id="total-error-bar" class="progress-bar-fill h-3 rounded-full" style="width: 0%;"></div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-4 mt-6">
+                    <div>
+                        <p class="text-sm text-gray-400">Learned Predictable Factors:</p>
+                        <ul class="list-disc list-inside ml-2">
+                            <li id="causal_factor_1_display" class="font-mono text-sm">Solar Flux (Predictable): 0.00
+                                $\text{°C}$</li>
+                            <li id="causal_factor_2_display" class="font-mono text-sm">Earth Albedo (Reflected): 0.00
+                                $\text{°C}$</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-400">Learned Network Factor:</p>
+                        <li id="causal_factor_3_display" class="font-mono text-sm">Neighbor Heat Soak (Density): 0.00
+                            $\text{°C}$</li>
+                        <p class="text-xs text-gray-500 mt-1">*Learned from constellation traffic data.</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-gray-400">Unmodeled Residual (The New Physics):</p>
+                        <div class="text-2xl font-mono text-red-500" id="unmodeled_error_display">0.00</div>
+                        <p class="text-xs text-gray-500">*The unexpected, uncataloged thermal coupling.</p>
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-4 border-t border-gray-700">
+                    <h3 class="text-lg font-semibold mb-2">Network Insight (Causal Vector)</h3>
+                    <pre class="bg-gray-800 p-3 rounded text-xs overflow-x-auto" id="causal_vector_output">
+// Causal Vector Abstraction: Minimal, validated physical insight shared across the entire industry network.
+{
+  "coordinate_volume": "LEO 400km, 10E (Orbital Grid Node)",
+  "anomaly_type": "THERMAL_COUPLING_BEHAVIOR",
+  "measured_T_degC": 0.00,
+  "modeled_T_degC": 0.00,
+  "unmodeled_residual_degC": 0.00,
+  "confidence_score": 0.00,
+  "curiosity_trigger": false,
+  "learned_factors": []
+}
+                    </pre>
+                </div>
+            </div>
+
+            <div class="card p-6 rounded-xl flex flex-col justify-between">
+                <div>
+                    <h2 class="text-2xl font-semibold mb-4 text-white">Causal Engine Controls</h2>
+                    <p class="text-sm text-gray-400 mb-4">Each cycle simulates the Grid Node aggregating thermal data
+                        from dozens of satellites over a 10-minute window.</p>
+
+                    <div class="flex flex-col space-y-3">
+                        <button id="run-cycle-btn"
+                            class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-200">
+                            Run 1 Cycle (10 Minutes)
+                        </button>
+                        <button onclick="runMultipleCycles(5)"
+                            class="bg-violet-600 hover:bg-violet-700 text-white font-bold py-2 px-4 rounded transition duration-200">
+                            Run 5 Cycles (Propagate Thermal Anomaly)
+                        </button>
+                    </div>
+
+                    <div class="mt-8">
+                        <h3 class="text-lg font-semibold mb-2 text-yellow-400">Curiosity & Expert Integration</h3>
+                        <p class="text-sm text-gray-400 mb-3" id="llm-status-text">
+                            Curiosity is <span class="text-green-400">dormant</span>. Waiting for a high-certainty,
+                            high-error thermal anomaly.
+                        </p>
+                        <button id="ask-llm-btn" disabled
+                            class="bg-gray-500 text-white font-bold py-2 px-4 rounded transition duration-200 opacity-50 cursor-not-allowed">
+                            Consult Expert for New Factor
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-gray-700">
+                    <p class="text-xs text-gray-500">The Causal Vector isolates the new **physical law** of thermal
+                        coupling, allowing the network to learn collectively without proprietary data.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Core Constants (Thermal Physics) ---
+        const BASELINE_TEMP_C = 0.0;
+        const THERMAL_COUPLING_PEAK_C = 8.0; // The true, hidden new physics
+        const LEARNING_RATE = 0.1;
+        const CURIOSITY_THRESHOLD_ERROR = 0.30;
+
+        // --- Causal Factors (The Knowns) ---
+        let SOLAR_FLUX_MODEL = 0.0;
+        let EARTH_ALBEDO_MODEL = 0.0;
+        let NEIGHBOR_HEAT_SOAK_MODEL = 0.0;
+
+        // --- Simulation State ---
+        let UNMODELED_FACTOR_ERROR = THERMAL_COUPLING_PEAK_C;
+        let CURIOSITY_FACTOR_LEARNED = false;
+        let isCuriosityTriggered = false;
+        let isExpertIntegrated = false;
+        let cycleCount = 0;
+
+        // --- Simulated Actual Reality (The True Physics) ---
+        function getActualSolarFlux(cycle) {
+            // Predictable, cyclical temperature change based on orbital position (sine wave)
+            return 5.0 * Math.sin((cycle % 12) * (2 * Math.PI / 12));
+        }
+
+        function getActualAlbedoEffect() {
+            // Predictable, stable factor of reflected heat from Earth
+            return 3.0 + (Math.random() * 0.5);
+        }
+
+        function getActualNeighborHeatSoak() {
+            // Predictable heat soak from other satellites in this busy volume of space
+            return 4.0;
+        }
+
+        function getActualThermalCouplingImpact(cycle) {
+            // The unmodeled new physics starts ramping up at cycle 6
+            if (cycle < 6) return 0.0;
+            // It ramps up over cycles 6-10 to the peak
+            return Math.min(THERMAL_COUPLING_PEAK_C, (cycle - 5) * 2.0);
+        }
+
+        // --- Core Engine Logic ---
+
+        function calculateCausalMismatch() {
+            cycleCount++;
+
+            // 1. Get the components of the true thermal reading at this Grid Node.
+            const actualCoupling = getActualThermalCouplingImpact(cycleCount);
+            const actualSolar = getActualSolarFlux(cycleCount);
+            const actualAlbedo = getActualAlbedoEffect();
+            const actualHeatSoak = getActualNeighborHeatSoak();
+
+            // 2. The Total Measured Anomaly 
+            const totalMeasuredAnomaly = BASELINE_TEMP_C + actualSolar + actualAlbedo + actualHeatSoak + actualCoupling;
+
+            // 3. The Modeled/Expected Anomaly 
+            const totalModeledAnomaly = BASELINE_TEMP_C + SOLAR_FLUX_MODEL + EARTH_ALBEDO_MODEL + NEIGHBOR_HEAT_SOAK_MODEL;
+
+            // 4. Calculate the Unmodeled Error (The Residual)
+            let modeledCoupling = 0;
+            if (CURIOSITY_FACTOR_LEARNED) {
+                // If the expert factor is integrated, model 95% of the new physics.
+                modeledCoupling = actualCoupling * 0.95;
+            }
+
+            UNMODELED_FACTOR_ERROR = actualCoupling - modeledCoupling;
+            if (!isCuriosityTriggered) {
+                // Before curiosity fires, the unmodeled error is the *entire new physics signal*.
+                UNMODELED_FACTOR_ERROR = actualCoupling;
+            }
+
+            return {
+                totalAnomaly: totalMeasuredAnomaly,
+                causalMismatch: totalMeasuredAnomaly - totalModeledAnomaly,
+                totalModeledAnomaly: totalModeledAnomaly
+            };
+        }
+
+        function networkLearning() {
+            const mismatch = calculateCausalMismatch();
+            const totalError = mismatch.causalMismatch;
+            const actualSolar = getActualSolarFlux(cycleCount);
+            const actualAlbedo = getActualAlbedoEffect();
+            const actualHeatSoak = getActualNeighborHeatSoak();
+
+            // The Grid Node learns its predictable environment over the first few cycles
+            if (cycleCount < 6) {
+                SOLAR_FLUX_MODEL += LEARNING_RATE * (actualSolar - SOLAR_FLUX_MODEL) * 0.9;
+                EARTH_ALBEDO_MODEL += LEARNING_RATE * (actualAlbedo - EARTH_ALBEDO_MODEL) * 0.5;
+                NEIGHBOR_HEAT_SOAK_MODEL += LEARNING_RATE * (actualHeatSoak - NEIGHBOR_HEAT_SOAK_MODEL) * 0.5;
+            }
+            // Once the new coupling starts (cycle 6), the learned model is suddenly WRONG.
+
+            // --- Curiosity Trigger (The "Missing Factor" Detection) ---
+            const normalizedError = UNMODELED_FACTOR_ERROR / THERMAL_COUPLING_PEAK_C;
+
+            if (normalizedError > CURIOSITY_THRESHOLD_ERROR && !isCuriosityTriggered && cycleCount >= 6) {
+                isCuriosityTriggered = true;
+                console.log("CURIOSITY TRIGGERED: New Thermal Coupling Anomaly Detected!");
+            }
+        }
+
+        function consultExpertForFactor() {
+            if (!isCuriosityTriggered || isExpertIntegrated) return;
+
+            // Simulates consulting the thermal engineer/expert to identify the new physical law (The Thermal Coupling)
+            isExpertIntegrated = true;
+            CURIOSITY_FACTOR_LEARNED = true;
+
+            // Recalculate the unmodeled error based on the new Coupling model integration
+            const actualCoupling = getActualThermalCouplingImpact(cycleCount);
+            const modeledCoupling = actualCoupling * 0.95;
+            UNMODELED_FACTOR_ERROR = actualCoupling - modeledCoupling;
+
+            updateUI(calculateCausalMismatch());
+
+            document.getElementById('ask-llm-btn').textContent = "New Thermal Factor Integrated (Physics Learned)";
+            document.getElementById('ask-llm-btn').classList.remove('bg-red-600', 'hover:bg-red-700');
+            document.getElementById('ask-llm-btn').classList.add('bg-green-600', 'cursor-default', 'opacity-100');
+            document.getElementById('ask-llm-btn').disabled = true;
+            document.getElementById('llm-status-text').innerHTML = `
+                New Factor Discovered: **Thermal Coupling Behavior**.<br>
+                The residual error is now only **${UNMODELED_FACTOR_ERROR.toFixed(2)} $\text{°C}$** (95% modeled).
+            `;
+            document.getElementById('status_message').classList.remove('bg-red-800', 'pulse', 'bg-indigo-800');
+            document.getElementById('status_message').classList.add('bg-green-800');
+            document.getElementById('status_message').textContent = `ALERT: New Physics Discovered. Thermal Coupling Modeled. Collective Network Learning Activated.`;
+
+        }
+
+        // --- UI Rendering ---
+
+        function updateUI(mismatchData) {
+            const totalAnomaly = mismatchData.totalAnomaly;
+            const maxAnomaly = BASELINE_TEMP_C + THERMAL_COUPLING_PEAK_C + 5.0 + 4.0 + 3.5;
+            const anomalyPercent = (totalAnomaly / maxAnomaly) * 100;
+
+            document.getElementById('unmodeled_error_display').textContent = UNMODELED_FACTOR_ERROR.toFixed(2);
+            document.getElementById('total-error-value').textContent = totalAnomaly.toFixed(2);
+            document.getElementById('total-error-bar').style.width = `${Math.min(100, anomalyPercent)}%`;
+
+            document.getElementById('causal_factor_1_display').textContent = `Solar Flux (Predictable): ${SOLAR_FLUX_MODEL.toFixed(2)} $\text{°C}$`;
+            document.getElementById('causal_factor_2_display').textContent = `Earth Albedo (Reflected): ${EARTH_ALBEDO_MODEL.toFixed(2)} $\text{°C}$`;
+            document.getElementById('causal_factor_3_display').textContent = `Neighbor Heat Soak (Density): ${NEIGHBOR_HEAT_SOAK_MODEL.toFixed(2)} $\text{°C}$`;
+
+            let statusText = `Cycle ${cycleCount}: Grid Node is learning its predictable orbital thermal environment.`;
+            document.getElementById('status_message').classList.remove('bg-red-800', 'bg-green-800', 'bg-indigo-800', 'pulse');
+            document.getElementById('status_message').classList.add('bg-indigo-800');
+
+            if (cycleCount >= 6 && !isCuriosityTriggered) {
+                statusText = `Cycle ${cycleCount}: Thermal anomaly increasing. Residual error rising to **${UNMODELED_FACTOR_ERROR.toFixed(2)} $\text{°C}$**. New behavior beginning.`;
+            } else if (isCuriosityTriggered && !isExpertIntegrated) {
+                statusText = `WARNING: Causal mismatch detected. Unmodeled factor is **${UNMODELED_FACTOR_ERROR.toFixed(2)} $\text{°C}$**. NETWORK NEEDS NEW PHYSICAL LAW INTEGRATION.`;
+                document.getElementById('status_message').classList.remove('bg-indigo-800');
+                document.getElementById('status_message').classList.add('bg-red-800', 'pulse');
+                document.getElementById('ask-llm-btn').disabled = false;
+                document.getElementById('ask-llm-btn').classList.remove('bg-gray-500', 'opacity-50', 'cursor-not-allowed');
+                document.getElementById('ask-llm-btn').classList.add('bg-red-600', 'hover:bg-red-700');
+                document.getElementById('llm-status-text').innerHTML = `
+                    Curiosity is **TRIGGERED**! The unmodeled error is > ${CURIOSITY_THRESHOLD_ERROR * 100}%.<br>
+                    Hypothesis: Possible **Thermal Coupling Behavior** anomaly.
+                `;
+            } else if (isExpertIntegrated) {
+                statusText = `ALERT: New Physics Discovered. Thermal Coupling Modeled. Collective Network Learning Activated.`;
+                document.getElementById('status_message').classList.remove('bg-red-800', 'pulse');
+                document.getElementById('status_message').classList.add('bg-green-800');
+            }
+
+
+            document.getElementById('status_message').textContent = statusText;
+
+            // Update Causal Vector Output 
+            const learnedFactors = ["SolarFluxModel", "EarthAlbedoModel", "NeighborHeatSoakModel", ...(CURIOSITY_FACTOR_LEARNED ? ["Thermal_Coupling_Model"] : [])];
+
+            const causalVector = {
+                coordinate_volume: "LEO 400km, 10E (Orbital Grid Node)",
+                anomaly_type: "THERMAL_COUPLING_BEHAVIOR",
+                cycle_count: cycleCount,
+                measured_T_degC: totalAnomaly.toFixed(2),
+                modeled_T_degC: mismatchData.totalModeledAnomaly.toFixed(2),
+                unmodeled_residual_degC: UNMODELED_FACTOR_ERROR.toFixed(2),
+                confidence_score: CURIOSITY_FACTOR_LEARNED ? 0.99 : 0.85,
+                curiosity_trigger: isCuriosityTriggered,
+                learned_factors: learnedFactors,
+            };
+            document.getElementById('causal_vector_output').textContent = JSON.stringify(causalVector, null, 2);
+        }
+
+        function runCycle() {
+            networkLearning();
+            updateUI(calculateCausalMismatch());
+        }
+
+        function runMultipleCycles(count) {
+            for (let i = 0; i < count; i++) {
+                if (isCuriosityTriggered && !isExpertIntegrated) {
+                    break;
+                }
+                runCycle();
+            }
+        }
+
+        // --- Initialization ---
+
+        function initialize() {
+            const initialMismatch = calculateCausalMismatch();
+
+            document.getElementById('unmodeled_error_display').textContent = UNMODELED_FACTOR_ERROR.toFixed(2);
+            document.getElementById('total-error-value').textContent = initialMismatch.totalAnomaly.toFixed(2);
+
+            updateUI(initialMismatch);
+            document.getElementById('run-cycle-btn').addEventListener('click', runCycle);
+            document.getElementById('ask-llm-btn').addEventListener('click', consultExpertForFactor);
+
+            document.getElementById('status_message').textContent = `Welcome to the Orbital Thermal Learning Network. Press 'Run Cycle' to begin learning the orbital environment.`;
+        }
+
+        document.addEventListener('DOMContentLoaded', initialize);
+    </script>
+</body>
+
+</html>

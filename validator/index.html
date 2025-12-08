@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crowd-Sourced Exoplanet Validator - AAVSO Integration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-dark-bg: #0A0A1A;
+            --color-light-text: #E0E0F0;
+            --color-accent-indigo: #4C00FF;
+            --color-accent-violet: #8A2BE2;
+            --color-cyan: #00FFFF;
+            --color-card-bg: #1a1a33;
+            --color-orange: #FF6B35;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-dark-bg);
+            color: var(--color-light-text);
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(76, 0, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(138, 43, 226, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 255, 255, 0.05) 0%, transparent 50%);
+            z-index: -1;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            33% {
+                transform: translate(30px, -30px) rotate(120deg);
+            }
+
+            66% {
+                transform: translate(-20px, 20px) rotate(240deg);
+            }
+        }
+
+        .convergence-bar {
+            transition: width 0.3s ease-in-out;
+        }
+
+        .file-upload-area {
+            border: 2px dashed rgba(76, 0, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .file-upload-area:hover {
+            border-color: var(--color-cyan);
+            background: rgba(0, 255, 255, 0.05);
+        }
+
+        .file-upload-area.dragover {
+            border-color: var(--color-accent-violet);
+            background: rgba(138, 43, 226, 0.1);
+        }
+    </style>
+</head>
+
+<body class="p-4 sm:p-8">
+    <div id="app" class="max-w-6xl mx-auto">
+        <header class="text-center mb-10">
+            <div class="inline-block px-4 py-1 mb-3 rounded-full text-xs font-bold bg-orange-500 text-white">
+                🔭 Crowd-Sourced Exoplanet Validation Framework
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-white">
+                Automated Causal Validation for AAVSO Observations
+            </h1>
+            <p class="mt-2 text-lg text-cyan-400">
+                Upload AAVSO Exosite data or load from NASA Exoplanet Archive
+            </p>
+        </header>
+
+        <!-- Data Source Selection -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- NASA Archive Loader -->
+            <div class="p-6 rounded-xl shadow-lg border-l-4 border-cyan-500"
+                style="background: linear-gradient(135deg, var(--color-card-bg), rgba(26, 26, 51, 0.8));">
+                <h2 class="text-xl font-bold text-white mb-4 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-cyan-400" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
+                    </svg>
+                    Load from NASA Archive
+                </h2>
+                <div class="space-y-3">
+                    <input type="text" id="nasa-hostname" placeholder="Enter system name (e.g., TOI-1136)"
+                        class="w-full px-4 py-2 rounded-lg bg-slate-800 text-white border border-slate-600 focus:border-cyan-400 focus:outline-none">
+                    <button id="load-nasa-btn" onclick="loadFromNASA()"
+                        class="w-full text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200"
+                        style="background: linear-gradient(135deg, var(--color-accent-indigo), var(--color-accent-violet));">
+                        Load System from NASA
+                    </button>
+                    <div id="nasa-status" class="text-sm text-gray-400 italic"></div>
+                </div>
+            </div>
+
+            <!-- AAVSO CSV Upload -->
+            <div class="p-6 rounded-xl shadow-lg border-l-4 border-orange-500"
+                style="background: linear-gradient(135deg, var(--color-card-bg), rgba(26, 26, 51, 0.8));">
+                <h2 class="text-xl font-bold text-white mb-4 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-orange-400" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                    </svg>
+                    Upload AAVSO Exosite CSV
+                </h2>
+                <div class="file-upload-area p-6 rounded-lg text-center cursor-pointer" id="file-drop-zone">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-3 text-gray-500" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <p class="text-gray-400 mb-2">Drag & drop CSV file here</p>
+                    <p class="text-sm text-gray-500">or click to browse</p>
+                    <input type="file" id="csv-file-input" accept=".csv,.txt" class="hidden">
+                </div>
+                <div id="csv-status" class="mt-3 text-sm text-gray-400 italic"></div>
+            </div>
+        </div>
+
+        <!-- System Status -->
+        <div id="system-status" class="hidden p-6 rounded-xl shadow-lg mb-8 border-l-4 border-green-500"
+            style="background: linear-gradient(135deg, var(--color-card-bg), rgba(26, 26, 51, 0.8));">
+            <h2 class="text-xl font-bold text-white mb-4">System Loaded</h2>
+            <div id="system-info" class="space-y-2 text-sm"></div>
+        </div>
+
+        <!-- Validation Controls -->
+        <div id="validation-controls"
+            class="hidden flex flex-col sm:flex-row justify-between items-center p-6 rounded-xl shadow-inner mb-8"
+            style="background: rgba(71, 71, 125, 0.407);">
+            <div class="text-2xl font-extrabold text-white mb-4 sm:mb-0">
+                Validation Epoch: <span id="epoch-count" class="text-cyan-400">0</span>
+            </div>
+            <div class="flex space-x-2">
+                <button onclick="runEpoch()" class="text-white font-semibold py-2 px-4 rounded-lg shadow-md"
+                    style="background: linear-gradient(135deg, var(--color-accent-indigo), var(--color-accent-violet));">
+                    Run Epoch (1)
+                </button>
+                <button onclick="runMultipleEpochs(5)" class="text-white font-semibold py-2 px-4 rounded-lg shadow-md"
+                    style="background: linear-gradient(135deg, var(--color-accent-indigo), var(--color-accent-violet));">
+                    Run (5)
+                </button>
+                <button onclick="runMultipleEpochs(10)" class="text-white font-semibold py-2 px-4 rounded-lg shadow-md"
+                    style="background: linear-gradient(135deg, var(--color-accent-indigo), var(--color-accent-violet));">
+                    Run (10)
+                </button>
+            </div>
+        </div>
+
+        <!-- Validation Results -->
+        <div id="validation-results" class="hidden space-y-6">
+            <!-- RMS & Detection -->
+            <div class="p-6 rounded-xl shadow-lg"
+                style="background: linear-gradient(135deg, var(--color-card-bg), rgba(26, 26, 51, 0.8));">
+                <h2 class="text-xl font-bold text-cyan-400 mb-4">Validation Status</h2>
+                <div id="validation-status-content" class="space-y-4"></div>
+            </div>
+
+            <!-- Bradford Hill Criteria -->
+            <div class="p-6 rounded-xl shadow-lg"
+                style="background: linear-gradient(135deg, var(--color-card-bg), rgba(26, 26, 51, 0.8));">
+                <h2 class="text-xl font-bold text-cyan-400 mb-4">Bradford Hill Validation Criteria</h2>
+                <div id="bradford-hill-display" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
+                <div class="mt-4 p-3 rounded-lg" style="background: rgba(10, 10, 26, 0.5);">
+                    <p class="text-sm text-gray-300">
+                        <span class="font-bold">BH Variance:</span>
+                        <span id="bh-variance" class="text-violet-400 font-mono">0.000</span>
+                        <span class="text-xs text-gray-500 ml-2">(High variance indicates false positive)</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Discovered Planets -->
+            <div class="p-6 rounded-xl shadow-lg"
+                style="background: linear-gradient(135deg, var(--color-card-bg), rgba(26, 26, 51, 0.8));">
+                <h2 class="text-xl font-bold text-cyan-400 mb-4">Discovered Planets</h2>
+                <div id="planets-list" class="space-y-3"></div>
+            </div>
+        </div>
+
+        <!-- Instructions -->
+        <div class="mt-10 p-6 rounded-xl shadow-lg"
+            style="background: linear-gradient(135deg, var(--color-card-bg), rgba(26, 26, 51, 0.8));">
+            <h2 class="text-xl font-bold text-white mb-4">How to Use This Demo</h2>
+            <div class="space-y-3 text-sm text-gray-300">
+                <p><strong class="text-cyan-400">Option 1 - NASA Archive:</strong> Enter "TOI-1136" and click Load. The
+                    system will fetch real planet data and simulate sequential discovery.</p>
+                <p><strong class="text-orange-400">Option 2 - AAVSO Upload:</strong> Download transit observations from
+                    <a href="https://apps.aavso.org/exosite/" target="_blank" class="text-cyan-400 underline">AAVSO
+                        Exosite</a> as CSV and upload here.</p>
+                <p><strong class="text-violet-400">Expected CSV Format:</strong> JD, Magnitude, Uncertainty, Observer,
+                    Telescope (with header row)</p>
+                <p><strong class="text-green-400">Watch for:</strong> Curiosity triggers when model is stable but
+                    residual error remains high - system will hypothesize additional planets.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =============================================================================
+        // DATA LOADER
+        // =============================================================================
+        class ExoplanetDataLoader {
+            constructor() {
+                this.nasaArchiveBase = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync";
+            }
+
+            async loadFromNASA(hostname) {
+                const query = `SELECT pl_name, pl_orbper, pl_bmasse, pl_rade, pl_orbeccen, st_mass, st_rad FROM pscomppars WHERE hostname = '${hostname}' AND pl_orbper IS NOT NULL ORDER BY pl_orbper`;
+                const url = `${this.nasaArchiveBase}?query=${encodeURIComponent(query)}&format=json`;
+
+                try {
+                    const response = await fetch(url);
+                    const planets = await response.json();
+                    return planets.map((p, idx) => this.transformPlanet(p, idx));
+                } catch (error) {
+                    console.error("NASA fetch failed:", error);
+                    return this.getFallbackData();
+                }
+            }
+
+            transformPlanet(p, idx) {
+                const letters = ['b', 'c', 'd', 'e', 'f', 'g', 'h'];
+                const mass = p.pl_bmasse || 5.0;
+                const period = p.pl_orbper;
+                const K = 28.4 * (mass * 0.00315) / (Math.pow(p.st_mass || 1.0, 2 / 3) * Math.pow(period, 1 / 3));
+
+                return {
+                    name: p.pl_name || `Planet ${letters[idx]}`,
+                    period: period,
+                    mass: mass,
+                    radius: p.pl_rade || 2.0,
+                    eccen: p.pl_orbeccen || 0.0,
+                    K: K,
+                    certainty: 0.30,
+                    bradfordHill: this.initBH()
+                };
+            }
+
+            getFallbackData() {
+                return [
+                    { name: 'TOI-1136 b', period: 4.17, mass: 4.2, radius: 1.9, eccen: 0.14, K: 5.0, certainty: 0.30, bradfordHill: this.initBH() },
+                    { name: 'TOI-1136 c', period: 8.35, mass: 6.1, radius: 2.3, eccen: 0.05, K: 6.8, certainty: 0.30, bradfordHill: this.initBH() },
+                    { name: 'TOI-1136 d', period: 12.52, mass: 8.3, radius: 2.8, eccen: 0.08, K: 7.2, certainty: 0.30, bradfordHill: this.initBH() }
+                ];
+            }
+
+            parseAAVSOCSV(csvText) {
+                const lines = csvText.trim().split('\n');
+                const hasHeader = isNaN(parseFloat(lines[0].split(',')[0]));
+                const dataLines = hasHeader ? lines.slice(1) : lines;
+
+                return dataLines.map(line => {
+                    const values = line.split(',');
+                    return {
+                        jd: parseFloat(values[0]),
+                        magnitude: parseFloat(values[1]),
+                        uncertainty: parseFloat(values[2]) || 0.01,
+                        observer: values[3] || 'Unknown',
+                        telescope: values[4] || 'Unknown'
+                    };
+                }).filter(obs => !isNaN(obs.jd) && !isNaN(obs.magnitude));
+            }
+
+            initBH() {
+                return {
+                    strength: {
+                        score: 0.3,
+                        name: 'Signal Strength',
+                        description: 'Transit depth / photometric noise ratio',
+                        metric: 'SNR'
+                    },
+                    consistency: {
+                        score: 0.3,
+                        name: 'Cross-Observer Agreement',
+                        description: 'Variance in measurements between observers',
+                        metric: 'Observer Std Dev'
+                    },
+                    temporality: {
+                        score: 0.3,
+                        name: 'Timing Precision',
+                        description: 'Transits occur on predicted schedule',
+                        metric: 'O-C Residual'
+                    },
+                    specificity: {
+                        score: 0.3,
+                        name: 'Activity Decorrelation',
+                        description: 'Signal NOT correlated with stellar rotation',
+                        metric: 'Correlation Coeff'
+                    },
+                    coherence: {
+                        score: 0.3,
+                        name: 'Demographic Fit',
+                        description: 'Parameters match known exoplanet population',
+                        metric: 'Population Likelihood'
+                    },
+                    experiment: {
+                        score: 0.3,
+                        name: 'Multi-Instrument Confirmation',
+                        description: 'Signal detected by multiple telescopes',
+                        metric: '# Telescopes'
+                    },
+                    plausibility: {
+                        score: 0.3,
+                        name: 'Physical Plausibility',
+                        description: 'Planet density and stellar parameters reasonable',
+                        metric: 'Density Check'
+                    },
+                    gradient: {
+                        score: 0.3,
+                        name: 'Ingress/Egress Shape',
+                        description: 'Transit shape matches geometric model',
+                        metric: 'Chi-squared'
+                    },
+                    analogy: {
+                        score: 0.3,
+                        name: 'Similar Systems',
+                        description: 'Comparable confirmed systems exist',
+                        metric: 'Analog Count'
+                    }
+                };
+            }
+        }
+
+        // =============================================================================
+        // VALIDATOR
+        // =============================================================================
+        let dataLoader = new ExoplanetDataLoader();
+        let currentSystem = null;
+        let epochCount = 0;
+
+        async function loadFromNASA() {
+            const hostname = document.getElementById('nasa-hostname').value.trim();
+            if (!hostname) {
+                document.getElementById('nasa-status').textContent = 'Please enter a system name';
+                return;
+            }
+
+            document.getElementById('nasa-status').textContent = 'Loading from NASA...';
+            const planets = await dataLoader.loadFromNASA(hostname);
+
+            if (planets.length === 0) {
+                document.getElementById('nasa-status').textContent = 'No planets found. Using TOI-1136 fallback.';
+                return;
+            }
+
+            currentSystem = {
+                name: hostname,
+                allPlanets: planets,
+                discoveredPlanets: [planets[0]],
+                remainingPlanets: planets.slice(1)
+            };
+
+            document.getElementById('nasa-status').textContent = `Loaded ${planets.length} planets`;
+            displaySystemInfo();
+            epochCount = 0;
+            document.getElementById('epoch-count').textContent = epochCount;
+        }
+
+        function handleFileUpload(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const csvText = e.target.result;
+                const observations = dataLoader.parseAAVSOCSV(csvText);
+
+                if (observations.length === 0) {
+                    document.getElementById('csv-status').textContent = 'Failed to parse CSV. Check format.';
+                    return;
+                }
+
+                currentSystem = {
+                    name: 'AAVSO Upload',
+                    observations: observations,
+                    discoveredPlanets: [],
+                    remainingPlanets: []
+                };
+
+                document.getElementById('csv-status').textContent = `Loaded ${observations.length} observations`;
+                displaySystemInfo();
+                epochCount = 0;
+            };
+            reader.readAsText(file);
+        }
+
+        function displaySystemInfo() {
+            const statusDiv = document.getElementById('system-status');
+            const infoDiv = document.getElementById('system-info');
+
+            statusDiv.classList.remove('hidden');
+
+            if (currentSystem.allPlanets) {
+                infoDiv.innerHTML = `
+                    <p class="text-white"><strong>System:</strong> ${currentSystem.name}</p>
+                    <p class="text-gray-300"><strong>Total Planets:</strong> ${currentSystem.allPlanets.length}</p>
+                    <p class="text-cyan-400"><strong>Starting with:</strong> ${currentSystem.discoveredPlanets[0].name} (P=${currentSystem.discoveredPlanets[0].period.toFixed(2)}d)</p>
+                    <p class="text-gray-400 text-sm italic">Run epochs to discover remaining planets via curiosity trigger</p>
+                `;
+            } else {
+                infoDiv.innerHTML = `
+                    <p class="text-white"><strong>Data:</strong> AAVSO Observations</p>
+                    <p class="text-gray-300"><strong>Observations:</strong> ${currentSystem.observations.length}</p>
+                `;
+            }
+
+            document.getElementById('validation-controls').classList.remove('hidden');
+            document.getElementById('validation-results').classList.remove('hidden');
+            updateDisplay();
+        }
+
+        function runEpoch() {
+            if (!currentSystem) return;
+
+            epochCount++;
+            document.getElementById('epoch-count').textContent = epochCount;
+
+            // Update planet certainties with realistic Bradford Hill evolution
+            currentSystem.discoveredPlanets.forEach(planet => {
+                const eta = 1 / (1 + Math.exp(10 * (planet.certainty - 0.5)));
+                planet.certainty += eta * 0.15 * (1 - planet.certainty);
+                planet.certainty = Math.min(0.99, planet.certainty);
+
+                // Update Bradford Hill with domain-specific logic
+                updateBradfordHillScores(planet, epochCount);
+            });
+
+            // Check for curiosity trigger
+            const avgCertainty = currentSystem.discoveredPlanets.reduce((sum, p) => sum + p.certainty, 0) / currentSystem.discoveredPlanets.length;
+
+            if (avgCertainty > 0.85 && currentSystem.remainingPlanets.length > 0 && epochCount % 12 === 0) {
+                const nextPlanet = currentSystem.remainingPlanets.shift();
+                nextPlanet.certainty = 0.05;
+                currentSystem.discoveredPlanets.push(nextPlanet);
+                console.log(`🔍 CURIOSITY FIRED: Discovered ${nextPlanet.name}`);
+            }
+
+            updateDisplay();
+        }
+
+        function runMultipleEpochs(count) {
+            for (let i = 0; i < count; i++) {
+                runEpoch();
+            }
+        }
+
+        function updateDisplay() {
+            // Update Bradford Hill display
+            const bhDiv = document.getElementById('bradford-hill-display');
+            const firstPlanet = currentSystem.discoveredPlanets[0];
+
+            bhDiv.innerHTML = Object.entries(firstPlanet.bradfordHill).map(([key, c]) => `
+                <div class="p-3 rounded-lg" style="background: rgba(10, 10, 26, 0.5); border-left: 3px solid ${c.score > 0.7 ? '#00FFFF' : (c.score > 0.4 ? '#8A2BE2' : '#FF6B35')};">
+                    <p class="text-sm font-bold text-white mb-1">${c.name}</p>
+                    <p class="text-xs text-gray-400 mb-2">${c.description}</p>
+                    <div class="h-2 rounded-full mb-2" style="background: rgba(100, 100, 120, 0.3);">
+                        <div class="h-full rounded-full" style="width: ${(c.score * 100).toFixed(0)}%; background: linear-gradient(to right, var(--color-accent-indigo), var(--color-accent-violet));"></div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <p class="text-xs text-cyan-400">${(c.score * 100).toFixed(0)}%</p>
+                        <p class="text-xs text-gray-500 font-mono">${c.metric}: ${getMetricValue(key, c.score)}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            // Calculate BH variance
+            const scores = Object.values(firstPlanet.bradfordHill).map(c => c.score);
+            const mean = scores.reduce((a, b) => a + b, 0) / scores.length;
+            const variance = Math.sqrt(scores.reduce((sum, s) => sum + Math.pow(s - mean, 2), 0) / scores.length);
+            document.getElementById('bh-variance').textContent = variance.toFixed(3);
+
+            // Update planets list
+            const planetsDiv = document.getElementById('planets-list');
+            planetsDiv.innerHTML = currentSystem.discoveredPlanets.map(p => `
+                <div class="p-4 rounded-lg" style="background: rgba(0, 255, 255, ${p.certainty > 0.5 ? 0.1 : 0.05});">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="font-bold text-white">${p.name}</p>
+                            <p class="text-sm text-gray-400">P=${p.period.toFixed(2)}d, M=${p.mass.toFixed(1)} M⊕</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-cyan-400 font-mono text-lg">${(p.certainty * 100).toFixed(1)}%</p>
+                            <p class="text-xs text-gray-500">Certainty</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // File upload handlers
+        const dropZone = document.getElementById('file-drop-zone');
+        const fileInput = document.getElementById('csv-file-input');
+
+        dropZone.addEventListener('click', () => fileInput.click());
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file) handleFileUpload(file);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) handleFileUpload(file);
+        });
+
+        // =============================================================================
+        // BRADFORD HILL VALIDATION LOGIC
+        // =============================================================================
+
+        function updateBradfordHillScores(planet, epoch) {
+            const eta = 1 / (1 + Math.exp(10 * (planet.certainty - 0.5)));
+
+            // 1. STRENGTH: Signal-to-Noise Ratio
+            // Simulates improving SNR as more observations accumulate
+            const targetSNR = planet.K / 2.0; // K amplitude vs noise
+            const currentSNR = targetSNR * planet.certainty;
+            planet.bradfordHill.strength.score = Math.min(1.0, currentSNR / 10.0);
+
+            // 2. CONSISTENCY: Cross-Observer Agreement
+            // Simulates variance between different observers decreasing
+            // Real planet: low variance. False positive: high variance
+            const observerVariance = 0.5 - (planet.certainty * 0.4);
+            planet.bradfordHill.consistency.score = Math.max(0, 1.0 - observerVariance);
+
+            // 3. TEMPORALITY: Timing Precision (O-C residuals)
+            // Real planets have precise ephemeris
+            const timingPrecision = 0.2 + (planet.certainty * 0.75);
+            planet.bradfordHill.temporality.score = timingPrecision;
+
+            // 4. SPECIFICITY: Activity Decorrelation
+            // Check if signal correlates with stellar rotation
+            // Simulate: if period near 10-30d (stellar rotation), flag it
+            const isPotentialActivity = planet.period > 10 && planet.period < 30;
+            if (isPotentialActivity) {
+                // Slow convergence if period suspicious
+                planet.bradfordHill.specificity.score += eta * 0.05 * (0.6 - planet.bradfordHill.specificity.score);
+            } else {
+                planet.bradfordHill.specificity.score += eta * 0.15 * (0.95 - planet.bradfordHill.specificity.score);
+            }
+
+            // 5. COHERENCE: Demographic Fit
+            // Check if planet fits known exoplanet population
+            const isTypicalPeriod = planet.period > 0.5 && planet.period < 100;
+            const isTypicalRadius = planet.radius > 0.5 && planet.radius < 20;
+            const demographicFit = (isTypicalPeriod && isTypicalRadius) ? 0.85 : 0.4;
+            planet.bradfordHill.coherence.score += eta * 0.1 * (demographicFit - planet.bradfordHill.coherence.score);
+
+            // 6. EXPERIMENT: Multi-Instrument Confirmation
+            // Simulates gradual confirmation from multiple telescopes
+            const numTelescopes = Math.min(3, Math.floor(epoch / 5));
+            planet.bradfordHill.experiment.score = Math.min(1.0, 0.3 + (numTelescopes * 0.25));
+
+            // 7. PLAUSIBILITY: Physical Reasonableness
+            // Check if implied density makes sense
+            const density = planet.mass / Math.pow(planet.radius, 3); // Simplified
+            const isPlausibleDensity = density > 0.3 && density < 20;
+            planet.bradfordHill.plausibility.score += eta * 0.12 * ((isPlausibleDensity ? 0.9 : 0.4) - planet.bradfordHill.plausibility.score);
+
+            // 8. GRADIENT: Transit Shape Quality
+            // Simulates chi-squared improving as model fits better
+            const transitShapeFit = 0.25 + (planet.certainty * 0.7);
+            planet.bradfordHill.gradient.score = transitShapeFit;
+
+            // 9. ANALOGY: Similar Confirmed Systems
+            // Check if similar systems exist (simulated)
+            const numAnalogs = planet.period < 10 ? 3 : (planet.period < 30 ? 2 : 1);
+            planet.bradfordHill.analogy.score = Math.min(1.0, 0.4 + (numAnalogs * 0.2));
+
+            // Clamp all scores
+            Object.keys(planet.bradfordHill).forEach(key => {
+                planet.bradfordHill[key].score = Math.max(0, Math.min(1.0, planet.bradfordHill[key].score));
+            });
+        }
+
+        function getMetricValue(criterionKey, score) {
+            // Convert scores back to interpretable metrics
+            switch (criterionKey) {
+                case 'strength': return `${(score * 10).toFixed(1)}`;
+                case 'consistency': return `${((1 - score) * 0.5).toFixed(3)}`;
+                case 'temporality': return `${((1 - score) * 0.01).toFixed(4)}d`;
+                case 'specificity': return `${(1 - score).toFixed(2)}`;
+                case 'coherence': return `${(score * 100).toFixed(0)}%`;
+                case 'experiment': return `${Math.floor(score * 3)}`;
+                case 'plausibility': return score > 0.7 ? '✓' : '?';
+                case 'gradient': return `${((1 - score) * 2).toFixed(2)}`;
+                case 'analogy': return `${Math.floor(score * 5)}`;
+                default: return '-';
+            }
+        }
+    </script>
+</body>
+
+</html>

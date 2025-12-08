@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nervous Machine | Fixed Atlas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            background-color: #020205;
+            color: #00ff00;
+            font-family: 'Space Mono', monospace;
+            overflow: hidden;
+            margin: 0;
+        }
+
+        #dashboard {
+            display: grid;
+            grid-template-columns: 450px 1fr;
+            height: 100vh;
+        }
+
+        #terminal-panel {
+            background: rgba(5, 5, 10, 0.95);
+            border-right: 1px solid rgba(0, 255, 255, 0.2);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+        }
+
+        .term-header {
+            color: #888;
+            font-size: 0.8rem;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #log-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            font-size: 0.75rem;
+            line-height: 1.4;
+            color: #aaa;
+            scrollbar-width: none;
+        }
+
+        #log-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .log-entry {
+            margin-bottom: 4px;
+            animation: fadeIn 0.1s;
+        }
+
+        .log-grid {
+            color: #00FFFF;
+            font-weight: bold;
+        }
+
+        .log-vector {
+            color: #cc88ff;
+            background: rgba(100, 0, 255, 0.1);
+            padding: 2px 5px;
+            border-left: 2px solid #cc88ff;
+            margin: 5px 0;
+            display: block;
+            font-size: 0.7rem;
+        }
+
+        #atlas-panel {
+            position: relative;
+            background: radial-gradient(circle at 50% 50%, #0a0a20 0%, #000000 100%);
+            perspective: 1000px;
+            overflow: hidden;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .overlay-stat {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            text-align: right;
+            pointer-events: none;
+        }
+
+        .big-stat {
+            font-size: 2.5rem;
+            color: #00ffff;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .label {
+            color: #666;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 15px;
+            background: #00ffff;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="dashboard">
+        <div id="terminal-panel">
+            <div class="term-header">
+                <span>SPATIAL_INDEXER_V9.2</span>
+                <span style="color: #00ffff;">ACTIVE</span>
+            </div>
+            <div id="log-container"></div>
+            <div style="margin-top: 10px; color: #00ffff;">
+                > <span id="current-task">IDLE</span><span class="cursor"></span>
+            </div>
+        </div>
+
+        <div id="atlas-panel">
+            <canvas id="spaceCanvas"></canvas>
+            <div class="overlay-stat">
+                <div class="label">Mapped Sectors (1km³)</div>
+                <div id="vector-count" class="big-stat">0</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('spaceCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+
+        // --- 3D MATH ---
+        function project3D(x, y, z) {
+            const scale = 800 / (800 + z);
+            const x2d = (x * scale) + width / 2;
+            const y2d = (y * scale) + height / 2;
+            return { x: x2d, y: y2d, scale: scale };
+        }
+
+        function rotateY(x, z, theta) {
+            return [
+                x * Math.cos(theta) - z * Math.sin(theta),
+                x * Math.sin(theta) + z * Math.cos(theta)
+            ];
+        }
+
+        // --- CONFIG ---
+        let voxels = [];
+        let activeVoxels = []; // subset that are lit up
+        let cameraAngleY = 0;
+
+        // Fixed Locations in the "Address Book"
+        const SECTORS = {
+            MARS: { x: 300, y: -50, z: 400, color: '#FF4444' },
+            LEO: { x: -200, y: 0, z: -100, color: '#00FFFF' },
+            GEO: { x: 100, y: 150, z: -300, color: '#8A2BE2' }
+        };
+
+        function resize() {
+            width = canvas.width = document.getElementById('atlas-panel').clientWidth;
+            height = canvas.height = document.getElementById('atlas-panel').clientHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // --- TERMINAL LOGIC ---
+        const logBox = document.getElementById('log-container');
+        const taskBox = document.getElementById('current-task');
+        const counterBox = document.getElementById('vector-count');
+        let sectorCount = 0;
+
+        function log(msg, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `log-entry log-${type}`;
+            div.innerHTML = `[${new Date().toLocaleTimeString('en-US', { hour12: false, minute: "2-digit", second: "2-digit", fractionalSecondDigits: 2 })}] ${msg}`;
+            logBox.appendChild(div);
+            logBox.scrollTop = logBox.scrollHeight;
+        }
+
+        // --- SCENARIOS ---
+        const SCENARIOS = [
+            {
+                file: "NASA_MCO_Phase1_Exec_Summary.pdf",
+                type: "MARS",
+                steps: [
+                    { msg: "Ingesting MCO Report...", delay: 200 },
+                    { msg: "Calculating ECI Coordinates...", delay: 400 },
+                    { msg: "ADDRESS: [MARS_ORBIT_L4]", type: "grid", delay: 600 },
+                    { msg: "Mapping Vector: Unit Mismatch", type: "vector", delay: 800 },
+                    { msg: "ACTIVATING SECTOR...", type: "success", delay: 1000 }
+                ]
+            },
+            {
+                file: "ISS_Loop_A_Pump_Failure.pdf",
+                type: "LEO",
+                steps: [
+                    { msg: "Parsing Thermal Logs...", delay: 2500 },
+                    { msg: "ADDRESS: [LEO_INC_51.6]", type: "grid", delay: 2800 },
+                    { msg: "Mapping Vector: Ammonia Crystal", type: "vector", delay: 3000 },
+                    { msg: "ACTIVATING SECTOR...", type: "success", delay: 3200 }
+                ]
+            },
+            {
+                file: "Galaxy_15_Zombie_Sat.pdf",
+                type: "GEO",
+                steps: [
+                    { msg: "Analyzing Drift Patterns...", delay: 4500 },
+                    { msg: "ADDRESS: [GEO_SLOT_133W]", type: "grid", delay: 4700 },
+                    { msg: "Mapping Vector: Firmware Race", type: "vector", delay: 4900 },
+                    { msg: "ACTIVATING SECTOR...", type: "success", delay: 5100 }
+                ]
+            }
+        ];
+
+        // --- 3D VOXEL LOGIC ---
+        class Voxel {
+            constructor(x, y, z, color) {
+                this.x = x; this.y = y; this.z = z;
+                this.color = color;
+                this.size = 0;
+                this.targetSize = 15; // Fixed size for grid look
+                this.active = false;
+            }
+
+            activate() {
+                this.active = true;
+            }
+
+            draw(ctx) {
+                if (!this.active) return;
+                if (this.size < this.targetSize) this.size += 1;
+
+                // Rotation (Camera moves, Voxel stays still relative to origin)
+                let [rx, rz] = rotateY(this.x, this.z, cameraAngleY);
+
+                // Projection
+                const p = project3D(rx, this.y, rz);
+
+                if (p.scale > 0) {
+                    const s = this.size * p.scale;
+
+                    // Draw Cube
+                    ctx.strokeStyle = this.color;
+                    ctx.lineWidth = 1;
+                    ctx.globalAlpha = Math.min(1, p.scale);
+
+                    // Front Face
+                    ctx.strokeRect(p.x - s / 2, p.y - s / 2, s, s);
+
+                    // Fill (Glow)
+                    ctx.fillStyle = this.color;
+                    ctx.globalAlpha = 0.1;
+                    ctx.fillRect(p.x - s / 2, p.y - s / 2, s, s);
+
+                    // "Address" Line (Connecting to plane)
+                    ctx.beginPath();
+                    ctx.moveTo(p.x, p.y + s / 2);
+                    ctx.lineTo(p.x, p.y + s / 2 + (50 * p.scale)); // Drop shadow line
+                    ctx.strokeStyle = `rgba(255,255,255,0.1)`;
+                    ctx.stroke();
+
+                    ctx.globalAlpha = 1;
+                }
+            }
+        }
+
+        // Pre-populate specific sectors but keep them invisible
+        function activateSector(type) {
+            const center = SECTORS[type];
+
+            // Spawn a 3x3x3 grid of voxels at this location
+            // They represent the "Address Block"
+            for (let x = -1; x <= 1; x++) {
+                for (let y = -1; y <= 1; y++) {
+                    for (let z = -1; z <= 1; z++) {
+                        const v = new Voxel(
+                            center.x + (x * 40),
+                            center.y + (y * 40),
+                            center.z + (z * 40),
+                            center.color
+                        );
+                        v.activate();
+                        activeVoxels.push(v);
+                    }
+                }
+            }
+            sectorCount += 27; // 3x3x3
+            counterBox.innerText = sectorCount;
+        }
+
+        function draw() {
+            ctx.fillStyle = '#020205';
+            ctx.fillRect(0, 0, width, height);
+
+            cameraAngleY += 0.005; // Slow camera rotation
+
+            // Draw Reference Grid (The "Address Book" Frame)
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = '#222';
+            for (let i = -500; i <= 500; i += 200) {
+                // Longitude lines approximation
+                let [sx, sz] = rotateY(i, -500, cameraAngleY);
+                let [ex, ez] = rotateY(i, 500, cameraAngleY);
+                let p1 = project3D(sx, 100, sz);
+                let p2 = project3D(ex, 100, ez);
+                if (p1.scale > 0 && p2.scale > 0) {
+                    ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
+                }
+            }
+
+            // Draw Voxels
+            // Simple Z-sort
+            activeVoxels.sort((a, b) => {
+                let [ax, az] = rotateY(a.x, a.z, cameraAngleY);
+                let [bx, bz] = rotateY(b.x, b.z, cameraAngleY);
+                return bz - az;
+            });
+
+            activeVoxels.forEach(v => v.draw(ctx));
+
+            requestAnimationFrame(draw);
+        }
+
+        // --- RUN ---
+        async function runIngestion() {
+            draw();
+            log("Initializing Address Space...", "info");
+            await new Promise(r => setTimeout(r, 1000));
+
+            for (const scenario of SCENARIOS) {
+                taskBox.innerText = "PROCESSING: " + scenario.file;
+                log(`Opening ${scenario.file}...`, "info");
+
+                for (const step of scenario.steps) {
+                    await new Promise(r => setTimeout(r, step.delay - (scenario.steps.indexOf(step) > 0 ? scenario.steps[scenario.steps.indexOf(step) - 1].delay : 0)));
+                    log(step.msg, step.type || 'info');
+
+                    if (step.type === 'success') {
+                        activateSector(scenario.type);
+                    }
+                }
+                await new Promise(r => setTimeout(r, 1500));
+            }
+            taskBox.innerText = "STANDING BY";
+            log("Heritage Data Mapped to Grid.", "success");
+        }
+
+        runIngestion();
+
+    </script>
+</body>
+
+</html>

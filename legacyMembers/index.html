@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Space Physics Atlas | Nervous Machine</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <style>
+        /* --- CORE VARIABLES --- */
+        :root {
+            --color-bg: #050510;
+            --color-text-main: #E0E0F0;
+            --color-text-muted: #8A8AA0;
+
+            --color-cyan: #00FFFF;
+            --color-indigo: #4C00FF;
+            --color-violet: #8A2BE2;
+            --color-alert: #FF4400;
+
+            --spacing-unit: 1rem;
+            --font-main: 'Montserrat', sans-serif;
+            --font-mono: 'Space Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            margin: 0;
+            padding: 0;
+            background-color: var(--color-bg);
+            color: var(--color-text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- TYPOGRAPHY --- */
+        h1,
+        h2,
+        h3,
+        h4 {
+            color: #FFFFFF;
+            font-weight: 700;
+            margin-top: 0;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        h2::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: var(--color-cyan);
+            margin-top: 1rem;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            font-family: var(--font-mono);
+            color: var(--color-cyan);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        p {
+            font-size: 1.1rem;
+            color: var(--color-text-muted);
+            margin-bottom: 1.5rem;
+            max-width: 700px;
+        }
+
+        .mono-tag {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--color-indigo);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        /* --- LAYOUT UTILITIES --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 4rem;
+            align-items: center;
+        }
+
+        /* --- NAVIGATION --- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(5, 5, 16, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1rem 0;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo span {
+            color: var(--color-cyan);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav a {
+            color: var(--color-text-main);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--color-cyan);
+        }
+
+        /* --- BUTTONS --- */
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            border-radius: 4px;
+            font-weight: 600;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .btn-primary {
+            background: rgba(0, 255, 255, 0.1);
+            border-color: var(--color-cyan);
+            color: var(--color-cyan);
+        }
+
+        .btn-primary:hover {
+            background: var(--color-cyan);
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+        }
+
+        .btn-secondary {
+            border-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            border-color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        #canvas-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(5, 5, 16, 0.95) 0%, rgba(5, 5, 16, 0.7) 50%, rgba(5, 5, 16, 0.2) 100%);
+            z-index: 2;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            max-width: 800px;
+        }
+
+        .hero h1 {
+            margin-bottom: 1.5rem;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: #E0E0F0;
+            border-left: 3px solid var(--color-indigo);
+            padding-left: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        /* --- SECTIONS --- */
+        section {
+            padding: 6rem 0;
+        }
+
+        .bg-light {
+            background-color: #0A0A1A;
+        }
+
+        /* Infrastructure Cards */
+        .infra-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 2.5rem;
+            transition: transform 0.3s;
+        }
+
+        .infra-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--color-indigo);
+        }
+
+        .infra-icon {
+            font-family: var(--font-mono);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        /* Telemetry Graph (The Old Way) */
+        .telemetry-card {
+            background: rgba(20, 20, 25, 0.6);
+            border: 1px solid rgba(255, 68, 68, 0.3);
+            border-radius: 8px;
+            padding: 1.5rem;
+            font-family: var(--font-mono);
+        }
+
+        .telemetry-header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .telemetry-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .val-red {
+            color: #FF4444;
+            font-weight: bold;
+        }
+
+        .val-norm {
+            color: #44FF44;
+        }
+
+        .val-warn {
+            color: #FFBB44;
+        }
+
+        .graph-line {
+            height: 2px;
+            background: #333;
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        .graph-line::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            right: 20%;
+            width: 8px;
+            height: 8px;
+            background: #FF4444;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #FF4444;
+        }
+
+        .fail-badge {
+            background: rgba(255, 68, 68, 0.2);
+            color: #FF4444;
+            padding: 0.2rem 0.5rem;
+            font-size: 0.7rem;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+
+        /* Validation List */
+        .validation-item {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            align-items: flex-start;
+        }
+
+        .check-icon {
+            color: var(--color-cyan);
+            font-size: 1.2rem;
+            margin-top: 0.2rem;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background: #020208;
+            padding: 4rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-overlay {
+                background: rgba(5, 5, 16, 0.85);
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="canvas-bg"></canvas>
+
+    <header>
+        <div class="container">
+            <a href="#" class="logo">NERVOUS<span>MACHINE</span></a>
+            <nav>
+                <ul>
+                    <li><a href="#vision">The Atlas</a></li>
+                    <li><a href="#platform">Platform</a></li>
+                    <li><a href="https://nervousmachine.substack.com" target="_blank">Substack</a></li>
+                    <li><a href="mailto:heidi@everychart.io" style="color: var(--color-cyan);">Join Consortium</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="container">
+            <div class="hero-content">
+                <span class="mono-tag">FOUNDING MANIFESTO v1.0</span>
+                <h1>MAP THE<br>UNKNOWN.</h1>
+                <p>
+                    Space operations are entering thermal and radiation regimes where we have zero heritage data.
+                    <br><br>
+                    Nervous Machine is building <strong>The Space Physics Atlas</strong>—the first privacy-preserving
+                    causal graph of the Solar System.
+                    Don't fly blind. Fly with the map.
+                </p>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <a href="mailto:heidi@everychart.io" class="btn btn-primary">Apply for Founding Membership</a>
+                    <a href="#platform" class="btn btn-secondary">Audit Your Heritage Data</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="vision" class="bg-light">
+        <div class="container">
+            <div class="grid-2">
+                <div>
+                    <span class="mono-tag">THE PROBLEM</span>
+                    <h2>THE PHYSICS GAP</h2>
+                    <p>
+                        For 60 years, we operated in LEO and GEO. We mastered that physics.
+                        Now, we are pushing into <strong>Cislunar Space, Mars Surface, and Asteroid Belts</strong>.
+                    </p>
+                    <p>
+                        Today, every company discovers the same physics failures in isolation.
+                        One satellite burns a radiator; six months later, another makes the exact same mistake.
+                        This is the <strong>$6.4M Redundancy Problem</strong>.
+                    </p>
+                </div>
+
+                <div class="telemetry-card">
+                    <div class="telemetry-header">
+                        <span>MISSION CONTROL: LOGS</span>
+                        <span style="color: #FF4444;">STATUS: CRITICAL</span>
+                    </div>
+
+                    <div style="opacity: 0.5; margin-bottom: 1.5rem;">
+                        <div class="telemetry-row">
+                            <span>MISSION_A (Feb 2024)</span>
+                            <span>LEO_400KM</span>
+                        </div>
+                        <div class="telemetry-row">
+                            <span>Solar Array Angle:</span>
+                            <span class="val-warn">45.2°</span>
+                        </div>
+                        <div class="telemetry-row">
+                            <span>Attitude Error:</span>
+                            <span class="val-red">+12.4° (LIMIT)</span>
+                        </div>
+                        <span class="fail-badge">THERMAL FAILURE - LOSS OF ASSET</span>
+                    </div>
+
+                    <div style="border-top: 1px dashed #444; margin: 1rem 0;"></div>
+
+                    <div>
+                        <div class="telemetry-row">
+                            <span>MISSION_B (Aug 2024)</span>
+                            <span>LEO_400KM</span>
+                        </div>
+                        <div class="telemetry-row">
+                            <span>Solar Array Angle:</span>
+                            <span class="val-warn">45.2°</span>
+                        </div>
+                        <div class="telemetry-row">
+                            <span>Attitude Error:</span>
+                            <span class="val-red">+12.4° (LIMIT)</span>
+                        </div>
+                        <div class="graph-line"></div>
+                        <span class="fail-badge">REDUNDANT FAILURE - AVOIDABLE</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="platform">
+        <div class="container">
+            <span class="mono-tag">THE INFRASTRUCTURE</span>
+            <h2>THE NERVOUS MACHINE ECOSYSTEM</h2>
+            <p>We don't just "store" data. We digitize, validate, and operationalize it.</p>
+
+            <div class="grid-3" style="margin-top: 3rem;">
+                <div class="infra-card">
+                    <span class="infra-icon">01.</span>
+                    <h3>The Ingestion Engine</h3>
+                    <p><strong>"The Ontologist"</strong></p>
+                    <p>We don't start from zero. Our <strong>Apollo Compiler</strong> ingests 50 years of unstructured
+                        heritage data (NASA mission logs, thermal reports) to define the initial meaning of the causal
+                        graph.</p>
+                </div>
+
+                <div class="infra-card">
+                    <span class="infra-icon">02.</span>
+                    <h3>The Federated Atlas</h3>
+                    <p><strong>"The Map"</strong></p>
+                    <p>A privacy-preserving graph. You share the <strong>Causal Vector</strong> ("At 400km, radiators
+                        lose 12% efficiency"), not your proprietary design. When one validates a law, all learn.</p>
+                </div>
+
+                <div class="infra-card">
+                    <span class="infra-icon">03.</span>
+                    <h3>The Edge Reflex</h3>
+                    <p><strong>"The Passenger"</strong></p>
+                    <p>A 50-cent C-struct engine that sits on your flight computer. It doesn't fly the ship; it
+                        downloads the Atlas to <strong>configure</strong> the ship before anomalies strike.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-light">
+        <div class="container">
+            <div class="grid-2">
+                <div>
+                    <span class="mono-tag">HERITAGE & VALIDATION</span>
+                    <h2>BUILT ON THE SHOULDERS OF GIANTS</h2>
+                    <p>You aren't the first to fly. We ensure you don't repeat the mistakes of the past.</p>
+
+                    <div class="validation-item">
+                        <span class="check-icon">✓</span>
+                        <div>
+                            <h4 style="margin:0; color:#fff;">NASA Heritage Validation</h4>
+                            <p style="font-size: 0.9rem; margin:0;">Framework validated against 20 years of ISS thermal
+                                management logs.</p>
+                        </div>
+                    </div>
+
+                    <div class="validation-item">
+                        <span class="check-icon">✓</span>
+                        <div>
+                            <h4 style="margin:0; color:#fff;">Privacy-Preserving Vectors</h4>
+                            <p style="font-size: 0.9rem; margin:0;">Legal framework validated for IP-safe physics
+                                sharing.</p>
+                        </div>
+                    </div>
+
+                    <div class="validation-item">
+                        <span class="check-icon">✓</span>
+                        <div>
+                            <h4 style="margin:0; color:#fff;">Edge-Native Architecture</h4>
+                            <p style="font-size: 0.9rem; margin:0;">Running on TI MSP430 (16-bit) and ARM Cortex-M
+                                hardware.</p>
+                        </div>
+                    </div>
+                </div>
+                <div style="opacity: 0.5; text-align: center;">
+                    <div style="border: 1px dashed #555; padding: 4rem;">
+                        <p>FOUNDING MEMBERS CONSORTIUM</p>
+                        <p style="font-size: 0.8rem;">[Selection In Progress]</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <h2>JOIN THE LEGACY.</h2>
+            <p style="margin: 0 auto 2rem auto;">
+                We are selecting 6 Founding Organizations to define the standards for the next century of space physics.
+            </p>
+            <a href="mailto:heidi@everychart.io" class="btn btn-primary">Apply for Membership</a>
+            <div style="margin-top: 4rem; font-size: 0.8rem; color: #555;">
+                &copy; 2025 Nervous Machine. Los Angeles, CA.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let nodes = [];
+        let connections = [];
+
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+            initNodes();
+        }
+        window.addEventListener('resize', resize);
+
+        class Node {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.2;
+                this.vy = (Math.random() - 0.5) * 0.2;
+                this.size = Math.random() * 2 + 1;
+                this.validated = Math.random() > 0.8; // Some are "Beacons"
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                // Validated nodes are cyan/bright, others are faint
+                ctx.fillStyle = this.validated ? '#00FFFF' : 'rgba(255,255,255,0.1)';
+                ctx.fill();
+
+                // Glow for validated
+                if (this.validated) {
+                    ctx.shadowBlur = 15;
+                    ctx.shadowColor = '#00FFFF';
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                }
+            }
+        }
+
+        function initNodes() {
+            nodes = [];
+            // Create a cloud of nodes
+            for (let i = 0; i < 80; i++) nodes.push(new Node());
+        }
+
+        function animate() {
+            // Clear with semi-transparent black for trail effect? No, clean clear.
+            ctx.clearRect(0, 0, width, height);
+
+            // Draw connections (The Atlas Mesh)
+            ctx.lineWidth = 1;
+            for (let i = 0; i < nodes.length; i++) {
+                let p1 = nodes[i];
+                p1.update();
+                p1.draw();
+
+                // Connect nearby nodes
+                for (let j = i + 1; j < nodes.length; j++) {
+                    let p2 = nodes[j];
+                    let dx = p1.x - p2.x;
+                    let dy = p1.y - p2.y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 150) {
+                        ctx.beginPath();
+                        ctx.moveTo(p1.x, p1.y);
+                        ctx.lineTo(p2.x, p2.y);
+
+                        // If both are validated, strong cyan line. Else faint.
+                        if (p1.validated && p2.validated) {
+                            ctx.strokeStyle = `rgba(0, 255, 255, ${1 - dist / 150})`;
+                        } else {
+                            ctx.strokeStyle = `rgba(255, 255, 255, ${0.05 * (1 - dist / 150)})`;
+                        }
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+
+        resize();
+        animate();
+    </script>
+</body>
+
+</html>
