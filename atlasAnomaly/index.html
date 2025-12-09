@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas | Anomaly Detection System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@500;700;900&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000000;
+            color: #00ff00;
+            font-family: 'JetBrains Mono', monospace;
+            overflow: hidden;
+        }
+
+        #dashboard {
+            display: grid;
+            grid-template-columns: 480px 1fr 380px;
+            height: 100vh;
+            gap: 0;
+        }
+
+        /* LEFT PANEL - Terminal */
+        #terminal-panel {
+            background: linear-gradient(135deg, #0a0015 0%, #000000 100%);
+            border-right: 2px solid rgba(0, 255, 255, 0.3);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 20px 0 60px rgba(0, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #terminal-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.5), transparent);
+            animation: scanline 3s linear infinite;
+        }
+
+        @keyframes scanline {
+
+            0%,
+            100% {
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .term-header {
+            font-family: 'Orbitron', monospace;
+            color: #00ffff;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            border-bottom: 2px solid rgba(0, 255, 255, 0.3);
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            text-transform: uppercase;
+        }
+
+        .status-badge {
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.65rem;
+            font-weight: 700;
+        }
+
+        .status-active {
+            background: rgba(0, 255, 0, 0.2);
+            color: #00ff00;
+        }
+
+        .status-warning {
+            background: rgba(255, 165, 0, 0.2);
+            color: #ffa500;
+        }
+
+        .status-critical {
+            background: rgba(255, 0, 0, 0.3);
+            color: #ff3333;
+            animation: pulse-red 1s infinite;
+        }
+
+        @keyframes pulse-red {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        #log-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            font-size: 0.7rem;
+            line-height: 1.5;
+            color: #888;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(0, 255, 255, 0.3) transparent;
+            padding-right: 8px;
+        }
+
+        #log-container::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        #log-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        #log-container::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 255, 0.3);
+            border-radius: 2px;
+        }
+
+        .log-entry {
+            margin-bottom: 6px;
+            animation: slideIn 0.2s ease-out;
+            display: flex;
+            gap: 8px;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .log-timestamp {
+            color: #444;
+            flex-shrink: 0;
+            font-size: 0.65rem;
+        }
+
+        .log-info {
+            color: #888;
+        }
+
+        .log-success {
+            color: #00ff00;
+            font-weight: 700;
+        }
+
+        .log-warning {
+            color: #ffa500;
+            font-weight: 700;
+        }
+
+        .log-critical {
+            color: #ff3333;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(255, 51, 51, 0.5);
+        }
+
+        .log-baseline {
+            color: #00ffff;
+        }
+
+        .log-anomaly {
+            color: #ff00ff;
+            background: rgba(255, 0, 255, 0.1);
+            padding: 4px 8px;
+            border-left: 3px solid #ff00ff;
+            display: block;
+            margin: 4px 0;
+            font-size: 0.68rem;
+        }
+
+        #current-task-container {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(0, 255, 255, 0.2);
+            color: #00ffff;
+            font-size: 0.75rem;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 14px;
+            background: #00ffff;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+            margin-left: 2px;
+        }
+
+        @keyframes blink {
+
+            0%,
+            49% {
+                opacity: 1;
+            }
+
+            50%,
+            100% {
+                opacity: 0;
+            }
+        }
+
+        /* CENTER PANEL - 3D Atlas */
+        #atlas-panel {
+            position: relative;
+            background: radial-gradient(ellipse at center, #0a0a1a 0%, #000000 100%);
+            overflow: hidden;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .overlay-title {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #00ffff;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+            letter-spacing: 4px;
+            pointer-events: none;
+        }
+
+        .overlay-subtitle {
+            position: absolute;
+            top: 62px;
+            left: 24px;
+            font-size: 0.7rem;
+            color: #666;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            pointer-events: none;
+        }
+
+        /* RIGHT PANEL - Metrics */
+        #metrics-panel {
+            background: linear-gradient(225deg, #0a0015 0%, #000000 100%);
+            border-left: 2px solid rgba(255, 0, 255, 0.3);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            box-shadow: -20px 0 60px rgba(255, 0, 255, 0.1);
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 0, 255, 0.3) transparent;
+        }
+
+        .metric-card {
+            background: rgba(10, 10, 30, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            border-color: rgba(0, 255, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+        }
+
+        .metric-label {
+            color: #666;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .metric-value {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            transition: color 0.3s ease;
+        }
+
+        .metric-value.warning {
+            color: #ffa500;
+            text-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
+        }
+
+        .metric-value.critical {
+            color: #ff3333;
+            text-shadow: 0 0 10px rgba(255, 51, 51, 0.5);
+            animation: pulse-scale 1s infinite;
+        }
+
+        @keyframes pulse-scale {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .metric-subtext {
+            font-size: 0.65rem;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        .cube-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 12px;
+        }
+
+        .cube-item {
+            font-size: 0.65rem;
+            padding: 6px;
+            margin: 4px 0;
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 3px solid #00ff00;
+            transition: all 0.3s ease;
+        }
+
+        .cube-item.anomaly {
+            border-left-color: #ff3333;
+            background: rgba(255, 51, 51, 0.1);
+            animation: pulse-border 1s infinite;
+        }
+
+        @keyframes pulse-border {
+
+            0%,
+            100% {
+                border-left-width: 3px;
+            }
+
+            50% {
+                border-left-width: 5px;
+            }
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ffff, #00ff00);
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="dashboard">
+        <!-- LEFT: Terminal Log -->
+        <div id="terminal-panel">
+            <div class="term-header">
+                <span>CAUSAL ATLAS v12.4</span>
+                <span id="system-status" class="status-badge status-active">NOMINAL</span>
+            </div>
+            <div id="log-container"></div>
+            <div id="current-task-container">
+                <span style="color: #666;">&gt;</span> <span id="current-task">Establishing baselines...</span><span
+                    class="cursor"></span>
+            </div>
+        </div>
+
+        <!-- CENTER: 3D Visualization -->
+        <div id="atlas-panel">
+            <div class="overlay-title">ATLAS</div>
+            <div class="overlay-subtitle">Anomaly Detection Grid</div>
+            <canvas id="spaceCanvas"></canvas>
+        </div>
+
+        <!-- RIGHT: Metrics -->
+        <div id="metrics-panel">
+            <div class="metric-card">
+                <div class="metric-label">Mapped Cubes (1km³)</div>
+                <div id="cube-count" class="metric-value">0</div>
+                <div class="metric-subtext">Baseline confidence: <span id="avg-confidence">0%</span></div>
+                <div class="progress-bar">
+                    <div id="confidence-progress" class="progress-fill" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">Active Anomalies</div>
+                <div id="anomaly-count" class="metric-value">0</div>
+                <div class="metric-subtext">Severity: <span id="max-severity">NONE</span></div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">Monitored Regions</div>
+                <div class="cube-list" id="region-list"></div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">System Health</div>
+                <div class="metric-subtext" style="line-height: 1.6;">
+                    <div>Telemetry: <span style="color: #00ff00;">ACTIVE</span></div>
+                    <div>Prediction: <span style="color: #00ff00;">ONLINE</span></div>
+                    <div>Learning: <span style="color: #00ff00;">ENABLED</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('spaceCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+
+        // ===== CONFIGURATION =====
+        const CUBE_SIZE = 30;
+        const BASELINE_BUILD_TIME = 5000; // 5 seconds to establish baseline
+        const ANOMALY_THRESHOLD = 3.0; // sigma
+
+        // Cube States
+        const STATE = {
+            ESTABLISHING: 'establishing',
+            BASELINE: 'baseline',
+            WARNING: 'warning',
+            ANOMALY: 'anomaly',
+            CRITICAL: 'critical'
+        };
+
+        // Regional definitions with realistic baseline parameters
+        const REGIONS = {
+            LEO_ISS: {
+                name: 'LEO (ISS Orbit)',
+                position: { x: -250, y: 50, z: -150 },
+                color: '#00FFFF',
+                baseline: {
+                    radiation: { mean: 0.08, std: 0.01 },
+                    plasma: { mean: 1e11, std: 1e10 },
+                    temperature: { mean: 280, std: 15 }
+                }
+            },
+            GEO_WEST: {
+                name: 'GEO (133°W)',
+                position: { x: 150, y: -80, z: 350 },
+                color: '#8A2BE2',
+                baseline: {
+                    radiation: { mean: 0.05, std: 0.01 },
+                    plasma: { mean: 1e6, std: 1e5 },
+                    temperature: { mean: 285, std: 10 }
+                }
+            },
+            GEO_CENTRAL: {
+                name: 'GEO (0°)',
+                position: { x: 200, y: 100, z: -300 },
+                color: '#9370DB',
+                baseline: {
+                    radiation: { mean: 0.05, std: 0.01 },
+                    plasma: { mean: 1e6, std: 1e5 },
+                    temperature: { mean: 285, std: 10 }
+                }
+            },
+            GEO_EAST: {
+                name: 'GEO (47°E)',
+                position: { x: -100, y: 120, z: 300 },
+                color: '#BA55D3',
+                baseline: {
+                    radiation: { mean: 0.05, std: 0.01 },
+                    plasma: { mean: 1e6, std: 1e5 },
+                    temperature: { mean: 285, std: 10 }
+                }
+            }
+        };
+
+        // ===== 3D PROJECTION =====
+        let cameraAngleY = 0;
+
+        function project3D(x, y, z) {
+            const scale = 800 / (800 + z);
+            const x2d = (x * scale) + width / 2;
+            const y2d = (y * scale) + height / 2;
+            return { x: x2d, y: y2d, scale: scale, depth: z };
+        }
+
+        function rotateY(x, z, theta) {
+            return [
+                x * Math.cos(theta) - z * Math.sin(theta),
+                x * Math.sin(theta) + z * Math.cos(theta)
+            ];
+        }
+
+        // ===== VOXEL CLASS =====
+        class CausalCube {
+            constructor(id, region, offset) {
+                this.id = id;
+                this.region = region;
+                this.x = region.position.x + offset.x;
+                this.y = region.position.y + offset.y;
+                this.z = region.position.z + offset.z;
+                this.color = region.color;
+
+                this.state = STATE.ESTABLISHING;
+                this.confidence = 0;
+                this.observations = 0;
+
+                this.baseline = JSON.parse(JSON.stringify(region.baseline));
+                this.currentReading = this.generateReading();
+
+                this.size = 0;
+                this.targetSize = CUBE_SIZE;
+                this.pulsePhase = Math.random() * Math.PI * 2;
+
+                this.anomalyDetected = false;
+                this.anomalySigma = 0;
+            }
+
+            generateReading(anomaly = false) {
+                const reading = {};
+                for (let param in this.baseline) {
+                    const base = this.baseline[param];
+                    if (anomaly) {
+                        // Generate anomalous reading
+                        const anomalyFactor = 10 + Math.random() * 40; // 10-50 sigma event
+                        reading[param] = base.mean + (anomalyFactor * base.std);
+                    } else {
+                        // Normal reading within ~2 sigma
+                        const randomFactor = (Math.random() - 0.5) * 2;
+                        reading[param] = base.mean + (randomFactor * base.std);
+                    }
+                }
+                return reading;
+            }
+
+            update(deltaTime) {
+                // Build confidence over time
+                if (this.state === STATE.ESTABLISHING) {
+                    this.confidence += deltaTime / BASELINE_BUILD_TIME;
+                    if (this.confidence >= 1.0) {
+                        this.confidence = 1.0;
+                        this.state = STATE.BASELINE;
+                        log(`Cube ${this.id}: Baseline established`, 'baseline');
+                    }
+                }
+
+                // Simulate periodic measurements
+                this.observations++;
+
+                // Size animation
+                if (this.size < this.targetSize) {
+                    this.size += 1.5;
+                }
+
+                // Pulse animation
+                this.pulsePhase += 0.05;
+            }
+
+            triggerAnomaly(severity = 10) {
+                this.currentReading = this.generateReading(true);
+                this.anomalyDetected = true;
+
+                // Calculate sigma deviation
+                const sigmas = [];
+                for (let param in this.currentReading) {
+                    const deviation = Math.abs(this.currentReading[param] - this.baseline[param].mean);
+                    const sigma = deviation / this.baseline[param].std;
+                    sigmas.push(sigma);
+                }
+                this.anomalySigma = Math.max(...sigmas);
+
+                // Update state based on severity
+                if (this.anomalySigma > 20) {
+                    this.state = STATE.CRITICAL;
+                } else if (this.anomalySigma > 10) {
+                    this.state = STATE.ANOMALY;
+                } else if (this.anomalySigma > 3) {
+                    this.state = STATE.WARNING;
+                }
+
+                return this.anomalySigma;
+            }
+
+            resolveAnomaly() {
+                this.anomalyDetected = false;
+                this.currentReading = this.generateReading();
+                this.state = STATE.BASELINE;
+                this.anomalySigma = 0;
+            }
+
+            getDisplayColor() {
+                switch (this.state) {
+                    case STATE.ESTABLISHING:
+                        return '#444444';
+                    case STATE.BASELINE:
+                        return this.color;
+                    case STATE.WARNING:
+                        return '#FFA500';
+                    case STATE.ANOMALY:
+                        return '#FF00FF';
+                    case STATE.CRITICAL:
+                        return '#FF3333';
+                    default:
+                        return this.color;
+                }
+            }
+
+            draw(ctx) {
+                if (this.size < 5) return;
+
+                let [rx, rz] = rotateY(this.x, this.z, cameraAngleY);
+                const p = project3D(rx, this.y, rz);
+
+                if (p.scale <= 0) return;
+
+                const s = this.size * p.scale;
+                const displayColor = this.getDisplayColor();
+
+                // Pulsing for anomalies
+                let pulseIntensity = 1.0;
+                if (this.anomalyDetected) {
+                    pulseIntensity = 0.7 + 0.3 * Math.sin(this.pulsePhase * 3);
+                } else if (this.state === STATE.ESTABLISHING) {
+                    pulseIntensity = 0.3 + 0.2 * Math.sin(this.pulsePhase);
+                }
+
+                ctx.globalAlpha = Math.min(1, p.scale) * pulseIntensity;
+
+                // Draw cube wireframe
+                ctx.strokeStyle = displayColor;
+                ctx.lineWidth = this.anomalyDetected ? 2 : 1;
+                ctx.strokeRect(p.x - s / 2, p.y - s / 2, s, s);
+
+                // Fill with glow
+                ctx.fillStyle = displayColor;
+                ctx.globalAlpha = (this.anomalyDetected ? 0.3 : 0.1) * pulseIntensity;
+                ctx.fillRect(p.x - s / 2, p.y - s / 2, s, s);
+
+                // Connection line to "ground plane"
+                if (this.state !== STATE.ESTABLISHING) {
+                    ctx.globalAlpha = 0.1 * p.scale;
+                    ctx.beginPath();
+                    ctx.moveTo(p.x, p.y + s / 2);
+                    ctx.lineTo(p.x, p.y + s / 2 + (40 * p.scale));
+                    ctx.strokeStyle = displayColor;
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
+
+                // Alert marker for anomalies
+                if (this.anomalyDetected && this.state === STATE.CRITICAL) {
+                    ctx.globalAlpha = 0.8 * pulseIntensity;
+                    ctx.fillStyle = '#FF3333';
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y - s / 2 - 10, 4, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.strokeStyle = '#FF3333';
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y - s / 2 - 10, 8, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        // ===== SCENE MANAGEMENT =====
+        let cubes = [];
+        let lastTime = Date.now();
+        let systemStatus = 'nominal';
+
+        function initializeCubes() {
+            let id = 0;
+            for (let regionKey in REGIONS) {
+                const region = REGIONS[regionKey];
+                // Create 3x3x3 grid per region
+                for (let x = -1; x <= 1; x++) {
+                    for (let y = -1; y <= 1; y++) {
+                        for (let z = -1; z <= 1; z++) {
+                            const cube = new CausalCube(
+                                `${regionKey}_${id++}`,
+                                region,
+                                { x: x * 50, y: y * 50, z: z * 50 }
+                            );
+                            cubes.push(cube);
+                        }
+                    }
+                }
+            }
+        }
+
+        // ===== UI UPDATES =====
+        const logBox = document.getElementById('log-container');
+        const taskBox = document.getElementById('current-task');
+        const cubeCountBox = document.getElementById('cube-count');
+        const avgConfidenceBox = document.getElementById('avg-confidence');
+        const confidenceProgress = document.getElementById('confidence-progress');
+        const anomalyCountBox = document.getElementById('anomaly-count');
+        const maxSeverityBox = document.getElementById('max-severity');
+        const regionListBox = document.getElementById('region-list');
+        const systemStatusBadge = document.getElementById('system-status');
+
+        function log(msg, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `log-entry log-${type}`;
+            const timestamp = new Date().toLocaleTimeString('en-US', {
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                fractionalSecondDigits: 2
+            });
+            div.innerHTML = `<span class="log-timestamp">[${timestamp}]</span><span>${msg}</span>`;
+            logBox.appendChild(div);
+            logBox.scrollTop = logBox.scrollHeight;
+
+            // Limit log entries
+            if (logBox.children.length > 100) {
+                logBox.removeChild(logBox.firstChild);
+            }
+        }
+
+        function updateMetrics() {
+            const baselineCubes = cubes.filter(c => c.state === STATE.BASELINE).length;
+            const avgConf = cubes.reduce((sum, c) => sum + c.confidence, 0) / cubes.length;
+            const anomalies = cubes.filter(c => c.anomalyDetected);
+
+            cubeCountBox.textContent = baselineCubes;
+            avgConfidenceBox.textContent = Math.round(avgConf * 100) + '%';
+            confidenceProgress.style.width = (avgConf * 100) + '%';
+            anomalyCountBox.textContent = anomalies.length;
+
+            // Update anomaly severity
+            if (anomalies.length > 0) {
+                const maxSigma = Math.max(...anomalies.map(a => a.anomalySigma));
+                if (maxSigma > 20) {
+                    maxSeverityBox.textContent = 'CRITICAL';
+                    maxSeverityBox.style.color = '#ff3333';
+                    anomalyCountBox.classList.add('critical');
+                } else if (maxSigma > 10) {
+                    maxSeverityBox.textContent = 'HIGH';
+                    maxSeverityBox.style.color = '#ff00ff';
+                    anomalyCountBox.classList.add('warning');
+                } else {
+                    maxSeverityBox.textContent = 'MODERATE';
+                    maxSeverityBox.style.color = '#ffa500';
+                    anomalyCountBox.classList.add('warning');
+                }
+            } else {
+                maxSeverityBox.textContent = 'NONE';
+                maxSeverityBox.style.color = '#888';
+                anomalyCountBox.classList.remove('critical', 'warning');
+            }
+
+            // Update region list
+            regionListBox.innerHTML = '';
+            for (let regionKey in REGIONS) {
+                const region = REGIONS[regionKey];
+                const regionCubes = cubes.filter(c => c.region === region);
+                const anomalyCubes = regionCubes.filter(c => c.anomalyDetected);
+
+                const div = document.createElement('div');
+                div.className = 'cube-item' + (anomalyCubes.length > 0 ? ' anomaly' : '');
+                div.innerHTML = `
+                    <div style="color: ${region.color}; font-weight: 700;">${region.name}</div>
+                    <div style="color: #666; font-size: 0.6rem;">
+                        Cubes: ${regionCubes.length} | 
+                        ${anomalyCubes.length > 0 ?
+                        `<span style="color: #ff3333;">ANOMALY (${anomalyCubes.length})</span>` :
+                        '<span style="color: #00ff00;">NOMINAL</span>'}
+                    </div>
+                `;
+                regionListBox.appendChild(div);
+            }
+
+            // Update system status badge
+            if (anomalies.length > 0) {
+                const maxSigma = Math.max(...anomalies.map(a => a.anomalySigma));
+                if (maxSigma > 20) {
+                    systemStatusBadge.textContent = 'CRITICAL';
+                    systemStatusBadge.className = 'status-badge status-critical';
+                } else if (maxSigma > 10) {
+                    systemStatusBadge.textContent = 'ALERT';
+                    systemStatusBadge.className = 'status-badge status-warning';
+                } else {
+                    systemStatusBadge.textContent = 'WARNING';
+                    systemStatusBadge.className = 'status-badge status-warning';
+                }
+            } else if (avgConf < 1.0) {
+                systemStatusBadge.textContent = 'CALIBRATING';
+                systemStatusBadge.className = 'status-badge status-warning';
+            } else {
+                systemStatusBadge.textContent = 'NOMINAL';
+                systemStatusBadge.className = 'status-badge status-active';
+            }
+        }
+
+        // ===== RENDER LOOP =====
+        function resize() {
+            width = canvas.width = canvas.clientWidth;
+            height = canvas.height = canvas.clientHeight;
+        }
+
+        function draw() {
+            const now = Date.now();
+            const deltaTime = now - lastTime;
+            lastTime = now;
+
+            // Clear canvas
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, width, height);
+
+            // Rotate camera
+            cameraAngleY += 0.003;
+
+            // Draw reference grid
+            ctx.strokeStyle = '#111111';
+            ctx.lineWidth = 1;
+            for (let i = -600; i <= 600; i += 150) {
+                let [sx, sz] = rotateY(i, -600, cameraAngleY);
+                let [ex, ez] = rotateY(i, 600, cameraAngleY);
+                let p1 = project3D(sx, 0, sz);
+                let p2 = project3D(ex, 0, ez);
+                if (p1.scale > 0 && p2.scale > 0) {
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                }
+            }
+
+            // Update and sort cubes
+            cubes.forEach(cube => cube.update(deltaTime));
+
+            // Z-sort for proper rendering
+            cubes.sort((a, b) => {
+                let [ax, az] = rotateY(a.x, a.z, cameraAngleY);
+                let [bx, bz] = rotateY(b.x, b.z, cameraAngleY);
+                return bz - az;
+            });
+
+            // Draw cubes
+            cubes.forEach(cube => cube.draw(ctx));
+
+            requestAnimationFrame(draw);
+        }
+
+        // ===== SCENARIO EXECUTION =====
+        async function runScenario() {
+            log('Initializing Causal Atlas...', 'info');
+            log('Deploying spatial indexers...', 'info');
+            await sleep(1000);
+
+            log(`Monitoring ${Object.keys(REGIONS).length} orbital regions`, 'info');
+            log('Establishing baselines from telemetry...', 'info');
+            taskBox.textContent = 'Establishing baselines...';
+
+            // Wait for baseline establishment
+            await sleep(BASELINE_BUILD_TIME + 1000);
+
+            log('All cubes baseline established', 'success');
+            log(`Confidence: 100% | Cubes: ${cubes.length}`, 'baseline');
+            taskBox.textContent = 'Monitoring for anomalies...';
+            updateMetrics();
+
+            await sleep(2000);
+
+            // ===== SOLAR STORM SCENARIO =====
+            log('═══════════════════════════════════', 'info');
+            log('SCENARIO: Solar Storm Event', 'warning');
+            log('═══════════════════════════════════', 'info');
+            await sleep(500);
+
+            // T-18 hours: Space weather satellite detects CME
+            log('Space Weather Sat: CME detected on solar surface', 'info');
+            log('Calculating arrival time at Earth orbit...', 'info');
+            await sleep(1500);
+            log('PREDICTION: Storm arrival in 18 hours', 'warning');
+            log('Estimated intensity: X-class (extreme)', 'warning');
+            taskBox.textContent = 'Storm predicted - monitoring precursors';
+            await sleep(2000);
+
+            // T-1 hour: Leading edge detected in LEO
+            log('T-1hr: LEO sensors detect particle flux increase', 'warning');
+            const leoCubes = cubes.filter(c => c.region === REGIONS.LEO_ISS);
+            leoCubes[0].triggerAnomaly();
+            log(`ANOMALY DETECTED: ${leoCubes[0].id}`, 'anomaly');
+            log(`├─ Radiation: 2.1σ above baseline`, 'anomaly');
+            log(`└─ Assessment: Leading edge of storm`, 'anomaly');
+            updateMetrics();
+            await sleep(2000);
+
+            // T-0: Storm hits GEO
+            log('T-0hr: STORM ARRIVAL - GEO BAND', 'critical');
+            log('═══════════════════════════════════', 'critical');
+            taskBox.textContent = 'CRITICAL EVENT - Solar storm in progress';
+
+            // Trigger anomalies across all GEO cubes
+            const geoCubes = cubes.filter(c =>
+                c.region === REGIONS.GEO_WEST ||
+                c.region === REGIONS.GEO_CENTRAL ||
+                c.region === REGIONS.GEO_EAST
+            );
+
+            for (let i = 0; i < geoCubes.length; i++) {
+                await sleep(100);
+                const sigma = geoCubes[i].triggerAnomaly();
+                log(`CRITICAL ANOMALY: ${geoCubes[i].id}`, 'critical');
+                log(`├─ Radiation: ${sigma.toFixed(1)}σ deviation`, 'anomaly');
+                log(`├─ Plasma density: ${(sigma * 0.4).toFixed(1)}σ deviation`, 'anomaly');
+                log(`└─ Electron temp: ${(sigma * 0.9).toFixed(1)}σ deviation`, 'anomaly');
+                updateMetrics();
+            }
+
+            await sleep(1000);
+            log('═══════════════════════════════════', 'critical');
+            log('AUTOMATED RESPONSE CASCADE INITIATED', 'warning');
+            log('═══════════════════════════════════', 'critical');
+            await sleep(500);
+
+            log('Directive: All GEO satellites → SAFE MODE', 'success');
+            log('├─ Orient solar panels edge-on', 'info');
+            log('├─ Power down non-essential systems', 'info');
+            log('└─ Log component performance for learning', 'info');
+            await sleep(1000);
+
+            log('Directive: ISS crew → Radiation shelter', 'success');
+            log('├─ Postpone all EVA activities', 'info');
+            log('└─ Monitor dosimeter readings', 'info');
+            await sleep(1000);
+
+            log('Heritage Query: "Last similar event?"', 'baseline');
+            await sleep(800);
+            log('├─ Match: Halloween Storms 2003 (Z=0.89)', 'baseline');
+            log('├─ Duration: 12-48 hours predicted', 'baseline');
+            log('└─ Damage probability: 15% (reduced to 3% in safe mode)', 'baseline');
+            await sleep(2000);
+
+            log('Casualty Prediction Model:', 'info');
+            log('├─ 15% prob: Electronics latchup', 'info');
+            log('├─ 40% prob: Solar panel degradation (temporary)', 'info');
+            log('└─  2% prob: Permanent component damage', 'info');
+            await sleep(2000);
+
+            // Storm peak
+            log('T+2hr: Storm intensity PEAK', 'critical');
+            log('47 satellites reporting solar panel current drop', 'warning');
+            await sleep(1500);
+
+            log('Real-time learning update:', 'baseline');
+            log('├─ Prior model: 15-30% efficiency loss', 'baseline');
+            log('├─ Observed: 25% ± 3% across fleet', 'baseline');
+            log('└─ Updated model certainty: Z = 0.92 ↑', 'baseline');
+            await sleep(2000);
+
+            // Storm subsides
+            log('T+48hr: Storm subsiding', 'success');
+            taskBox.textContent = 'Storm resolving - restoring nominal ops';
+
+            for (let i = 0; i < geoCubes.length; i++) {
+                await sleep(150);
+                geoCubes[i].resolveAnomaly();
+                updateMetrics();
+            }
+            leoCubes[0].resolveAnomaly();
+
+            await sleep(1000);
+            log('All cubes returned to baseline (±1σ)', 'success');
+            log('Event catalogued. Causal models updated.', 'success');
+            await sleep(1000);
+
+            log('═══════════════════════════════════', 'success');
+            log('SCENARIO COMPLETE', 'success');
+            log('═══════════════════════════════════', 'success');
+            log('Storm event validated across 47 satellites', 'baseline');
+            log('Baseline refined for solar maximum period', 'baseline');
+            log('Prediction accuracy improved: Z = 0.78 → 0.89', 'baseline');
+            await sleep(2000);
+
+            log('Key learnings propagated to:', 'info');
+            log('├─ All current missions', 'info');
+            log('├─ Future mission planning databases', 'info');
+            log('└─ Heritage knowledge archive', 'info');
+            await sleep(2000);
+
+            taskBox.textContent = 'Standing by for next event...';
+            log('System ready. Monitoring continues.', 'success');
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // ===== INITIALIZATION =====
+        window.addEventListener('resize', resize);
+        resize();
+
+        initializeCubes();
+        draw();
+
+        // Start scenario after a brief delay
+        setTimeout(() => {
+            runScenario();
+            // Update metrics every second
+            setInterval(updateMetrics, 1000);
+        }, 1000);
+
+    </script>
+</body>
+
+</html>
