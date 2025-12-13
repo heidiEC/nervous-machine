@@ -264,11 +264,20 @@
             max-width: 640px;
         }
 
-        .video-container video {
+        .video-container iframe {
             width: 100%;
             height: auto;
+            aspect-ratio: 16 / 9;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        @media (max-width: 768px) {
+            .video-container {
+                margin: 1.5rem auto 2rem;
+                max-width: 100%;
+                padding: 0 1rem;
+            }
         }
 
         .video-container .tagline {
@@ -280,11 +289,6 @@
             margin-bottom: 2rem;
         }
 
-        @media (max-width: 768px) {
-            .video-container {
-                margin: 1.5rem auto 2rem;
-            }
-        }
 
         /* Content Sections */
         .content-section {
@@ -671,12 +675,14 @@
 
             <!-- Video container -->
             <div class="video-container">
-                <video controls width="640" height="360" preload="metadata">
-                    <source src="assets/SolarStormAnomaly.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-                <p class="tagline">Watch: Learning and Anomaly Detection in 3D Space</p>
+                <iframe width="640" height="360" src="https://www.youtube.com/embed/ayFMtAvYkQo"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen>
+                </iframe>
             </div>
+            <p class="tagline">Watch: Learning and Anomaly Detection in 3D Space</p>
+        </div>
         </div>
     </section>
     <section id="use-cases" class="content-section light-bg">
