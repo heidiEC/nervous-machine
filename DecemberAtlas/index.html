@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NERVOUS MACHINE | DEBRIS FIELD FORENSICS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@500;700;900&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000000;
+            color: #00ff41;
+            font-family: 'JetBrains Mono', monospace;
+            overflow: hidden;
+        }
+
+        .glass-panel {
+            background: rgba(5, 5, 10, 0.9);
+            border: 1px solid #1a1a1a;
+            backdrop-filter: blur(4px);
+        }
+
+        .log-entry {
+            margin-bottom: 4px;
+            border-left: 2px solid #333;
+            padding-left: 8px;
+            opacity: 0;
+            animation: fadeIn 0.3s forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .metric-bar {
+            height: 4px;
+            background: #111;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-fill {
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="w-full h-screen grid grid-cols-[400px_1fr_350px]">
+
+        <div class="glass-panel border-r border-gray-800 p-6 flex flex-col z-20">
+            <div class="mb-6">
+                <h1 class="text-3xl font-bold font-orbitron text-white mb-1">NERVOUS<span
+                        class="text-green-500">MACHINE</span></h1>
+                <div class="text-[10px] text-gray-500 tracking-widest">DEBRIS FIELD DENSITY FORENSICS</div>
+            </div>
+
+            <div class="flex-1 overflow-hidden flex flex-col bg-black/50 border border-gray-800 p-4 font-mono text-xs">
+                <div class="text-gray-500 border-b border-gray-800 pb-2 mb-2">MISSION LOG (UTC)</div>
+                <div id="terminal" class="flex-1 overflow-y-auto space-y-1"></div>
+            </div>
+
+            <div class="mt-4 border-t border-gray-800 pt-4">
+                <div class="flex justify-between items-end mb-2">
+                    <div class="text-4xl font-bold font-orbitron text-white" id="clock-day">DEC 01</div>
+                    <div class="text-right">
+                        <div class="text-xl text-gray-400" id="clock-time">00:00</div>
+                    </div>
+                </div>
+                <div class="w-full bg-gray-900 h-1 mt-2">
+                    <div id="timeline-progress" class="bg-green-500 h-full w-0"></div>
+                </div>
+                <div class="flex justify-between text-[10px] text-gray-600 mt-1">
+                    <span>DEC 01</span>
+                    <span>DEC 11</span>
+                    <span>DEC 17</span>
+                    <span>DEC 31</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="relative bg-black overflow-hidden"
+            style="background: radial-gradient(circle at center, #0a0a10 0%, #000 80%);">
+            <canvas id="spaceCanvas"></canvas>
+
+            <div class="absolute bottom-10 text-center pointer-events-none w-full">
+                <div class="text-xs text-gray-500 tracking-[0.5em] font-orbitron">VOXEL DENSITY MAP</div>
+                <div id="current-event-label" class="text-2xl font-bold text-white mt-2 h-8"></div>
+                <div class="text-[10px] text-gray-600 mt-4 tracking-wider">
+                    SPACE: PLAY/PAUSE | ← → : STEP DAYS | R: RESTART
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-panel border-l border-gray-800 p-6 flex flex-col z-20 overflow-y-auto">
+            <div class="text-xs font-bold text-gray-400 mb-6 border-b border-gray-800 pb-2">ORBITAL DENSITY</div>
+
+            <!-- ISS - GROUND TRUTH REFERENCE -->
+            <div class="mb-6 border-2 border-yellow-600/50 p-3 bg-yellow-900/20 rounded">
+                <div class="flex justify-between text-sm mb-1">
+                    <span class="text-yellow-400 font-bold">ISS (GROUND TRUTH)</span>
+                    <span id="val-iss" class="text-white font-mono">1.00x</span>
+                </div>
+                <div class="flex justify-between text-[10px] text-gray-400 mb-1">
+                    <span>ALT: 418 km | INC: 51.6°</span>
+                    <span class="text-yellow-500">A/m KNOWN</span>
+                </div>
+                <div class="metric-bar h-1 bg-gray-800">
+                    <div id="bar-iss" class="metric-fill bg-yellow-500 w-[10%]"></div>
+                </div>
+            </div>
+
+            <div class="text-xs font-bold text-gray-400 mb-4 border-b border-gray-800 pb-2">SHELL VOLATILITY</div>
+
+            <div class="mb-6">
+                <div class="flex justify-between text-sm mb-1">
+                    <span class="text-orange-400 font-bold">90° POLAR (OVEN)</span>
+                    <span id="val-90" class="text-white font-mono">1.00x</span>
+                </div>
+                <div class="metric-bar h-1 bg-gray-800">
+                    <div id="bar-90" class="metric-fill bg-orange-500 w-[10%]"></div>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <div class="flex justify-between text-sm mb-1">
+                    <span class="text-purple-400 font-bold">73° HIGH-INC</span>
+                    <span id="val-73" class="text-white font-mono">1.00x</span>
+                </div>
+                <div class="metric-bar h-1 bg-gray-800">
+                    <div id="bar-73" class="metric-fill bg-purple-500 w-[10%]"></div>
+                </div>
+            </div>
+
+            <div class="mb-6 border border-blue-900/30 p-2 bg-blue-900/10">
+                <div class="flex justify-between text-sm mb-1">
+                    <span class="text-blue-400 font-bold">53° STARLINK (HAMMER)</span>
+                    <span id="val-53" class="text-white font-mono">1.00x</span>
+                </div>
+                <div class="flex justify-between text-[10px] text-gray-400 mb-1">
+                    <span>SHOCK RATE: <span id="shock-53" class="text-white">0.0</span></span>
+                </div>
+                <div class="metric-bar h-1 bg-gray-800">
+                    <div id="bar-53" class="metric-fill bg-blue-500 w-[10%]"></div>
+                </div>
+            </div>
+
+            <div class="mb-6 opacity-60">
+                <div class="flex justify-between text-sm mb-1">
+                    <span class="text-gray-400 font-bold">43° MID-LAT</span>
+                    <span id="val-43" class="text-white font-mono">1.00x</span>
+                </div>
+                <div class="metric-bar h-1 bg-gray-800">
+                    <div id="bar-43" class="metric-fill bg-gray-500 w-[10%]"></div>
+                </div>
+            </div>
+
+            <div class="mt-auto pt-4 border-t border-gray-800">
+                <div class="flex justify-between text-[10px] text-gray-500 mb-1">
+                    <span>SOLAR CONDITION</span>
+                    <span id="flux-val" class="text-yellow-500">QUIET</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('spaceCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+
+        // === 1. DATA ===
+        const TIMELINE = [
+            { date: '2024-12-01', '53deg': 0.85, '73deg': 0.95, '90deg': 1.03, '43deg': 0.85, iss: 0.90 },
+            { date: '2024-12-02', '53deg': 1.07, '73deg': 1.12, '90deg': 0.97, '43deg': 1.07, iss: 0.95 },
+            { date: '2024-12-03', '53deg': 1.15, '73deg': 0.93, '90deg': 1.07, '43deg': 1.15, iss: 1.17 },
+            { date: '2024-12-04', '53deg': 1.77, '73deg': 1.31, '90deg': 1.62, '43deg': 1.77, iss: 1.69 },
+            { date: '2024-12-05', '53deg': 1.17, '73deg': 1.10, '90deg': 1.30, '43deg': 1.17, iss: 1.25 },
+            { date: '2024-12-06', '53deg': 1.15, '73deg': 0.82, '90deg': 1.04, '43deg': 1.15, iss: 1.38 },
+            { date: '2024-12-07', '53deg': 1.09, '73deg': 1.08, '90deg': 0.76, '43deg': 1.09, iss: 1.32 },
+            { date: '2024-12-08', '53deg': 0.95, '73deg': 0.84, '90deg': 0.80, '43deg': 0.95, iss: 1.19 },
+            { date: '2024-12-09', '53deg': 1.03, '73deg': 0.83, '90deg': 0.74, '43deg': 1.03, iss: 1.45 },
+            { date: '2024-12-10', '53deg': 1.15, '73deg': 1.03, '90deg': 1.05, '43deg': 1.15, iss: 1.34 },
+            { date: '2024-12-11', '53deg': 1.37, '73deg': 1.40, '90deg': 1.11, '43deg': 1.37, iss: 1.56 },
+            { date: '2024-12-12', '53deg': 1.16, '73deg': 0.96, '90deg': 0.89, '43deg': 1.16, iss: 1.41 },
+            { date: '2024-12-13', '53deg': 1.04, '73deg': 1.07, '90deg': 0.98, '43deg': 1.04, iss: 1.33 },
+            { date: '2024-12-14', '53deg': 0.71, '73deg': 0.84, '90deg': 0.66, '43deg': 0.71, iss: 0.93 },
+            { date: '2024-12-15', '53deg': 0.56, '73deg': 0.76, '90deg': 0.57, '43deg': 0.56, iss: 0.71 },
+            { date: '2024-12-16', '53deg': 0.58, '73deg': 0.82, '90deg': 0.64, '43deg': 0.58, iss: 0.64 },
+            { date: '2024-12-17', '53deg': 0.69, '73deg': 0.72, '90deg': 0.75, '43deg': 0.69, iss: 0.73 },
+            { date: '2024-12-18', '53deg': 0.62, '73deg': 0.73, '90deg': 0.71, '43deg': 0.62, iss: 0.74 },
+            { date: '2024-12-19', '53deg': 0.52, '73deg': 0.53, '90deg': 0.66, '43deg': 0.52, iss: 0.74 },
+            { date: '2024-12-20', '53deg': 0.59, '73deg': 0.68, '90deg': 0.52, '43deg': 0.59, iss: 0.87 },
+            { date: '2024-12-21', '53deg': 0.66, '73deg': 0.97, '90deg': 0.58, '43deg': 0.66, iss: 1.05 },
+            { date: '2024-12-22', '53deg': 0.76, '73deg': 0.70, '90deg': 1.15, '43deg': 0.76, iss: 1.32 },
+            { date: '2024-12-23', '53deg': 0.78, '73deg': 1.08, '90deg': 0.90, '43deg': 0.78, iss: 1.20 },
+            { date: '2024-12-24', '53deg': 0.89, '73deg': 0.93, '90deg': 0.83, '43deg': 0.89, iss: 1.33 },
+            { date: '2024-12-25', '53deg': 0.99, '73deg': 0.69, '90deg': 0.92, '43deg': 0.99, iss: 1.41 },
+            { date: '2024-12-26', '53deg': 0.90, '73deg': 0.75, '90deg': 0.86, '43deg': 0.90, iss: 1.52 },
+            { date: '2024-12-27', '53deg': 0.91, '73deg': 0.62, '90deg': 1.24, '43deg': 0.91, iss: 1.49 },
+            { date: '2024-12-28', '53deg': 1.03, '73deg': 0.63, '90deg': 1.06, '43deg': 1.03, iss: 1.48 },
+            { date: '2024-12-29', '53deg': 1.26, '73deg': 0.69, '90deg': 1.59, '43deg': 1.26, iss: 1.81 },
+            { date: '2024-12-30', '53deg': 1.15, '73deg': 0.90, '90deg': 1.43, '43deg': 1.15, iss: 1.77 },
+            { date: '2024-12-31', '53deg': 1.24, '73deg': 0.97, '90deg': 0.65, '43deg': 1.24, iss: 1.47 }
+        ];
+
+        const EVENTS = [
+            { date: '2024-12-01', type: 'FLARE', msg: 'X1.9 FLARE DETECTED', impact: 'Major X-class event from active sunspot region' },
+            { date: '2024-12-04', type: 'CME', msg: 'MULTIPLE CME LAUNCHES', impact: 'Several Earth-directed CMEs detected' },
+            { date: '2024-12-06', type: 'FLARE', msg: 'M8.1 FLARE + FULL-HALO CME', impact: 'Strong M-class flare with Earth-directed CME at 20:39 UTC' },
+            { date: '2024-12-08', type: 'STORM', msg: 'G3 STORM WATCH ISSUED', impact: 'CME arrival imminent | Elevated particle flux expected' },
+            { date: '2024-12-08', type: 'STORM', msg: 'G3 STORM ONSET', impact: 'Strong geomagnetic storming | Aurora visible to mid-latitudes' },
+            { date: '2024-12-09', type: 'STORM', msg: 'G3 STORM CONTINUES', impact: 'Auroral displays reach Seattle, Chicago, N. Germany' },
+            { date: '2024-12-12', type: 'FLARE', msg: 'DUAL M-CLASS FLARES', impact: 'M2.0 & M1.1 from AR4294/AR4296 | R1 radio blackouts' },
+            { date: '2024-12-12', type: 'STORM', msg: 'G1 STORM DETECTED', impact: 'Minor storming from solar ejecta & high-speed winds' },
+            { date: '2024-12-13', type: 'STORM', msg: 'G1 STORM PERSISTS', impact: 'Continued minor geomagnetic activity' },
+            { date: '2024-12-14', type: 'CALM', msg: 'CONDITIONS QUIETING', impact: 'Coronal-hole stream weakening | Quiet to unsettled' },
+            { date: '2024-12-17', type: 'ALERT', msg: 'NEW CH STREAM APPROACHING', impact: 'Potential G1 storm levels from coronal-hole winds' },
+            { date: '2024-12-22', type: 'STORM', msg: 'G1 STORM EXPECTED', impact: 'Minor geomagnetic storm conditions forecast' },
+            { date: '2024-12-23', type: 'STORM', msg: 'G1 STORM LEVELS REACHED', impact: 'Minor storming activity observed' },
+            { date: '2024-12-30', type: 'FLARE', msg: 'M5.1 FLARE OBSERVED', impact: 'Moderate M-class activity from Sunspot Region 4325' },
+            { date: '2024-12-31', type: 'FLARE', msg: 'M7.1 FLARE (R2 BLACKOUT)', impact: 'Strong M-class from Region 4324 | Year ends with moderate radio blackout' }
+        ];
+
+        // === 3D PROJECTION ===
+        let cameraAngleY = 0;
+        let ROTATION = 0;
+
+        function project3D(x, y, z) {
+            const scale = 800 / (800 + z);
+            const x2d = (x * scale) + width / 2;
+            const y2d = (y * scale) + height / 2;
+            return { x: x2d, y: y2d, scale: scale };
+        }
+
+        function rotateY(x, z, theta) {
+            const cos = Math.cos(theta);
+            const sin = Math.sin(theta);
+            return [x * cos - z * sin, x * sin + z * cos];
+        }
+
+        // === VOXEL CLASS ===
+        class Voxel {
+            constructor(x, y, z, type, radius) {
+                this.x = x;
+                this.y = y;
+                this.z = z;
+                this.type = type;
+                this.radius = radius;
+                this.size = type === 'iss' ? 12 : 8; // ISS is bigger!
+                this.baseColor = this.getBaseColor();
+                this.currentColor = this.baseColor;
+                this.scale = 1.0;
+                this.alpha = type === 'iss' ? 1.0 : 0.4; // ISS always visible
+            }
+
+            getBaseColor() {
+                if (this.type === 'iss') return '#ffd700'; // GOLD for ISS!
+                if (this.type === 'starlink') return '#0064ff';
+                if (this.type === 'polar') return '#ff8c00';
+                if (this.type === 'high') return '#8c00ff';
+                return '#646464';
+            }
+
+            update(frameData) {
+                // ISS gets its own data field!
+                const val = this.type === 'iss' ? frameData.iss :
+                    (this.type === 'starlink' ? frameData['53deg'] :
+                        this.type === 'polar' ? frameData['90deg'] :
+                            this.type === 'high' ? frameData['73deg'] : frameData['43deg']);
+
+                // ISS - THE GOLDEN STANDARD (known A/m = 0.006!)
+                if (this.type === 'iss') {
+                    if (val > 1.6) {
+                        this.currentColor = '#ffaa00'; // Orange-gold at peak
+                        this.scale = 1.6;
+                        this.alpha = 1.0;
+                    } else if (val > 1.3) {
+                        this.currentColor = '#ffd700'; // Pure gold elevated
+                        this.scale = 1.4;
+                        this.alpha = 1.0;
+                    } else if (val > 1.0) {
+                        this.currentColor = '#ffd700'; // Gold normal
+                        this.scale = 1.2;
+                        this.alpha = 1.0;
+                    } else {
+                        this.currentColor = '#ccaa00'; // Dimmed gold quiet
+                        this.scale = 1.0;
+                        this.alpha = 0.95;
+                    }
+                    return; // ISS is special, no other checks
+                }
+
+                // Check if this is a hotspot voxel during bloom period
+                const isHotspot = hotspotVoxels.includes(this);
+                const isBloomPeriod = frameData.date >= '2024-12-12' && frameData.date <= '2024-12-14';
+                // Cap at 10x to account for A/m ratio uncertainty in debris
+                const hotspotMultiplier = isHotspot && isBloomPeriod ? 10 : 1;
+                const effectiveVal = val * hotspotMultiplier;
+
+                if (this.type === 'starlink') {
+                    if (effectiveVal > 1.8) {
+                        this.currentColor = '#ff0000';
+                        this.scale = 1.4;
+                        this.alpha = 0.95;
+                    } else if (effectiveVal > 1.2) {
+                        this.currentColor = '#ffaa00';
+                        this.scale = 1.2;
+                        this.alpha = 0.85;
+                    } else if (effectiveVal < 0.5) {
+                        this.currentColor = '#1a3a6e'; // Darker blue but visible
+                        this.scale = 0.7;
+                        this.alpha = 0.5; // Increased from 0.2
+                    } else {
+                        this.currentColor = this.baseColor;
+                        this.scale = 1.0;
+                        this.alpha = 0.65; // Increased from 0.4
+                    }
+                } else if (this.type === 'polar') {
+                    // Polar shows blooms for hotspot voxels (capped at 10x)
+                    if (effectiveVal > 8.0) {
+                        this.currentColor = '#ffffff'; // White hot
+                        this.scale = 2.5;
+                        this.alpha = 1.0;
+                    } else if (effectiveVal > 5.0) {
+                        this.currentColor = '#ff0000'; // Red critical
+                        this.scale = 2.0;
+                        this.alpha = 0.95;
+                    } else if (effectiveVal > 2.0) {
+                        this.currentColor = '#ff4400';
+                        this.scale = 1.5;
+                        this.alpha = 0.85;
+                    } else if (effectiveVal > 1.5) {
+                        this.currentColor = '#ff8800';
+                        this.scale = 1.3;
+                        this.alpha = 0.75;
+                    } else {
+                        this.currentColor = this.baseColor;
+                        this.scale = 1.0;
+                        this.alpha = 0.6; // Increased from 0.4
+                    }
+                } else if (this.type === 'high') {
+                    // High-inc also shows blooms for hotspot voxels (capped at 10x)
+                    if (effectiveVal > 8.0) {
+                        this.currentColor = '#ffffff'; // White hot
+                        this.scale = 2.5;
+                        this.alpha = 1.0;
+                    } else if (effectiveVal > 5.0) {
+                        this.currentColor = '#ff00ff'; // Magenta critical
+                        this.scale = 2.0;
+                        this.alpha = 0.95;
+                    } else if (effectiveVal > 2.0) {
+                        this.currentColor = '#c800ff';
+                        this.scale = 1.5;
+                        this.alpha = 0.85;
+                    } else if (effectiveVal > 1.5) {
+                        this.currentColor = '#9900ff';
+                        this.scale = 1.2;
+                        this.alpha = 0.75;
+                    } else {
+                        this.currentColor = this.baseColor;
+                        this.scale = 1.0;
+                        this.alpha = 0.55; // Increased from 0.3
+                    }
+                } else {
+                    // Mid-lat stays relatively stable but more visible
+                    this.scale = 0.9;
+                    this.alpha = 0.4; // Increased from 0.15
+                }
+            }
+
+            draw(ctx) {
+                let [rx, rz] = rotateY(this.x, this.z, cameraAngleY);
+                const p = project3D(rx, this.y, rz);
+
+                if (p.scale <= 0) return;
+
+                const s = this.size * this.scale * p.scale;
+
+                ctx.globalAlpha = Math.min(1, p.scale * this.alpha);
+
+                // Draw cube wireframe
+                ctx.strokeStyle = this.currentColor;
+                ctx.lineWidth = this.scale > 1.2 ? 2 : 1;
+                ctx.strokeRect(p.x - s / 2, p.y - s / 2, s, s);
+
+                // Fill with glow
+                ctx.fillStyle = this.currentColor;
+                ctx.globalAlpha = Math.min(1, p.scale * this.alpha * 0.3);
+                ctx.fillRect(p.x - s / 2, p.y - s / 2, s, s);
+
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        // === INITIALIZE VOXELS ===
+        const voxels = [];
+        const hotspotVoxels = []; // Track which voxels can be "hotspots"
+        let issVoxel = null; // The ISS - our ground truth reference!
+
+        function initVoxels() {
+            // === ISS - THE GOLDEN VOXEL ===
+            // Position: 51.6° inclination, ~418 km (radius ~110 px scaled)
+            const issRadius = 110; // Lower than other shells
+            const issInc = 0.9; // 51.6° in radians
+            const issTheta = Math.PI / 4; // Arbitrary orbital position
+            const issX = issRadius * Math.cos(issTheta) * Math.cos(issInc);
+            const issZ = issRadius * Math.sin(issTheta) * Math.cos(issInc);
+            const issY = issRadius * Math.sin(issInc);
+            issVoxel = new Voxel(issX, issY, issZ, 'iss', issRadius);
+            voxels.push(issVoxel);
+
+            // Starlink shell (53 deg) - radius 150
+            for (let i = 0; i < 40; i++) {
+                const theta = Math.random() * Math.PI * 2;
+                const inc = (Math.random() - 0.5) * 1.5;
+                const radius = 150;
+                const x = radius * Math.cos(theta) * Math.cos(inc);
+                const z = radius * Math.sin(theta) * Math.cos(inc);
+                const y = radius * Math.sin(inc);
+                const v = new Voxel(x, y, z, 'starlink', radius);
+                voxels.push(v);
+            }
+
+            // High inc shell (73 deg) - radius 180
+            for (let i = 0; i < 30; i++) {
+                const theta = Math.random() * Math.PI * 2;
+                const inc = (Math.random() > 0.5 ? 1 : -1) * (1.2 + Math.random() * 0.2);
+                const radius = 180;
+                const x = radius * Math.cos(theta) * Math.cos(inc);
+                const z = radius * Math.sin(theta) * Math.cos(inc);
+                const y = radius * Math.sin(inc);
+                const v = new Voxel(x, y, z, 'high', radius);
+                voxels.push(v);
+                // Mark some high-inc voxels as potential hotspots (DMSP debris)
+                if (i < 5) hotspotVoxels.push(v);
+            }
+
+            // Polar shell (90 deg) - radius 200
+            for (let i = 0; i < 25; i++) {
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.acos((Math.random() * 2) - 1);
+                const radius = 200;
+                const x = radius * Math.sin(phi) * Math.cos(theta);
+                const z = radius * Math.sin(phi) * Math.sin(theta);
+                const y = radius * Math.cos(phi);
+                if (Math.abs(y) > radius * 0.7) {
+                    const v = new Voxel(x, y, z, 'polar', radius);
+                    voxels.push(v);
+                    // Mark some polar voxels as potential hotspots
+                    if (i < 3) hotspotVoxels.push(v);
+                }
+            }
+
+            // Mid-lat shell (43 deg) - radius 130
+            for (let i = 0; i < 20; i++) {
+                const theta = Math.random() * Math.PI * 2;
+                const inc = (Math.random() - 0.5) * 0.8;
+                const radius = 130;
+                const x = radius * Math.cos(theta) * Math.cos(inc);
+                const z = radius * Math.sin(theta) * Math.cos(inc);
+                const y = radius * Math.sin(inc);
+                voxels.push(new Voxel(x, y, z, 'midlat', radius));
+            }
+        }
+
+        // === SIMULATION LOOP ===
+        let timeIdx = 0;
+        let isPlaying = true;
+        let hasPlayedOnce = false;
+
+        function update() {
+            // Advance time (SLOWER for readability)
+            if (isPlaying && timeIdx < TIMELINE.length - 1) {
+                timeIdx += 0.015; // Slowed down from 0.05
+            } else if (timeIdx >= TIMELINE.length - 1) {
+                // Reached end - pause if first playthrough
+                if (!hasPlayedOnce) {
+                    isPlaying = false;
+                    hasPlayedOnce = true;
+                    timeIdx = TIMELINE.length - 1; // Stay at end
+                } else {
+                    // Loop on subsequent playthroughs
+                    timeIdx = 0;
+                    resetLogs();
+                }
+            }
+
+            const frameData = TIMELINE[Math.floor(timeIdx)];
+            if (!frameData) return requestAnimationFrame(update);
+
+            // Update UI
+            const d = new Date(frameData.date);
+            document.getElementById('clock-day').innerText = d.toLocaleDateString('en-US', { month: 'short', day: '2-digit' }).toUpperCase();
+            document.getElementById('clock-time').innerText = d.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
+            document.getElementById('timeline-progress').style.width = (timeIdx / TIMELINE.length * 100) + "%";
+
+            // Process events
+            checkEvents(frameData.date);
+
+            // Update voxels
+            voxels.forEach(v => v.update(frameData));
+
+            // Update metrics
+            updateMetrics(frameData);
+
+            // Rotate camera
+            cameraAngleY += 0.003;
+
+            // Draw
+            draw();
+
+            requestAnimationFrame(update);
+        }
+
+        function draw() {
+            // Clear canvas
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, width, height);
+
+            // Draw reference grid
+            ctx.strokeStyle = '#111111';
+            ctx.lineWidth = 1;
+            for (let i = -400; i <= 400; i += 100) {
+                let [sx, sz] = rotateY(i, -400, cameraAngleY);
+                let [ex, ez] = rotateY(i, 400, cameraAngleY);
+                let p1 = project3D(sx, 0, sz);
+                let p2 = project3D(ex, 0, ez);
+                if (p1.scale > 0 && p2.scale > 0) {
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                }
+            }
+
+            // Z-sort voxels
+            voxels.sort((a, b) => {
+                let [ax, az] = rotateY(a.x, a.z, cameraAngleY);
+                let [bx, bz] = rotateY(b.x, b.z, cameraAngleY);
+                return bz - az;
+            });
+
+            // Draw voxels
+            voxels.forEach(v => v.draw(ctx));
+        }
+
+        function updateMetrics(data) {
+            // ISS - Ground Truth Reference
+            updateBar('iss', data.iss, 'bg-yellow-500');
+
+            // Shells
+            updateBar('53', data['53deg'], 'bg-blue-500');
+            updateBar('73', data['73deg'], 'bg-purple-500');
+            updateBar('90', data['90deg'], 'bg-orange-500');
+            updateBar('43', data['43deg'], 'bg-gray-500');
+
+            let prev = TIMELINE[Math.max(0, Math.floor(timeIdx) - 1)]['53deg'];
+            let shock = (data['53deg'] - prev) * 10;
+            document.getElementById('shock-53').innerText = shock > 0 ? "+" + shock.toFixed(1) : "0.0";
+        }
+
+        function updateBar(id, val, colorClass) {
+            const el = document.getElementById(`bar-${id}`);
+            const txt = document.getElementById(`val-${id}`);
+            if (el) el.style.width = Math.min(100, val * 20) + "%";
+            if (txt) txt.innerText = val.toFixed(2) + "x";
+        }
+
+        // === EVENT LOGIC ===
+        let loggedEvents = new Set();
+
+        function checkEvents(currentDate) {
+            EVENTS.forEach(ev => {
+                if (currentDate >= ev.date && !loggedEvents.has(ev.date)) {
+                    logToTerminal(ev);
+                    loggedEvents.add(ev.date);
+
+                    const label = document.getElementById('current-event-label');
+                    label.innerText = ev.type;
+                    label.className = `text-2xl font-bold mt-2 h-8 ${getColor(ev.type)}`;
+                    setTimeout(() => label.innerText = "", 4000);
+
+                    if (ev.type === 'FLARE' || ev.type === 'STORM') {
+                        document.getElementById('flux-val').innerText = ev.msg.split(' ')[0];
+                        document.getElementById('flux-val').className = getColor(ev.type);
+                    }
+                }
+            });
+        }
+
+        function logToTerminal(ev) {
+            const term = document.getElementById('terminal');
+            const row = document.createElement('div');
+            row.className = "log-entry";
+            row.style.borderLeftColor = getHexColor(ev.type);
+            row.innerHTML = `
+                <span class="text-gray-400">[${ev.date.substring(5)}]</span> 
+                <span class="${getColor(ev.type)} font-bold">${ev.msg}</span><br>
+                <span class="text-gray-600 text-[10px]">> ${ev.impact}</span>
+            `;
+            term.appendChild(row);
+            term.scrollTop = term.scrollHeight;
+        }
+
+        function resetLogs() {
+            document.getElementById('terminal').innerHTML = "";
+            loggedEvents.clear();
+        }
+
+        function getColor(type) {
+            if (type === 'FLARE') return 'text-yellow-400';
+            if (type === 'CME') return 'text-orange-400';
+            if (type === 'STORM') return 'text-red-500';
+            if (type === 'FAILURE') return 'text-red-600 font-black';
+            if (type === 'ALERT') return 'text-cyan-400';
+            if (type === 'CALM') return 'text-green-400';
+            return 'text-white';
+        }
+
+        function getHexColor(type) {
+            if (type === 'FLARE') return '#facc15';
+            if (type === 'CME') return '#fb923c';
+            if (type === 'STORM') return '#ef4444';
+            if (type === 'FAILURE') return '#dc2626';
+            if (type === 'ALERT') return '#22d3ee';
+            if (type === 'CALM') return '#4ade80';
+            return '#fff';
+        }
+
+        // === INIT ===
+        function resize() {
+            width = canvas.width = canvas.clientWidth;
+            height = canvas.height = canvas.clientHeight;
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+
+        initVoxels();
+        update();
+
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => {
+            if (e.key === ' ' || e.key === 'Spacebar') {
+                // Toggle play/pause
+                isPlaying = !isPlaying;
+                e.preventDefault();
+            } else if (e.key === 'ArrowRight') {
+                // Step forward one day
+                timeIdx = Math.min(TIMELINE.length - 1, Math.floor(timeIdx) + 1);
+                isPlaying = false;
+                e.preventDefault();
+            } else if (e.key === 'ArrowLeft') {
+                // Step backward one day
+                timeIdx = Math.max(0, Math.floor(timeIdx) - 1);
+                isPlaying = false;
+                e.preventDefault();
+            } else if (e.key === 'r' || e.key === 'R') {
+                // Restart from beginning
+                timeIdx = 0;
+                resetLogs();
+                isPlaying = true;
+                hasPlayedOnce = false;
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+
+</html>
