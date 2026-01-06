@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NERVOUS MACHINE | 31-Day Causal Run</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --panel: #0a0a0a;
+            --accent: #00f0ff;
+            --text: #e0e0e0;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .glass {
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Progress Bar Styles */
+        .bar-container {
+            position: relative;
+            height: 6px;
+            background: #333;
+            border-radius: 3px;
+            margin-top: 4px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            transition: width 0.3s ease-out;
+        }
+
+        /* Markers */
+        .marker {
+            position: absolute;
+            top: -2px;
+            bottom: -2px;
+            width: 2px;
+            background: #fff;
+            z-index: 20;
+            box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+        }
+
+        .prior-marker {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            z-index: 10;
+            border-left: 1px dashed rgba(255, 255, 255, 0.4);
+        }
+
+        /* Voxel Grid */
+        .voxel-card {
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .voxel-card.active {
+            border-color: var(--accent);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        /* Factor Colors */
+        .c-solar {
+            background-color: #facc15;
+        }
+
+        .c-cme {
+            background-color: #ef4444;
+        }
+
+        .c-euv {
+            background-color: #fb923c;
+        }
+
+        .c-aurora {
+            background-color: #a855f7;
+        }
+    </style>
+</head>
+
+<body class="flex flex-col h-full p-4 gap-4">
+
+    <header class="flex justify-between items-center pb-2 border-b border-gray-800">
+        <div>
+            <h1 class="text-xl font-bold tracking-wider">NERVOUS<span class="text-cyan-400">MACHINE</span> <span
+                    class="text-xs text-gray-500 ml-2">DEC 2025 CAUSAL RUN</span></h1>
+        </div>
+        <div class="flex gap-6 text-xs mono">
+            <div>DATE: <span id="sim-date" class="text-cyan-400 font-bold">DEC 01</span></div>
+            <div>STATUS: <span id="sim-status" class="text-yellow-500">READY</span></div>
+        </div>
+    </header>
+
+    <div class="flex-1 flex gap-4 overflow-hidden">
+
+        <div class="w-1/2 grid grid-cols-2 gap-4 overflow-y-auto pr-1" id="voxel-grid">
+        </div>
+
+        <div class="w-1/2 flex flex-col gap-4">
+
+            <div class="glass rounded-lg p-4 flex-1 flex flex-col">
+                <div class="flex justify-between items-center mb-4">
+                    <div class="text-xs font-bold text-gray-500 uppercase">Weight Convergence</div>
+                    <div class="flex gap-4 text-[10px] text-gray-400">
+                        <span class="flex items-center gap-1">
+                            <div class="w-1 h-3 bg-white/30 border-l border-dashed border-white"></div> Prior
+                        </span>
+                        <span class="flex items-center gap-1">
+                            <div class="w-2 h-2 bg-cyan-500"></div> Learned
+                        </span>
+                        <span class="flex items-center gap-1">
+                            <div class="w-1 h-3 bg-white"></div> Truth
+                        </span>
+                    </div>
+                </div>
+
+                <div id="factors-detail" class="flex flex-col gap-5">
+                </div>
+
+                <div class="mt-auto pt-4 border-t border-gray-800">
+                    <div class="flex justify-between items-end mb-2">
+                        <div class="text-xs font-bold text-gray-500">CAUSAL CERTAINTY (Z)</div>
+                        <div id="z-val" class="mono text-xs text-cyan-400">0.20</div>
+                    </div>
+                    <div class="w-full h-2 bg-gray-800 rounded overflow-hidden">
+                        <div id="z-bar" class="h-full bg-cyan-500 transition-all duration-300" style="width: 20%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass rounded-lg p-4 h-1/3 flex flex-col">
+                <div class="flex justify-between items-center mb-2">
+                    <div class="text-xs font-bold text-gray-500 uppercase">Error Signal (ε)</div>
+                    <div class="text-[10px] mono text-red-400" id="current-error">ε: 0.00</div>
+                </div>
+                <div class="flex-1 relative w-full">
+                    <canvas id="errorChart"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-gray-900 rounded p-2 grid grid-cols-4 gap-2">
+                <button onclick="step(1)"
+                    class="bg-gray-800 hover:bg-gray-700 text-cyan-400 border border-cyan-900/50 py-2 rounded text-xs font-bold transition-all">STEP
+                    ></button>
+                <button onclick="step(5)"
+                    class="bg-gray-800 hover:bg-gray-700 text-cyan-400 border border-cyan-900/50 py-2 rounded text-xs font-bold transition-all">RUN
+                    5 >></button>
+                <button onclick="toggleRun()" id="btn-run"
+                    class="bg-cyan-900/30 hover:bg-cyan-900/50 text-white border border-cyan-700 py-2 rounded text-xs font-bold transition-all">RUN
+                    ALL</button>
+                <button onclick="resetSim()"
+                    class="bg-red-900/20 hover:bg-red-900/40 text-red-400 border border-red-900/50 py-2 rounded text-xs font-bold transition-all">RESET</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA: 31 Days (Derived from your CSV + Interpolated) ---
+        // val = Normalized density proxy (0-1)
+        const DECEMBER_DATA = [
+            0.35, 0.32, 0.28, 0.45, 0.65, 0.78, 0.72, 0.60, 0.52, 0.48, // Dec 1-10 (Storm Peak 4-6)
+            0.58, 0.49, 0.35, 0.30, 0.28, 0.29, 0.31, 0.35, 0.33, 0.32, // Dec 11-20 (Recovery)
+            0.30, 0.35, 0.38, 0.42, 0.40, 0.38, 0.35, 0.34, 0.45, 0.48, 0.46 // Dec 21-31 (Minor fluctuations)
+        ];
+
+        // --- VOXEL DEFINITIONS ---
+        // Truth is what we want the model to converge TO.
+        // Priors are where the model STARTS.
+        const VOXELS = [
+            {
+                id: 'ISS (Zarya)',
+                shell: '51.6°',
+                desc: 'Mid-Latitude (Real Telemetry)',
+                priors: { solar: 0.30, cme: 0.10, euv: 0.30, aurora: 0.10 }, // LLM Underestimates CME impact
+                truth: { solar: 0.35, cme: 0.65, euv: 0.40, aurora: 0.15 }, // Reality: CME hits hard
+                learned: { solar: 0.30, cme: 0.10, euv: 0.30, aurora: 0.10 },
+                z: 0.2
+            },
+            {
+                id: 'Shell 53°',
+                shell: '53.0°',
+                desc: 'Starlink (Debris Proxy)',
+                priors: { solar: 0.30, cme: 0.20, euv: 0.30, aurora: 0.20 },
+                truth: { solar: 0.38, cme: 0.60, euv: 0.38, aurora: 0.30 },
+                learned: { solar: 0.30, cme: 0.20, euv: 0.30, aurora: 0.20 },
+                z: 0.2
+            },
+            {
+                id: 'Shell 73°',
+                shell: '73.0°',
+                desc: 'Polar Crossing (Debris Proxy)',
+                priors: { solar: 0.40, cme: 0.30, euv: 0.30, aurora: 0.40 },
+                truth: { solar: 0.40, cme: 0.55, euv: 0.30, aurora: 0.75 }, // Reality: High Aurora
+                learned: { solar: 0.40, cme: 0.30, euv: 0.30, aurora: 0.40 },
+                z: 0.2
+            },
+            {
+                id: 'Shell 90°',
+                shell: '90.0°',
+                desc: 'Sun-Sync (Debris Proxy)',
+                priors: { solar: 0.40, cme: 0.40, euv: 0.30, aurora: 0.50 },
+                truth: { solar: 0.45, cme: 0.60, euv: 0.25, aurora: 0.90 }, // Reality: Extreme Aurora
+                learned: { solar: 0.40, cme: 0.40, euv: 0.30, aurora: 0.50 },
+                z: 0.2
+            }
+        ];
+
+        const FACTORS = [
+            { id: 'solar', name: 'Solar Wind', color: 'c-solar' },
+            { id: 'cme', name: 'CME Impact', color: 'c-cme' },
+            { id: 'euv', name: 'EUV Flux', color: 'c-euv' },
+            { id: 'aurora', name: 'Auroral Heating', color: 'c-aurora' }
+        ];
+
+        // --- STATE ---
+        let state = {
+            running: false,
+            tick: 0,
+            selectedIdx: 0,
+            inputs: { solar: 0.5, cme: 0.0, euv: 0.5, aurora: 0.2 }
+        };
+
+        let chart, interval;
+
+        // --- INIT ---
+        function init() {
+            renderGrid();
+            initChart();
+            updateDetail();
+        }
+
+        // --- MAIN LOGIC ---
+        function runStep() {
+            if (state.tick >= DECEMBER_DATA.length) {
+                stopRun();
+                document.getElementById('sim-status').innerText = "COMPLETE";
+                document.getElementById('sim-status').className = "text-green-500 font-bold";
+                return;
+            }
+
+            // 1. Environment Inputs (Simulate Weather based on CSV pattern)
+            const dayVal = DECEMBER_DATA[state.tick];
+            const isStorm = dayVal > 0.6; // High density = Storm
+
+            // Derive causal inputs from the observed density (simplified physics inversion for demo)
+            state.inputs.solar = 0.4 + (dayVal * 0.3);
+            state.inputs.cme = isStorm ? Math.min(1.0, dayVal * 1.2) : 0.05; // CME spikes only during storm
+            state.inputs.aurora = 0.2 + (dayVal * 0.5);
+            state.inputs.euv = 0.5;
+
+            // 2. Learning Loop (All Voxels)
+            VOXELS.forEach(v => {
+                let totalErr = 0;
+
+                FACTORS.forEach(f => {
+                    // Prediction
+                    const pred = state.inputs[f.id] * v.learned[f.id];
+
+                    // Observation (Target)
+                    // Scale local effects (Polar sees more Aurora, ISS sees more CME/Drag)
+                    let obs = state.inputs[f.id] * v.truth[f.id];
+
+                    // Error
+                    const err = Math.abs(pred - obs);
+                    totalErr += err;
+
+                    // Update Weight (Constrained 0.0 - 1.2)
+                    // High Z = Low Eta
+                    const eta = 0.15 * (1 / (1 + Math.exp(8 * (v.z - 0.5))));
+                    const delta = eta * (obs - pred);
+
+                    v.learned[f.id] = Math.max(0, Math.min(1.2, v.learned[f.id] + delta));
+                });
+
+                // Update Certainty
+                const avgErr = totalErr / 4;
+                const zDelta = (avgErr < 0.05) ? 0.02 : (avgErr > 0.15) ? -0.01 : 0.0;
+                v.z = Math.max(0.1, Math.min(0.99, v.z + zDelta));
+            });
+
+            // 3. UI Update
+            document.getElementById('sim-date').innerText = `DEC ${String(state.tick + 1).padStart(2, '0')}`;
+            renderGrid(); // Update grid EVERY tick
+            updateDetail();
+            updateChart();
+
+            state.tick++;
+        }
+
+        // --- CONTROL FUNCTIONS ---
+        function step(n) {
+            // If running automatically, stop first
+            if (state.running) stopRun();
+
+            let count = 0;
+            const loop = setInterval(() => {
+                runStep();
+                count++;
+                if (count >= n || state.tick >= 31) clearInterval(loop);
+            }, 100); // Fast steps
+        }
+
+        function toggleRun() {
+            if (state.running) {
+                stopRun();
+            } else {
+                if (state.tick >= 31) resetSim();
+                state.running = true;
+                interval = setInterval(runStep, 300); // Slower for observation
+                document.getElementById('btn-run').innerText = "PAUSE";
+                document.getElementById('sim-status').innerText = "RUNNING...";
+                document.getElementById('sim-status').className = "text-cyan-400 animate-pulse";
+            }
+        }
+
+        function stopRun() {
+            clearInterval(interval);
+            state.running = false;
+            document.getElementById('btn-run').innerText = "RUN ALL";
+            document.getElementById('sim-status').innerText = "PAUSED";
+            document.getElementById('sim-status').className = "text-yellow-500";
+        }
+
+        function resetSim() {
+            stopRun();
+            state.tick = 0;
+            // Reset weights to priors
+            VOXELS.forEach(v => {
+                v.learned = { ...v.priors };
+                v.z = 0.2;
+            });
+            document.getElementById('sim-date').innerText = "DEC 01";
+            document.getElementById('sim-status').innerText = "READY";
+
+            chart.data.labels = [];
+            chart.data.datasets[0].data = [];
+            chart.update();
+
+            renderGrid();
+            updateDetail();
+        }
+
+        // --- RENDERERS ---
+        function renderGrid() {
+            const grid = document.getElementById('voxel-grid');
+            grid.innerHTML = ''; // Re-render complete grid
+
+            VOXELS.forEach((v, i) => {
+                const isSelected = i === state.selectedIdx;
+                const el = document.createElement('div');
+                el.className = `voxel-card glass p-3 rounded cursor-pointer ${isSelected ? 'active' : ''}`;
+                el.onclick = () => { state.selectedIdx = i; updateDetail(); renderGrid(); };
+
+                el.innerHTML = `
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="font-bold text-xs text-white">${v.id}</span>
+                        <span class="mono text-[10px] ${v.z > 0.8 ? 'text-green-400' : 'text-cyan-400'}">Z: ${(v.z * 100).toFixed(0)}%</span>
+                    </div>
+                    <div class="text-[10px] text-gray-500 mb-2 truncate">${v.desc}</div>
+                    
+                    <div class="space-y-1">
+                        ${FACTORS.map(f => `
+                            <div class="w-full h-1 bg-gray-800 rounded overflow-hidden relative">
+                                <div class="absolute w-0.5 h-full bg-white z-10" style="left: ${v.truth[f.id] * 100}%"></div>
+                                <div class="h-full ${f.color} opacity-80 transition-all duration-300" style="width: ${v.learned[f.id] * 100}%"></div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                grid.appendChild(el);
+            });
+        }
+
+        function updateDetail() {
+            const v = VOXELS[state.selectedIdx];
+            const container = document.getElementById('factors-detail');
+            container.innerHTML = '';
+
+            FACTORS.forEach(f => {
+                const prior = v.priors[f.id] * 100;
+                const learn = v.learned[f.id] * 100;
+                const truth = v.truth[f.id] * 100;
+
+                const el = document.createElement('div');
+                el.innerHTML = `
+                    <div class="flex justify-between text-[10px] mb-1">
+                        <span class="font-bold text-gray-400">${f.name}</span>
+                        <span class="mono text-cyan-400">${(v.learned[f.id]).toFixed(2)}</span>
+                    </div>
+                    <div class="bar-container">
+                        <div class="marker" style="left: ${truth}%" title="Truth"></div>
+                        <div class="prior-marker" style="left: ${prior}%" title="Prior"></div>
+                        <div class="bar-fill ${f.color} opacity-80" style="width: ${learn}%"></div>
+                    </div>
+                `;
+                container.appendChild(el);
+            });
+
+            // Z Bar
+            document.getElementById('z-bar').style.width = `${v.z * 100}%`;
+            document.getElementById('z-val').innerText = v.z.toFixed(2);
+        }
+
+        function initChart() {
+            const ctx = document.getElementById('errorChart').getContext('2d');
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        { label: 'Error', data: [], borderColor: '#ef4444', borderWidth: 2, tension: 0.3, pointRadius: 0 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: false,
+                    scales: { x: { display: false }, y: { min: 0, max: 0.5, grid: { color: '#333' } } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function updateChart() {
+            const v = VOXELS[state.selectedIdx];
+
+            // Calculate error for selected voxel
+            let err = 0;
+            FACTORS.forEach(f => {
+                const obs = state.inputs[f.id] * v.truth[f.id];
+                const pred = state.inputs[f.id] * v.learned[f.id];
+                err += Math.abs(pred - obs);
+            });
+            const avgErr = err / 4;
+
+            document.getElementById('current-error').innerText = `ε: ${avgErr.toFixed(3)}`;
+
+            if (chart.data.labels.length > 31) {
+                chart.data.labels.shift();
+                chart.data.datasets[0].data.shift();
+            }
+            chart.data.labels.push('');
+            chart.data.datasets[0].data.push(avgErr);
+            chart.update('none');
+        }
+
+        init();
+    </script>
+</body>
+
+</html>
