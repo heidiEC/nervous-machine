@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space — Nervous Machine</title>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <style>
+        :root {
+            --color-dark-bg: #06060F;
+            --color-card-bg: #0E0E1E;
+            --color-card-border: rgba(76, 0, 255, 0.15);
+            --color-accent-indigo: #4C00FF;
+            --color-accent-violet: #8A2BE2;
+            --color-cyan: #00FFFF;
+            --color-text: #C8C8E0;
+            --color-text-muted: #8888AA;
+            --font-display: 'Instrument Serif', Georgia, serif;
+            --font-body: 'DM Sans', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-dark-bg);
+            color: var(--color-text);
+            line-height: 1.7;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+
+        /* Header */
+        header {
+            position: fixed; width: 100%; top: 0; z-index: 1000;
+            background: rgba(6, 6, 15, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(76, 0, 255, 0.1);
+            padding: 1rem 0;
+        }
+        header .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--font-display); font-size: 1.5rem; color: #fff; text-decoration: none; }
+        nav ul { list-style: none; display: flex; gap: 2rem; }
+        nav a {
+            color: var(--color-text-muted); text-decoration: none; font-size: 0.85rem;
+            font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; transition: color 0.3s;
+        }
+        nav a:hover { color: var(--color-cyan); }
+        nav a.active { color: var(--color-cyan); }
+
+        /* Hero */
+        .hero {
+            min-height: 70vh; display: flex; align-items: center;
+            position: relative; overflow: hidden; padding-top: 80px;
+        }
+        .hero::before {
+            content: ''; position: absolute; inset: 0;
+            background:
+                radial-gradient(ellipse 60% 50% at 15% 80%, rgba(76, 0, 255, 0.18) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 60% at 85% 25%, rgba(0, 255, 255, 0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .hero-inner { position: relative; z-index: 2; max-width: 720px; }
+        .hero-label {
+            font-family: var(--font-mono); font-size: 0.8rem; color: var(--color-cyan);
+            letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.5rem;
+            opacity: 0; animation: fadeUp 0.8s 0.2s forwards;
+        }
+        .hero h1 {
+            font-family: var(--font-display); font-size: clamp(2.4rem, 5vw, 3.8rem);
+            color: #fff; line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -0.02em;
+            opacity: 0; animation: fadeUp 0.8s 0.4s forwards;
+        }
+        .hero h1 em { font-style: italic; color: var(--color-cyan); }
+        .hero-sub {
+            font-size: 1.15rem; line-height: 1.75; color: var(--color-text); max-width: 600px; margin-bottom: 2rem;
+            opacity: 0; animation: fadeUp 0.8s 0.6s forwards;
+        }
+        .hero-ctas {
+            display: flex; gap: 1rem; flex-wrap: wrap;
+            opacity: 0; animation: fadeUp 0.8s 0.8s forwards;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex; align-items: center; padding: 0.85rem 2rem; border-radius: 6px;
+            font-family: var(--font-body); font-weight: 600; font-size: 0.9rem; text-decoration: none;
+            transition: all 0.3s; cursor: pointer; border: none; letter-spacing: 0.02em;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-accent-indigo), var(--color-accent-violet));
+            color: #fff; box-shadow: 0 4px 20px rgba(76, 0, 255, 0.3);
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(76, 0, 255, 0.45); }
+        .btn-ghost { background: transparent; color: var(--color-text); border: 1px solid rgba(200, 200, 224, 0.2); }
+        .btn-ghost:hover { border-color: var(--color-cyan); color: var(--color-cyan); }
+
+        /* Sections */
+        section { padding: 6rem 0; }
+        .section-label {
+            font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-accent-violet);
+            letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1rem;
+        }
+        .section-title {
+            font-family: var(--font-display); font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+            color: #fff; line-height: 1.15; margin-bottom: 1.25rem; letter-spacing: -0.02em;
+        }
+        .section-lead {
+            font-size: 1.05rem; color: var(--color-text); max-width: 600px;
+            margin-bottom: 3rem; line-height: 1.75;
+        }
+
+        /* Alternating sections */
+        .alt-bg {
+            background: var(--color-card-bg);
+            border-top: 1px solid var(--color-card-border);
+            border-bottom: 1px solid var(--color-card-border);
+        }
+
+        /* Two-col layout */
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+
+        /* Stat blocks */
+        .stat-block {
+            padding: 1.75rem; background: rgba(76, 0, 255, 0.06);
+            border: 1px solid var(--color-card-border); border-radius: 10px; margin-bottom: 1.25rem;
+        }
+        .stat-num {
+            font-family: var(--font-mono); font-size: 2.2rem; color: var(--color-cyan);
+            font-weight: 500; line-height: 1; margin-bottom: 0.4rem;
+        }
+        .stat-num span { font-size: 1rem; color: var(--color-text-muted); }
+        .stat-label { font-size: 0.9rem; color: var(--color-text-muted); line-height: 1.6; }
+
+        /* Feature cards */
+        .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+        .feature-card {
+            padding: 2rem; background: var(--color-card-bg);
+            border: 1px solid var(--color-card-border); border-radius: 10px; transition: all 0.3s;
+        }
+        .feature-card:hover { border-color: rgba(76, 0, 255, 0.3); transform: translateY(-3px); }
+        .feature-card h3 {
+            font-family: var(--font-display); font-size: 1.3rem; color: #fff; margin-bottom: 0.6rem;
+        }
+        .feature-card p { font-size: 0.9rem; color: var(--color-text-muted); line-height: 1.65; }
+
+        /* CTA section */
+        .cta-section { text-align: center; padding: 7rem 0; position: relative; }
+        .cta-section::before {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(76, 0, 255, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .cta-section .section-title,
+        .cta-section .section-lead { text-align: center; max-width: 550px; margin-left: auto; margin-right: auto; }
+        .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+        /* Footer */
+        footer {
+            padding: 2rem 0; border-top: 1px solid var(--color-card-border);
+            text-align: center; font-size: 0.8rem; color: var(--color-text-muted);
+        }
+        footer a:hover { color: var(--color-cyan); }
+
+        /* Responsive */
+        @media (max-width: 860px) {
+            .two-col { grid-template-columns: 1fr; gap: 2.5rem; }
+            .feature-grid { grid-template-columns: 1fr; }
+            header .container { flex-direction: column; gap: 0.75rem; }
+            nav ul { gap: 1.25rem; flex-wrap: wrap; justify-content: center; }
+            section { padding: 4rem 0; }
+            .hero { min-height: 60vh; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <a href="/" class="logo">Nervous Machine</a>
+            <nav>
+                <ul>
+                    <li><a href="/space" class="active">Space</a></li>
+                    <li><a href="/robotics">Robotics</a></li>
+                    <li><a href="/manufacturing">Manufacturing</a></li>
+                    <li><a href="/data-centers">Data Centers</a></li>
+                    <li><a href="/#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-inner">
+                <div class="hero-label">Space Atlas</div>
+                <h1>Your satellite doesn't fly in the <em>mean thermosphere</em></h1>
+                <p class="hero-sub">
+                    General space weather models predict bulk density for the entire thermosphere at once. That's like checking the weather for all of Europe to decide if you need an umbrella in London. Nervous Machine learns at the voxel level&mdash;your orbital corridor, your drivers, your time lags.
+                </p>
+                <div class="hero-ctas">
+                    <a href="https://calendly.com/nervousmachine/space" class="btn btn-primary">Book a Space Consultation</a>
+                    <a href="/DecemberAtlas" class="btn btn-ghost">Explore Space Atlas →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem -->
+    <section class="alt-bg">
+        <div class="container">
+            <div class="two-col">
+                <div>
+                    <div class="section-label">The Challenge</div>
+                    <h2 class="section-title">Operational models compress the variance that kills missions</h2>
+                    <p class="section-lead">
+                        Operational thermospheric models provide bulk density estimates but lack driver-resolved attribution. They can't tell you which driver caused a density spike, how long its influence persists, or how perturbations propagate across orbital shells.
+                    </p>
+                    <p style="color: var(--color-text-muted); font-size: 0.95rem; line-height: 1.75;">
+                        The sudden, highly variable density spikes driven by geomagnetic storms are what force emergency collision avoidance maneuvers and drain a spacecraft's fuel budget. Simulations get you 80&ndash;95% of the way&mdash;but the shadow 5&ndash;20% is where the variance hides, and variance is what determines mission life.
+                    </p>
+                </div>
+                <div>
+                    <div class="stat-block">
+                        <div class="stat-num">85% <span>MAPE</span></div>
+                        <div class="stat-label">JB2008 operational model under equivalent storm conditions&mdash;the current standard for thermospheric density prediction</div>
+                    </div>
+                    <div class="stat-block" style="border-color: rgba(0, 255, 255, 0.2);">
+                        <div class="stat-num">16% <span>MAPE</span></div>
+                        <div class="stat-label">Nervous Machine on TLE debris catalog data across 156 voxels and 726 validated causal edges&mdash;same pipeline, same drivers</div>
+                    </div>
+                    <div class="stat-block" style="border-color: rgba(0, 255, 255, 0.35); background: rgba(0, 255, 255, 0.04);">
+                        <div class="stat-num">&gt;0.91 <span>certainty</span></div>
+                        <div class="stat-label">All five drivers on GRACE-FO sub-minute data. Higher cadence unlocked temporal lag structure for driver-resolved attribution and multi-day forward prediction.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works for Space -->
+    <section>
+        <div class="container">
+            <div class="section-label">How It Works</div>
+            <h2 class="section-title">Causal discovery at the voxel level</h2>
+            <p class="section-lead">
+                The framework decomposes density variations into individual drivers&mdash;solar EUV, geomagnetic activity, seasonal-latitudinal patterns, solar wind dynamic pressure, and Joule heating&mdash;while learning the time-lag structure governing how each driver's influence persists across orbital shells.
+            </p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>Driver-resolved attribution</h3>
+                    <p>Five causal drivers individually weighted per voxel. The system learns which drivers matter where, and by how much&mdash;not a single global coefficient.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Temporal lag learning</h3>
+                    <p>Each driver's influence persists differently&mdash;from minutes (a sudden Bz flip) to days (a Dst ring current recovery). The pipeline learns the lag structure from error signals.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Forward prediction</h3>
+                    <p>Given a driver impulse, the model forecasts how the resulting density perturbation evolves across voxels over hours to days, with certainty quantified per edge.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Cadence-adaptive learning</h3>
+                    <p>The same pipeline works across observation cadences. TLE debris data proved the architecture; GRACE-FO sub-minute data unlocked causal depth. The system knows what it can and can't learn from each source.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Validation -->
+    <section class="alt-bg">
+        <div class="container">
+            <div class="two-col">
+                <div>
+                    <div class="section-label">Validation</div>
+                    <h2 class="section-title">Two data regimes, one pipeline</h2>
+                    <p class="section-lead">
+                        We validated across two data regimes to isolate the role of observation cadence. Same pipeline, same five space weather drivers, same time window. The only variable was measurement quality.
+                    </p>
+                    <p style="color: var(--color-text-muted); font-size: 0.95rem; line-height: 1.75; margin-bottom: 1.5rem;">
+                        <strong style="color: #fff;">Phase 1 — TLE debris catalog:</strong> 156 voxels, 726 validated causal edges, 16% MAPE vs 85% for JB2008. Daily cadence proved the architecture but couldn't resolve temporal lag structure.
+                    </p>
+                    <p style="color: var(--color-text-muted); font-size: 0.95rem; line-height: 1.75;">
+                        <strong style="color: #fff;">Phase 2 — GRACE-FO accelerometer:</strong> Sub-minute cadence recovered both attribution and prediction. All five drivers exceeded 0.91 certainty, 93% of edges surpassed Z=0.80, and the learned lag model produced validated multi-day forecasts.
+                    </p>
+                </div>
+                <div>
+                    <div class="section-label">What's Next</div>
+                    <h2 class="section-title" style="margin-bottom: 1rem;">LEO GPS drag residuals</h2>
+                    <p style="color: var(--color-text-muted); font-size: 0.95rem; line-height: 1.75; margin-bottom: 1.5rem;">
+                        Live LEO GPS drag residuals already provide GRACE-FO-comparable cadence but remain unexploited for thermospheric characterization. Our framework can ingest these signals to deliver certainty-quantified, driver-resolved nowcasts and spatiotemporal perturbation forecasts&mdash;without dedicated science missions.
+                    </p>
+                    <p style="color: var(--color-text-muted); font-size: 0.95rem; line-height: 1.75;">
+                        Every satellite in a GPS-equipped constellation becomes a sensor. The fleet learns the thermosphere together, sharing causal vectors (~1KB) without sharing raw telemetry.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demos -->
+    <section>
+        <div class="container" style="text-align: center;">
+            <div class="section-label" style="text-align: center;">See It Work</div>
+            <h2 class="section-title" style="text-align: center; max-width: 600px; margin-left: auto; margin-right: auto;">Learning and anomaly detection in 3D space</h2>
+            <p class="section-lead" style="text-align: center; margin-left: auto; margin-right: auto;">
+                Watch the causal engine learn thermospheric variance across orbital voxels.
+            </p>
+            <div style="max-width: 720px; margin: 0 auto 2rem;">
+                <iframe width="100%" style="aspect-ratio: 16/9; border-radius: 10px; border: 1px solid var(--color-card-border);"
+                    src="https://www.youtube.com/embed/ayFMtAvYkQo" title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen></iframe>
+            </div>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="/voxels" class="btn btn-ghost">ISS Voxel Demo</a>
+                <a href="/simulation" class="btn btn-ghost">Thermal Simulation</a>
+                <a href="/DecemberAtlas" class="btn btn-ghost">Space Atlas</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section id="contact" class="cta-section alt-bg">
+        <div class="container" style="position: relative; z-index: 2;">
+            <div class="section-label">Get Started</div>
+            <h2 class="section-title">Make every satellite a sensor. Make the fleet a learning network.</h2>
+            <p class="section-lead">
+                Whether you operate one spacecraft or a constellation, Nervous Machine learns the variance your current models average away.
+            </p>
+            <div class="cta-buttons">
+                <a href="https://calendly.com/nervousmachine/space" class="btn btn-primary">Book a Space Consultation</a>
+                <a href="https://github.com/Nervous-Machine/causalAI-demo" target="_blank" class="btn btn-ghost">CLI Demo on GitHub</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div style="display: flex; justify-content: center; gap: 2.5rem; margin-bottom: 1.25rem; flex-wrap: wrap;">
+                <a href="https://www.techrxiv.org/users/975562/articles/1343063-the-pure-error-signal-dissipative-causal-learning-for-intrinsically-safe-autonomy" target="_blank" style="color: var(--color-text-muted); text-decoration: none; font-size: 0.85rem; transition: color 0.3s;">Research Paper</a>
+                <a href="https://nervousmachine.substack.com" target="_blank" style="color: var(--color-text-muted); text-decoration: none; font-size: 0.85rem; transition: color 0.3s;">Substack</a>
+                <a href="https://github.com/Nervous-Machine/causalAI-demo" target="_blank" style="color: var(--color-text-muted); text-decoration: none; font-size: 0.85rem; transition: color 0.3s;">GitHub</a>
+            </div>
+            <p>&copy; 2025 Nervous Machine. All rights reserved.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

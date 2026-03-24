@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Centers — Nervous Machine</title>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <style>
+        :root {
+            --color-dark-bg: #06060F; --color-card-bg: #0E0E1E; --color-card-border: rgba(76, 0, 255, 0.15);
+            --color-accent-indigo: #4C00FF; --color-accent-violet: #8A2BE2; --color-cyan: #00FFFF;
+            --color-text: #C8C8E0; --color-text-muted: #8888AA;
+            --font-display: 'Instrument Serif', Georgia, serif; --font-body: 'DM Sans', sans-serif; --font-mono: 'JetBrains Mono', monospace;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: var(--font-body); background-color: var(--color-dark-bg); color: var(--color-text); line-height: 1.7; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+        header { position: fixed; width: 100%; top: 0; z-index: 1000; background: rgba(6, 6, 15, 0.9); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(76, 0, 255, 0.1); padding: 1rem 0; }
+        header .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--font-display); font-size: 1.5rem; color: #fff; text-decoration: none; }
+        nav ul { list-style: none; display: flex; gap: 2rem; }
+        nav a { color: var(--color-text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; transition: color 0.3s; }
+        nav a:hover { color: var(--color-cyan); }
+        nav a.active { color: var(--color-cyan); }
+        .hero { min-height: 70vh; display: flex; align-items: center; position: relative; overflow: hidden; padding-top: 80px; }
+        .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 15% 80%, rgba(76, 0, 255, 0.18) 0%, transparent 70%), radial-gradient(ellipse 40% 60% at 85% 25%, rgba(0, 255, 255, 0.08) 0%, transparent 70%); pointer-events: none; }
+        .hero-inner { position: relative; z-index: 2; max-width: 720px; }
+        .hero-label { font-family: var(--font-mono); font-size: 0.8rem; color: var(--color-cyan); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.8s 0.2s forwards; }
+        .hero h1 { font-family: var(--font-display); font-size: clamp(2.4rem, 5vw, 3.8rem); color: #fff; line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -0.02em; opacity: 0; animation: fadeUp 0.8s 0.4s forwards; }
+        .hero h1 em { font-style: italic; color: var(--color-cyan); }
+        .hero-sub { font-size: 1.15rem; line-height: 1.75; color: var(--color-text); max-width: 600px; margin-bottom: 2rem; opacity: 0; animation: fadeUp 0.8s 0.6s forwards; }
+        .hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.8s 0.8s forwards; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+        .btn { display: inline-flex; align-items: center; padding: 0.85rem 2rem; border-radius: 6px; font-family: var(--font-body); font-weight: 600; font-size: 0.9rem; text-decoration: none; transition: all 0.3s; cursor: pointer; border: none; letter-spacing: 0.02em; }
+        .btn-primary { background: linear-gradient(135deg, var(--color-accent-indigo), var(--color-accent-violet)); color: #fff; box-shadow: 0 4px 20px rgba(76, 0, 255, 0.3); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(76, 0, 255, 0.45); }
+        .btn-ghost { background: transparent; color: var(--color-text); border: 1px solid rgba(200, 200, 224, 0.2); }
+        .btn-ghost:hover { border-color: var(--color-cyan); color: var(--color-cyan); }
+        section { padding: 6rem 0; }
+        .section-label { font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-accent-violet); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1rem; }
+        .section-title { font-family: var(--font-display); font-size: clamp(1.8rem, 3.5vw, 2.6rem); color: #fff; line-height: 1.15; margin-bottom: 1.25rem; letter-spacing: -0.02em; }
+        .section-lead { font-size: 1.05rem; color: var(--color-text); max-width: 600px; margin-bottom: 3rem; line-height: 1.75; }
+        .alt-bg { background: var(--color-card-bg); border-top: 1px solid var(--color-card-border); border-bottom: 1px solid var(--color-card-border); }
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+        .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+        .feature-card { padding: 2rem; background: var(--color-card-bg); border: 1px solid var(--color-card-border); border-radius: 10px; transition: all 0.3s; }
+        .feature-card:hover { border-color: rgba(76, 0, 255, 0.3); transform: translateY(-3px); }
+        .feature-card h3 { font-family: var(--font-display); font-size: 1.3rem; color: #fff; margin-bottom: 0.6rem; }
+        .feature-card p { font-size: 0.9rem; color: var(--color-text-muted); line-height: 1.65; }
+        .cta-section { text-align: center; padding: 7rem 0; position: relative; }
+        .cta-section::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(76, 0, 255, 0.1) 0%, transparent 70%); pointer-events: none; }
+        .cta-section .section-title, .cta-section .section-lead { text-align: center; max-width: 550px; margin-left: auto; margin-right: auto; }
+        .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        footer { padding: 2rem 0; border-top: 1px solid var(--color-card-border); text-align: center; font-size: 0.8rem; color: var(--color-text-muted); }
+        footer a:hover { color: var(--color-cyan); }
+        @media (max-width: 860px) { .two-col { grid-template-columns: 1fr; gap: 2.5rem; } .feature-grid { grid-template-columns: 1fr; } header .container { flex-direction: column; gap: 0.75rem; } nav ul { gap: 1.25rem; flex-wrap: wrap; justify-content: center; } section { padding: 4rem 0; } .hero { min-height: 60vh; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <a href="/" class="logo">Nervous Machine</a>
+            <nav><ul>
+                <li><a href="/space">Space</a></li>
+                <li><a href="/robotics">Robotics</a></li>
+                <li><a href="/manufacturing">Manufacturing</a></li>
+                <li><a href="/data-centers" class="active">Data Centers</a></li>
+                <li><a href="/#contact">Contact</a></li>
+            </ul></nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-inner">
+                <div class="hero-label">Data Centers</div>
+                <h1>Every rack has a <em>thermal signature</em></h1>
+                <p class="hero-sub">
+                    CFD models and design-time thermal simulations predict airflow for the ideal layout. In practice, every rack, every row, every hot aisle develops its own thermal behavior. Nervous Machine learns it and optimizes cooling in real time.
+                </p>
+                <div class="hero-ctas">
+                    <a href="https://calendly.com/nervousmachine/data-centers" class="btn btn-primary">Book a Data Center Consultation</a>
+                    <a href="https://github.com/Nervous-Machine/causalAI-demo" target="_blank" class="btn btn-ghost">CLI Demo on GitHub</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="alt-bg">
+        <div class="container">
+            <div class="two-col">
+                <div>
+                    <div class="section-label">The Challenge</div>
+                    <h2 class="section-title">Thermal models are stale the day they're deployed</h2>
+                    <p class="section-lead">
+                        Data center thermal models are built from CFD simulations of the designed layout. But workloads shift, racks get reconfigured, blanking panels go missing, and seasonal ambient conditions change. The simulation drifts from reality rack by rack.
+                    </p>
+                    <p style="color: var(--color-text-muted); font-size: 0.95rem; line-height: 1.75;">
+                        Operators compensate by overcooling&mdash;running CRAC units harder than necessary to ensure nothing overheats. That's energy waste driven by uncertainty. The model says the room is fine; the operator knows individual racks tell a different story.
+                    </p>
+                </div>
+                <div>
+                    <div class="section-label">What Changes</div>
+                    <h2 class="section-title" style="margin-bottom: 1rem;">Per-zone causal thermal models</h2>
+                    <p style="color: var(--color-text-muted); font-size: 0.95rem; line-height: 1.75; margin-bottom: 1.5rem;">
+                        Nervous Machine builds causal models for each thermal zone&mdash;learning the actual relationships between workload, airflow, ambient conditions, and temperature. When a zone drifts, the system identifies the driver: is it a workload spike, a failed fan, or a recirculation path the CFD model never predicted?
+                    </p>
+                    <p style="color: var(--color-text-muted); font-size: 0.95rem; line-height: 1.75;">
+                        Validated thermal relationships propagate across zones and facilities. A discovery in one data hall&mdash;say, a specific rack configuration that creates a hot spot under certain workloads&mdash;becomes fleet knowledge, shared as causal vectors (~1KB), not raw sensor streams.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="section-label">Capabilities</div>
+            <h2 class="section-title">What the causal engine learns</h2>
+            <p class="section-lead">
+                Continuous thermal calibration per zone, per rack, per workload profile&mdash;enriching CFD baselines with operational reality.
+            </p>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>Real-time thermal attribution</h3>
+                    <p>Decompose temperature deviations into individual drivers: workload, airflow, ambient, recirculation. Know which factor is causing the hot spot, not just that it exists.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Cooling optimization</h3>
+                    <p>Replace overcooling with precision. The causal model predicts thermal response to workload changes, enabling just-in-time cooling adjustments that reduce PUE without increasing risk.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Cross-facility learning</h3>
+                    <p>Thermal discoveries propagate across data halls and campuses. Similar rack configurations and workload profiles benefit from shared causal knowledge. Raw telemetry stays local.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Sensor-level deployment</h3>
+                    <p>Runs alongside existing BMS and DCIM infrastructure. No cloud dependency for real-time decisions. Lightweight enough for edge controllers in each zone.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="cta-section alt-bg">
+        <div class="container" style="position: relative; z-index: 2;">
+            <div class="section-label">Get Started</div>
+            <h2 class="section-title">Stop overcooling. Start learning what each zone actually needs.</h2>
+            <p class="section-lead">
+                From single-hall pilots to multi-campus rollouts, Nervous Machine adapts to your thermal environment and your workload.
+            </p>
+            <div class="cta-buttons">
+                <a href="https://calendly.com/nervousmachine/data-centers" class="btn btn-primary">Book a Data Center Consultation</a>
+                <a href="https://github.com/Nervous-Machine/causalAI-demo" target="_blank" class="btn btn-ghost">CLI Demo on GitHub</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div style="display: flex; justify-content: center; gap: 2.5rem; margin-bottom: 1.25rem; flex-wrap: wrap;">
+                <a href="https://www.techrxiv.org/users/975562/articles/1343063-the-pure-error-signal-dissipative-causal-learning-for-intrinsically-safe-autonomy" target="_blank" style="color: var(--color-text-muted); text-decoration: none; font-size: 0.85rem; transition: color 0.3s;">Research Paper</a>
+                <a href="https://nervousmachine.substack.com" target="_blank" style="color: var(--color-text-muted); text-decoration: none; font-size: 0.85rem; transition: color 0.3s;">Substack</a>
+                <a href="https://github.com/Nervous-Machine/causalAI-demo" target="_blank" style="color: var(--color-text-muted); text-decoration: none; font-size: 0.85rem; transition: color 0.3s;">GitHub</a>
+            </div>
+            <p>&copy; 2025 Nervous Machine. All rights reserved.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
