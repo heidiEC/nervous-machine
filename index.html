@@ -479,6 +479,8 @@
 
             nav ul {
                 gap: 1.25rem;
+                flex-wrap: wrap;
+                justify-content: center;
             }
 
             header .container {
@@ -491,6 +493,10 @@
                 align-items: flex-start;
             }
 
+            .hero {
+                padding-top: 140px;
+            }
+
             section {
                 padding: 4.5rem 0;
             }
@@ -499,6 +505,18 @@
         @media (max-width: 480px) {
             .deploy-specs {
                 grid-template-columns: 1fr;
+            }
+
+            nav ul {
+                gap: 0.75rem 1rem;
+            }
+
+            nav a {
+                font-size: 0.8rem;
+            }
+
+            .hero {
+                padding-top: 160px;
             }
         }
     </style>
