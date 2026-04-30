@@ -445,7 +445,7 @@
                 <div class="hero-ctas">
                     <a href="https://calendly.com/heidi-everychart/30min" class="btn btn-primary">Book a Space
                         Consultation</a>
-                    <a href="/DecemberAtlas" class="btn btn-ghost">Explore Space Atlas →</a>
+                    <a href="https://space-atlas.nervousmachine.com" class="btn btn-ghost">Explore Space Atlas →</a>
                 </div>
             </div>
         </div>
@@ -577,22 +577,46 @@
         <div class="container" style="text-align: center;">
             <div class="section-label" style="text-align: center;">See It Work</div>
             <h2 class="section-title"
-                style="text-align: center; max-width: 600px; margin-left: auto; margin-right: auto;">Learning and
-                anomaly detection in 3D space</h2>
-            <p class="section-lead" style="text-align: center; margin-left: auto; margin-right: auto;">
-                Watch the causal engine learn thermospheric variance across orbital voxels.
+                style="text-align: center; max-width: 720px; margin-left: auto; margin-right: auto;">
+                Two simulations, two questions.</h2>
+            <p class="section-lead" style="text-align: center; max-width: 720px; margin: 0 auto 3rem;">
+                How does space weather propagate <em>through</em> the voxel grid? And how does the engine
+                earn certainty <em>about</em> each voxel as evidence arrives? Both, interactively.
             </p>
-            <div style="max-width: 720px; margin: 0 auto 2rem;">
+
+            <!-- Group 1: Spatial propagation -->
+            <div style="max-width: 720px; margin: 0 auto 3.5rem;">
+                <h3
+                    style="font-size: 1.05rem; color: #fff; margin-bottom: 0.4rem; letter-spacing: 0.3px; font-weight: 600;">
+                    Spatial propagation</h3>
+                <p style="color: var(--color-text-muted); font-size: 0.92rem; margin-bottom: 1.5rem;">
+                    How a geomagnetic event moves through orbital shells in time — the voxel grid as a
+                    physical structure, not a lookup table.
+                </p>
                 <iframe width="100%"
                     style="aspect-ratio: 16/9; border-radius: 10px; border: 1px solid var(--color-card-border);"
-                    src="https://www.youtube.com/embed/ayFMtAvYkQo" title="YouTube video player" frameborder="0"
+                    src="https://www.youtube.com/embed/ayFMtAvYkQo" title="Causal engine learning over voxels"
+                    frameborder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowfullscreen></iframe>
+                <div style="margin-top: 1.25rem;">
+                    <a href="/DecemberAtlas" class="btn btn-ghost">December 2025 Space Weather Simulation</a>
+                </div>
             </div>
-            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                <a href="/voxels" class="btn btn-ghost">ISS Voxel Demo</a>
-                <a href="/simulation" class="btn btn-ghost">Thermal Simulation</a>
-                <a href="/DecemberAtlas" class="btn btn-ghost">Space Atlas</a>
+
+            <!-- Group 2: Learning dynamics -->
+            <div style="max-width: 720px; margin: 0 auto;">
+                <h3
+                    style="font-size: 1.05rem; color: #fff; margin-bottom: 0.4rem; letter-spacing: 0.3px; font-weight: 600;">
+                    Learning dynamics</h3>
+                <p style="color: var(--color-text-muted); font-size: 0.92rem; margin-bottom: 1.5rem;">
+                    How certainty evolves as evidence arrives — across voxels over a 31-day run (outer loop),
+                    and within a single spacecraft as the dissipative learning rate adapts (inner loop).
+                </p>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="/voxels" class="btn btn-ghost">Outer Loop · 31-Day Causal Run</a>
+                    <a href="/simulation" class="btn btn-ghost">Inner Loop · Dissipative Learning</a>
+                </div>
             </div>
         </div>
     </section>
