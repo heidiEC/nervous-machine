@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nervous Machine — Optimize for Variance, Not the Mean</title>
+    <title>Nervous Machine — Certainty-Calibrated Runtime-Assured Autonomy</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
         rel="stylesheet">
@@ -341,76 +341,6 @@
             color: var(--color-text-muted);
         }
 
-        /* ─── Pricing ─── */
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-        }
-
-        .pricing-card {
-            padding: 2.5rem 2rem;
-            background: var(--color-card-bg);
-            border: 1px solid var(--color-card-border);
-            border-radius: 10px;
-            transition: all 0.3s;
-        }
-
-        .pricing-card.featured {
-            border-color: rgba(0, 255, 255, 0.3);
-            background: linear-gradient(135deg, rgba(76, 0, 255, 0.08), rgba(138, 43, 226, 0.08));
-        }
-
-        .pricing-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(0, 255, 255, 0.25);
-        }
-
-        .pricing-tier {
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            color: var(--color-accent-violet);
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            margin-bottom: 0.75rem;
-        }
-
-        .pricing-card h3 {
-            font-family: var(--font-display);
-            font-size: 1.6rem;
-            color: #fff;
-            margin-bottom: 0.75rem;
-        }
-
-        .pricing-desc {
-            font-size: 0.95rem;
-            color: var(--color-text-muted);
-            margin-bottom: 1.5rem;
-            line-height: 1.65;
-        }
-
-        .pricing-features {
-            list-style: none;
-            padding: 0;
-        }
-
-        .pricing-features li {
-            font-size: 0.9rem;
-            color: var(--color-text);
-            padding: 0.4rem 0;
-            padding-left: 1.25rem;
-            position: relative;
-        }
-
-        .pricing-features li::before {
-            content: '→';
-            position: absolute;
-            left: 0;
-            color: var(--color-cyan);
-            font-family: var(--font-mono);
-            font-size: 0.8rem;
-        }
-
         /* ─── Footer ─── */
         footer a:hover {
             color: var(--color-cyan);
@@ -467,8 +397,7 @@
                 gap: 2.5rem;
             }
 
-            .how-grid,
-            .pricing-grid {
+            .how-grid {
                 grid-template-columns: 1fr;
                 gap: 1.25rem;
             }
@@ -531,8 +460,7 @@
             <nav>
                 <ul>
                     <li><a href="/space">Space</a></li>
-                    <li><a href="/robotics">Robotics</a></li>
-                    <li><a href="/manufacturing">Manufacturing</a></li>
+                    <li><a href="/chip-reliability">Chip Reliability</a></li>
                     <li><a href="/data-centers">Data Centers</a></li>
                     <li><a href="mailto:heidi@nervousmachine.com" style="color: var(--color-cyan);">Contact</a></li>
                 </ul>
@@ -544,15 +472,16 @@
     <section class="hero">
         <div class="container">
             <div class="hero-inner">
-                <div class="hero-label">Edge-native causal learning</div>
-                <h1>Powering machines that <em>learn from reality</em></h1>
+                <div class="hero-label">Certainty-Calibrated Runtime-Assured Autonomy</div>
+                <h1>Calibrating your priors to <em>deployment reality</em></h1>
                 <p class="hero-sub">
-                    Most AI optimizes for the mean. Nervous Machine learns your ecosystem&mdash;your machines, your
-                    configurations, your environment&mdash;in real time, at the edge, without constant cloud inference.
+                    Sim, digital twin, world model&mdash;every model deployed in the physical world is a prior. Nervous
+                    Machine calibrates it against runtime telemetry on-device, with certainty-scored assurance flags.
+                    Raw data stays on-site; calibrated flags cross organizational boundaries.
                 </p>
                 <div class="hero-ctas">
-                    <a href="https://calendly.com/heidi-everychart/30min" class="btn btn-primary">Book a Demo</a>
-                    <a href="/voxels" class="btn btn-ghost">See It Learn →</a>
+                    <a href="https://calendly.com/heidi-everychart/30min" class="btn btn-primary">Book a Call</a>
+                    <a href="/data-centers" class="btn btn-ghost">See the Benchmarks →</a>
                 </div>
             </div>
         </div>
@@ -562,42 +491,44 @@
     <section>
         <div class="container">
             <div class="section-label">How It Works</div>
-            <h2 class="section-title">Learn each machine's real signature</h2>
+            <h2 class="section-title">Calibrate every prior against deployment reality</h2>
             <p class="section-lead">
-                Nervous Machine enriches population-level priors with instance-level causal models that update from
-                operational reality. No retraining. No cloud roundtrip. Just continuous calibration at the edge.
+                Nervous Machine takes your design-time prior&mdash;sim output, digital twin, world model&mdash;and
+                calibrates it continuously against runtime telemetry. No retraining. No cloud roundtrip. Just on-device
+                certainty calibration.
             </p>
 
             <div class="how-grid">
                 <div class="how-card">
                     <div class="how-step">01 — Seed</div>
-                    <h3>Start with physics</h3>
-                    <p>Build an initial causal graph from domain literature, simulation outputs, or digital twin priors.
-                        The system starts with the best available knowledge&mdash;then improves it.</p>
+                    <h3>Start with the prior</h3>
+                    <p>Bring your existing prior&mdash;sim output, digital twin, world model, domain literature. The
+                        system starts from the best available design-time knowledge, then calibrates it against
+                        deployment.</p>
                 </div>
                 <div class="how-card">
                     <div class="how-step">02 — Sense</div>
                     <h3>Measure the gap</h3>
-                    <p>Sensors capture actual outcomes. Pure error signals (predicted vs. actual) expose exactly where
-                        the model diverges from reality. No labels needed&mdash;just ground truth.</p>
+                    <p>Runtime telemetry captures actual outcomes. The substrate exposes exactly where the prior
+                        diverges from deployment. No labels needed&mdash;just ground truth.</p>
                 </div>
                 <div class="how-card">
                     <div class="how-step">03 — Adapt</div>
                     <h3>Learn where uncertain</h3>
-                    <p>Learning rate is inversely proportional to certainty. Agile where ignorant, stable where
-                        confident. The system knows what it doesn't know and adjusts accordingly.</p>
+                    <p>Agile where ignorant, stable where confident. The system knows what it doesn't know and adapts
+                        accordingly.</p>
                 </div>
                 <div class="how-card">
                     <div class="how-step">04 — Detect</div>
                     <h3>Trigger curiosity</h3>
-                    <p>High certainty + persistent error = missing causal factor. The system autonomously flags
-                        knowledge gaps and generates hypotheses instead of masking them.</p>
+                    <p>The system autonomously flags knowledge gaps and surfaces hypotheses instead of masking them.
+                        Unknown unknowns become first-class signals.</p>
                 </div>
                 <div class="how-card">
                     <div class="how-step">05 — Propagate</div>
-                    <h3>Share vectors, not data</h3>
-                    <p>Validated causal vectors (~1KB) propagate across the fleet. Raw telemetry never leaves the
-                        device. Every node benefits from collective learning without sharing sensitive data.</p>
+                    <h3>Share learning, not data</h3>
+                    <p>Calibrated learning propagates across the fleet at a tiny footprint. Raw telemetry never leaves
+                        the device. Every node benefits from collective certainty without sharing sensitive data.</p>
                 </div>
                 <div class="how-card">
                     <div class="how-step">06 — Repeat</div>
@@ -607,12 +538,6 @@
                 </div>
             </div>
 
-            <div style="text-align: center; margin-top: 2.5rem;">
-                <a href="https://github.com/Nervous-Machine/causalAI-demo" target="_blank" class="btn btn-ghost"
-                    style="font-family: var(--font-mono); font-size: 0.85rem;">
-                    <span style="margin-right: 0.5rem;">⌘</span> Clone the CLI demo &amp; run the pipeline yourself →
-                </a>
-            </div>
         </div>
     </section>
 
@@ -644,61 +569,10 @@
                             <div class="spec-label">Share learnings, not raw telemetry</div>
                         </div>
                         <div class="spec-item">
-                            <div class="spec-val">Causal</div>
-                            <div class="spec-label">Explainable models, not black boxes</div>
+                            <div class="spec-val">Auditable</div>
+                            <div class="spec-label">Reviewable models, not black boxes</div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Pricing -->
-    <section>
-        <div class="container">
-            <div class="section-label">Pricing</div>
-            <h2 class="section-title">Scale to your operation</h2>
-            <p class="section-lead">
-                Per-install or subscription. Start with a single device and scale to fleet-wide intelligence. No
-                lock-in.
-            </p>
-
-            <div class="pricing-grid">
-                <div class="pricing-card">
-                    <div class="pricing-tier">Tier 1</div>
-                    <h3>Local Learning</h3>
-                    <p class="pricing-desc">Single-device causal learning. Your machine learns its own signature from
-                        operational reality.</p>
-                    <ul class="pricing-features">
-                        <li>On-device causal model</li>
-                        <li>Real-time error signal adaptation</li>
-                        <li>Curiosity-triggered gap detection</li>
-                        <li>No cloud dependency</li>
-                    </ul>
-                </div>
-                <div class="pricing-card featured">
-                    <div class="pricing-tier">Tier 2</div>
-                    <h3>Fleet Learning</h3>
-                    <p class="pricing-desc">Multi-device propagation. Validated causal edges shared across nodes without
-                        exposing raw data.</p>
-                    <ul class="pricing-features">
-                        <li>Everything in Local</li>
-                        <li>Fleet-wide causal propagation</li>
-                        <li>Privacy-preserving knowledge sharing</li>
-                        <li>Collective certainty convergence</li>
-                    </ul>
-                </div>
-                <div class="pricing-card">
-                    <div class="pricing-tier">Tier 3</div>
-                    <h3>Custom Causal</h3>
-                    <p class="pricing-desc">Bespoke causal model training for your domain. We build the initial graph
-                        with your physics and your data.</p>
-                    <ul class="pricing-features">
-                        <li>Everything in Fleet</li>
-                        <li>Domain-specific causal graph design</li>
-                        <li>Custom validation pipelines</li>
-                        <li>Dedicated engineering support</li>
-                    </ul>
                 </div>
             </div>
         </div>
@@ -708,15 +582,14 @@
     <section id="contact" class="cta-section">
         <div class="container" style="position: relative; z-index: 2;">
             <div class="section-label">Get Started</div>
-            <h2 class="section-title">Your machines have variance. We&nbsp;learn&nbsp;it.</h2>
+            <h2 class="section-title">Calibrate the prior. Assure&nbsp;the&nbsp;runtime.</h2>
             <p class="section-lead">
-                Satellites, factories, robots, data centers. If it operates in the physical world, we can make its
-                models smarter.
+                Satellites, factories, robots, data centers, chips. Anywhere a model is deployed in the physical world,
+                Nervous Machine calibrates it against what's actually happening.
             </p>
             <div class="cta-buttons">
-                <a href="https://calendly.com/heidi-everychart/30min" class="btn btn-primary">Book a Demo</a>
-                <a href="https://github.com/Nervous-Machine/causalAI-demo" target="_blank" class="btn btn-ghost">CLI
-                    Demo on GitHub</a>
+                <a href="https://calendly.com/heidi-everychart/30min" class="btn btn-primary">Book a Call</a>
+                <a href="mailto:heidi@nervousmachine.com" class="btn btn-ghost">Reach Out Directly</a>
             </div>
         </div>
     </section>
@@ -725,14 +598,8 @@
     <footer>
         <div class="container">
             <div style="display: flex; justify-content: center; gap: 2.5rem; margin-bottom: 1.25rem; flex-wrap: wrap;">
-                <a href="https://www.techrxiv.org/users/975562/articles/1343063-the-pure-error-signal-dissipative-causal-learning-for-intrinsically-safe-autonomy"
-                    target="_blank"
-                    style="color: var(--color-text-muted); text-decoration: none; font-size: 0.85rem; transition: color 0.3s;">Research
-                    Paper</a>
                 <a href="https://nervousmachine.substack.com" target="_blank"
                     style="color: var(--color-text-muted); text-decoration: none; font-size: 0.85rem; transition: color 0.3s;">Substack</a>
-                <a href="https://github.com/Nervous-Machine/causalAI-demo" target="_blank"
-                    style="color: var(--color-text-muted); text-decoration: none; font-size: 0.85rem; transition: color 0.3s;">GitHub</a>
                 <a href="/DecemberAtlas"
                     style="color: var(--color-text-muted); text-decoration: none; font-size: 0.85rem; transition: color 0.3s;">Space
                     Atlas</a>
