@@ -128,19 +128,15 @@
         }
 
         .hero h1 {
-            font-family: var(--font-display);
-            font-size: clamp(2.8rem, 6vw, 4.5rem);
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: clamp(2.4rem, 4.5vw, 3.4rem);
             color: #fff;
-            line-height: 1.1;
+            line-height: 1.2;
             margin-bottom: 1.5rem;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.015em;
             opacity: 0;
             animation: fadeUp 0.8s 0.4s forwards;
-        }
-
-        .hero h1 em {
-            font-style: italic;
-            color: var(--color-cyan);
         }
 
         .hero-sub {
@@ -226,12 +222,13 @@
         }
 
         .section-title {
-            font-family: var(--font-display);
-            font-size: clamp(2rem, 4vw, 3rem);
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: clamp(1.8rem, 3.5vw, 2.6rem);
             color: #fff;
-            line-height: 1.15;
+            line-height: 1.2;
             margin-bottom: 1.25rem;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.015em;
         }
 
         .section-lead {
@@ -240,6 +237,96 @@
             max-width: 600px;
             margin-bottom: 3.5rem;
             line-height: 1.75;
+        }
+
+        /* ─── Case Studies ─── */
+        .case-section {
+            background: var(--color-card-bg);
+            border-top: 1px solid var(--color-card-border);
+            border-bottom: 1px solid var(--color-card-border);
+            padding: 6rem 0;
+        }
+        .case-intro {
+            margin-bottom: 3rem;
+        }
+        .case-intro .section-title {
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+            letter-spacing: -0.01em;
+            margin-bottom: 1rem;
+        }
+        .case-intro .section-lead {
+            font-size: 1.02rem;
+            color: var(--color-text);
+            max-width: 720px;
+            margin-bottom: 0;
+        }
+        .case-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        .case-card {
+            background: rgba(14, 14, 30, 0.7);
+            border: 1px solid var(--color-card-border);
+            border-radius: 10px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s;
+        }
+        .case-card:hover {
+            border-color: rgba(76, 0, 255, 0.4);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(76, 0, 255, 0.18);
+        }
+        .case-tag {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            color: var(--color-cyan);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+        .case-card h3 {
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: #fff;
+            line-height: 1.3;
+            margin-bottom: 0.9rem;
+            letter-spacing: -0.01em;
+        }
+        .case-card p {
+            font-size: 0.92rem;
+            color: var(--color-text);
+            line-height: 1.7;
+            margin-bottom: 1.25rem;
+        }
+        .case-nums {
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            color: var(--color-cyan);
+            background: rgba(0, 255, 255, 0.05);
+            padding: 0.55rem 0.8rem;
+            border-radius: 4px;
+            line-height: 1.7;
+            margin-bottom: 1.25rem;
+        }
+        .case-link {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--color-cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: auto;
+            transition: letter-spacing 0.3s;
+        }
+        .case-card:hover .case-link {
+            letter-spacing: 0.15em;
         }
 
         /* ─── How It Works ─── */
@@ -290,10 +377,12 @@
         }
 
         .how-card h3 {
-            font-family: var(--font-display);
-            font-size: 1.5rem;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 1.2rem;
             color: #fff;
             margin-bottom: 0.75rem;
+            letter-spacing: -0.01em;
         }
 
         .how-card p {
@@ -402,6 +491,14 @@
                 gap: 1.25rem;
             }
 
+            .case-grid {
+                grid-template-columns: 1fr;
+                gap: 1.25rem;
+            }
+            .case-section {
+                padding: 4rem 0;
+            }
+
             .deploy-specs {
                 grid-template-columns: 1fr 1fr;
             }
@@ -459,10 +556,10 @@
             <div class="logo">Nervous Machine</div>
             <nav>
                 <ul>
-                    <!---<li><a href="/space">Space</a></li>
-                    <li><a href="/chip-reliability">Chip Reliability</a></li>
-                    <li><a href="/data-centers">Data Centers</a></li>--->
-                    <li><a href="mailto:heidi@nervousmachine.com" style="color: var(--color-cyan);">Contact</a></li>
+                    <li><a href="/quantum">Quantum</a></li>
+                    <li><a href="/data-centers">Data Centers</a></li>
+                    <li><a href="/space">Space</a></li>
+                    <li><a href="#contact" style="color: var(--color-cyan);">Contact</a></li>
                 </ul>
             </nav>
         </div>
@@ -473,7 +570,7 @@
         <div class="container">
             <div class="hero-inner">
                 <div class="hero-label">Certainty-Calibrated Runtime-Assured Autonomy</div>
-                <h1>Calibrating your priors to <em>deployment reality</em></h1>
+                <h1>Calibrating priors against deployment reality.</h1>
                 <p class="hero-sub">
                     Sim, digital twin, world model&mdash;every model deployed in the physical world is a prior. Nervous
                     Machine calibrates it against runtime telemetry on-device, with certainty-scored assurance flags.
@@ -481,8 +578,69 @@
                 </p>
                 <div class="hero-ctas">
                     <a href="https://calendly.com/heidi-everychart/30min" class="btn btn-primary">Book a Call</a>
-                    <a href="https://doi.org/10.5281/zenodo.20563491" class="btn btn-ghost">See the Benchmarks →</a>
+                    <a href="#case-studies" class="btn btn-ghost">See the case studies →</a>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Case Studies -->
+    <section id="case-studies" class="case-section">
+        <div class="container">
+            <div class="case-intro">
+                <div class="section-label">Where the substrate has been benchmarked</div>
+                <h2 class="section-title">Three substrates. The same primitives. Byte-identical across domains.</h2>
+                <p class="section-lead">
+                    Per-edge causal learning, applied to three different physical environments. Each
+                    case study runs on a real public archive, with the methodology fully published.
+                </p>
+            </div>
+            <div class="case-grid">
+                <a href="/quantum" class="case-card">
+                    <div class="case-tag">Quantum &middot; IBM ibm_fez</div>
+                    <h3>Seventeen shared-resource clusters discovered from telemetry alone.</h3>
+                    <p>
+                        A 106-day audit of IBM's <span style="font-family: var(--font-mono); color: var(--color-cyan); font-size: 0.88em;">ibm_fez</span>
+                        Heron processor. The substrate discovered clusters with no coupling-map input
+                        and no vendor hints; 15 of 17 were confirmed across multiple coordinated-motion
+                        events.
+                    </p>
+                    <div class="case-nums">
+                        17 clusters &middot; 15 / 17 multi-event<br>
+                        156 qubits &middot; 59,192 predictions scored
+                    </div>
+                    <div class="case-link">Explore &rarr;</div>
+                </a>
+                <a href="/data-centers" class="case-card">
+                    <div class="case-tag">Data Centers &middot; CINECA Marconi100</div>
+                    <h3>The edges between vendors have no owner. That is where assurance has to live.</h3>
+                    <p>
+                        A 2.5-year offline causal audit across five telemetry owners. Eight cooling
+                        edges classified into a vulnerability taxonomy; one non-owned edge surfaced
+                        that no single silo could observe; a drift pattern that silently invalidates
+                        control laws while forecasts look healthy.
+                    </p>
+                    <div class="case-nums">
+                        5 owners &middot; 8 edges audited<br>
+                        &rho; = 0.76 cross-regime &middot; p = 0.028
+                    </div>
+                    <div class="case-link">Explore &rarr;</div>
+                </a>
+                <a href="/space" class="case-card">
+                    <div class="case-tag">Space &middot; LEO, GEO, Mars, Cislunar</div>
+                    <h3>Operational models as priors. Telemetry as ground truth. Autonomous discovery of regime-dependent physics.</h3>
+                    <p>
+                        Per-edge causal learning across four space-environment regimes against real
+                        archive ground truth from GRACE-FO, GOES-19, MSL/RAD, and ARTEMIS-P1/P2.
+                        Calibrated certainty plus the discovery of two unmodeled physical phenomena
+                        the priors didn't encode.
+                    </p>
+                    <div class="case-nums">
+                        4 regimes &middot; ~50 kB flight footprint<br>
+                        92.4% LEO precision &middot; 2 discoveries
+                    </div>
+                    <div class="case-link">Explore &rarr;</div>
+                </a>
             </div>
         </div>
     </section>
@@ -600,11 +758,8 @@
             <div style="display: flex; justify-content: center; gap: 2.5rem; margin-bottom: 1.25rem; flex-wrap: wrap;">
                 <a href="https://nervousmachine.substack.com" target="_blank"
                     style="color: var(--color-text-muted); text-decoration: none; font-size: 0.85rem; transition: color 0.3s;">Substack</a>
-                <a href="/DecemberAtlas"
-                    style="color: var(--color-text-muted); text-decoration: none; font-size: 0.85rem; transition: color 0.3s;">Space
-                    Atlas</a>
             </div>
-            <p>&copy; 2025 Nervous Machine. All rights reserved.</p>
+            <p>&copy; 2026 Nervous Machine. All rights reserved.</p>
         </div>
     </footer>
 

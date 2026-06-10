@@ -17,6 +17,7 @@
             --color-accent-indigo: #4C00FF;
             --color-accent-violet: #8A2BE2;
             --color-cyan: #00FFFF;
+            --color-amber: #FFB454;
             --color-text: #C8C8E0;
             --color-text-muted: #8888AA;
             --font-display: 'Instrument Serif', Georgia, serif;
@@ -24,11 +25,7 @@
             --font-mono: 'JetBrains Mono', monospace;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: var(--font-body);
@@ -39,11 +36,7 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
 
         header {
             position: fixed;
@@ -55,242 +48,244 @@
             border-bottom: 1px solid rgba(76, 0, 255, 0.1);
             padding: 1rem 0;
         }
-
-        header .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-family: var(--font-display);
-            font-size: 1.5rem;
-            color: #fff;
-            text-decoration: none;
-        }
-
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 2rem;
-        }
-
+        header .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--font-display); font-size: 1.5rem; color: #fff; text-decoration: none; }
+        nav ul { list-style: none; display: flex; gap: 2rem; }
         nav a {
-            color: var(--color-text-muted);
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 500;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            transition: color 0.3s;
+            color: var(--color-text-muted); text-decoration: none;
+            font-size: 0.85rem; font-weight: 500; letter-spacing: 0.04em;
+            text-transform: uppercase; transition: color 0.3s;
         }
-
-        nav a:hover {
-            color: var(--color-cyan);
-        }
-
-        nav a.active {
-            color: var(--color-cyan);
-        }
+        nav a:hover, nav a.active { color: var(--color-cyan); }
 
         .hero {
-            min-height: 70vh;
-            display: flex;
-            align-items: center;
+            padding: 140px 0 4rem;
             position: relative;
             overflow: hidden;
-            padding-top: 80px;
         }
-
         .hero::before {
             content: '';
             position: absolute;
             inset: 0;
-            background: radial-gradient(ellipse 60% 50% at 15% 80%, rgba(76, 0, 255, 0.18) 0%, transparent 70%), radial-gradient(ellipse 40% 60% at 85% 25%, rgba(0, 255, 255, 0.08) 0%, transparent 70%);
+            background: radial-gradient(ellipse 60% 50% at 15% 80%, rgba(76, 0, 255, 0.12) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 60% at 85% 25%, rgba(0, 255, 255, 0.05) 0%, transparent 70%);
             pointer-events: none;
         }
-
-        .hero-inner {
-            position: relative;
-            z-index: 2;
-            max-width: 720px;
-        }
+        .hero-inner { position: relative; z-index: 2; max-width: 820px; }
 
         .hero-label {
-            font-family: var(--font-mono);
-            font-size: 0.8rem;
-            color: var(--color-cyan);
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            margin-bottom: 1.5rem;
-            opacity: 0;
-            animation: fadeUp 0.8s 0.2s forwards;
+            font-family: var(--font-mono); font-size: 0.78rem;
+            color: var(--color-cyan); letter-spacing: 0.14em;
+            text-transform: uppercase; margin-bottom: 1.5rem;
         }
-
         .hero h1 {
-            font-family: var(--font-display);
-            font-size: clamp(2.4rem, 5vw, 3.8rem);
-            color: #fff;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-            letter-spacing: -0.02em;
-            opacity: 0;
-            animation: fadeUp 0.8s 0.4s forwards;
-        }
-
-        .hero h1 em {
-            font-style: italic;
-            color: var(--color-cyan);
-        }
-
-        .hero-sub {
-            font-size: 1.15rem;
-            line-height: 1.75;
-            color: var(--color-text);
-            max-width: 600px;
-            margin-bottom: 2rem;
-            opacity: 0;
-            animation: fadeUp 0.8s 0.6s forwards;
-        }
-
-        .hero-ctas {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            opacity: 0;
-            animation: fadeUp 0.8s 0.8s forwards;
-        }
-
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(24px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.85rem 2rem;
-            border-radius: 6px;
             font-family: var(--font-body);
             font-weight: 600;
-            font-size: 0.9rem;
-            text-decoration: none;
-            transition: all 0.3s;
-            cursor: pointer;
-            border: none;
-            letter-spacing: 0.02em;
+            font-size: clamp(2rem, 3.8vw, 2.9rem);
+            color: #fff; line-height: 1.2;
+            margin-bottom: 1.5rem; letter-spacing: -0.015em;
         }
+        .hero-sub {
+            font-size: 1.08rem; line-height: 1.75;
+            color: var(--color-text); max-width: 720px; margin-bottom: 2.5rem;
+        }
+        .hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; }
 
+        .btn {
+            display: inline-flex; align-items: center;
+            padding: 0.85rem 2rem; border-radius: 6px;
+            font-family: var(--font-body); font-weight: 600; font-size: 0.9rem;
+            text-decoration: none; transition: all 0.3s;
+            cursor: pointer; border: none; letter-spacing: 0.02em;
+        }
         .btn-primary {
             background: linear-gradient(135deg, var(--color-accent-indigo), var(--color-accent-violet));
             color: #fff;
             box-shadow: 0 4px 20px rgba(76, 0, 255, 0.3);
         }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(76, 0, 255, 0.45);
-        }
-
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(76, 0, 255, 0.45); }
         .btn-ghost {
-            background: transparent;
-            color: var(--color-text);
+            background: transparent; color: var(--color-text);
             border: 1px solid rgba(200, 200, 224, 0.2);
         }
+        .btn-ghost:hover { border-color: var(--color-cyan); color: var(--color-cyan); }
 
-        .btn-ghost:hover {
-            border-color: var(--color-cyan);
-            color: var(--color-cyan);
+        .stat-band {
+            background: var(--color-card-bg);
+            border-top: 1px solid var(--color-card-border);
+            border-bottom: 1px solid var(--color-card-border);
+            padding: 2.5rem 0;
         }
-
-        section {
-            padding: 6rem 0;
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
         }
-
-        .section-label {
+        .stat {
+            padding: 0.75rem 0 0.75rem 1.5rem;
+            border-left: 2px solid var(--color-accent-indigo);
+        }
+        .stat .v {
+            font-family: var(--font-body);
+            font-weight: 500;
+            font-size: 2.2rem;
+            color: #fff;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.01em;
+        }
+        .stat .v.cyan { color: var(--color-cyan); }
+        .stat .k {
             font-family: var(--font-mono);
             font-size: 0.75rem;
-            color: var(--color-accent-violet);
-            letter-spacing: 0.15em;
+            color: var(--color-text-muted);
             text-transform: uppercase;
-            margin-bottom: 1rem;
+            letter-spacing: 0.06em;
+            line-height: 1.5;
         }
 
-        .section-title {
-            font-family: var(--font-display);
-            font-size: clamp(1.8rem, 3.5vw, 2.6rem);
-            color: #fff;
-            line-height: 1.15;
-            margin-bottom: 1.25rem;
-            letter-spacing: -0.02em;
-        }
-
-        .section-lead {
-            font-size: 1.05rem;
-            color: var(--color-text);
-            max-width: 600px;
-            margin-bottom: 3rem;
-            line-height: 1.75;
-        }
-
+        section { padding: 5.5rem 0; }
         .alt-bg {
             background: var(--color-card-bg);
             border-top: 1px solid var(--color-card-border);
             border-bottom: 1px solid var(--color-card-border);
         }
 
+        .section-label {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--color-accent-violet);
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+        .section-title {
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: clamp(1.5rem, 2.6vw, 2rem);
+            color: #fff; line-height: 1.25;
+            margin-bottom: 1.25rem; letter-spacing: -0.01em;
+        }
+        .section-lead {
+            font-size: 1rem;
+            color: var(--color-text);
+            max-width: 760px;
+            margin-bottom: 2rem;
+            line-height: 1.75;
+        }
+        .section-lead.dim { color: var(--color-text-muted); font-size: 0.95rem; }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--color-card-bg);
+            border: 1px solid var(--color-card-border);
+            border-radius: 8px;
+            overflow: hidden;
+            font-size: 0.88rem;
+        }
+        .data-table th, .data-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(76, 0, 255, 0.08);
+            vertical-align: top;
+        }
+        .data-table th {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: var(--color-text-muted);
+            font-weight: 500;
+            background: rgba(76, 0, 255, 0.06);
+            white-space: nowrap;
+        }
+        .data-table td.mono { font-family: var(--font-mono); font-size: 0.82rem; color: var(--color-text); }
+        .data-table td.cyan { color: var(--color-cyan); }
+        .data-table td.amber { color: var(--color-amber); }
+        .data-table td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+        .data-table td.edge { font-weight: 500; color: #fff; font-family: var(--font-mono); font-size: 0.82rem; }
+        .data-table td.class { font-weight: 600; font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.04em; }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table tr:hover td { background: rgba(76, 0, 255, 0.04); }
+        .table-cap {
+            font-family: var(--font-mono);
+            font-size: 0.74rem;
+            color: var(--color-text-muted);
+            margin-top: 0.8rem;
+            line-height: 1.55;
+        }
+
+        .scroll-x { overflow-x: auto; margin: 0 -1rem; padding: 0 1rem; }
+
+        .callout {
+            background: linear-gradient(135deg, rgba(76, 0, 255, 0.08), rgba(0, 255, 255, 0.04));
+            border: 1px solid var(--color-card-border);
+            border-left: 3px solid var(--color-cyan);
+            border-radius: 8px;
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+        }
+        .callout p {
+            font-family: var(--font-body);
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: #fff;
+        }
+        .callout p strong { color: var(--color-cyan); font-weight: 600; }
+
         .two-col {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 4rem;
+            gap: 3rem;
             align-items: start;
+        }
+        .two-col h3 {
+            font-family: var(--font-body);
+            font-weight: 600;
+            color: #fff;
+            font-size: 1.05rem;
+            margin-bottom: 0.8rem;
+        }
+        .two-col p {
+            font-size: 0.93rem;
+            color: var(--color-text);
+            line-height: 1.7;
         }
 
         .feature-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
+            gap: 1.25rem;
         }
-
         .feature-card {
-            padding: 2rem;
+            padding: 1.75rem;
             background: var(--color-card-bg);
             border: 1px solid var(--color-card-border);
             border-radius: 10px;
-            transition: all 0.3s;
         }
-
-        .feature-card:hover {
-            border-color: rgba(76, 0, 255, 0.3);
-            transform: translateY(-3px);
-        }
-
         .feature-card h3 {
-            font-family: var(--font-display);
-            font-size: 1.3rem;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 1.05rem;
             color: #fff;
             margin-bottom: 0.6rem;
         }
-
         .feature-card p {
             font-size: 0.9rem;
             color: var(--color-text-muted);
             line-height: 1.65;
         }
-
-        .cta-section {
-            text-align: center;
-            padding: 7rem 0;
-            position: relative;
+        .feature-card .who {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--color-cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.5rem;
         }
 
+        .cta-section { text-align: center; padding: 6rem 0; position: relative; }
         .cta-section::before {
             content: '';
             position: absolute;
@@ -298,21 +293,24 @@
             background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(76, 0, 255, 0.1) 0%, transparent 70%);
             pointer-events: none;
         }
-
-        .cta-section .section-title,
-        .cta-section .section-lead {
-            text-align: center;
-            max-width: 550px;
-            margin-left: auto;
-            margin-right: auto;
+        .cta-section .container { position: relative; z-index: 2; }
+        .cta-section .section-title, .cta-section .section-lead {
+            text-align: center; max-width: 620px; margin-left: auto; margin-right: auto;
         }
+        .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
 
-        .cta-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
+        code, .mono {
+            font-family: var(--font-mono);
+            font-size: 0.88em;
+            color: var(--color-cyan);
         }
+        a.link {
+            color: var(--color-cyan);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+            transition: border-color 0.3s;
+        }
+        a.link:hover { border-bottom-color: var(--color-cyan); }
 
         footer {
             padding: 2rem 0;
@@ -321,54 +319,16 @@
             font-size: 0.8rem;
             color: var(--color-text-muted);
         }
-
-        footer a:hover {
-            color: var(--color-cyan);
-        }
+        footer a { color: var(--color-text-muted); text-decoration: none; transition: color 0.3s; }
+        footer a:hover { color: var(--color-cyan); }
 
         @media (max-width: 860px) {
-            .two-col {
-                grid-template-columns: 1fr;
-                gap: 2.5rem;
-            }
-
-            .feature-grid {
-                grid-template-columns: 1fr;
-            }
-
-            header .container {
-                flex-direction: column;
-                gap: 0.75rem;
-            }
-
-            nav ul {
-                gap: 1.25rem;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            section {
-                padding: 4rem 0;
-            }
-
-            .hero {
-                min-height: 60vh;
-                padding-top: 140px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            nav ul {
-                gap: 0.75rem 1rem;
-            }
-
-            nav a {
-                font-size: 0.8rem;
-            }
-
-            .hero {
-                padding-top: 160px;
-            }
+            .two-col { grid-template-columns: 1fr; gap: 2rem; }
+            .feature-grid { grid-template-columns: 1fr; }
+            header .container { flex-direction: column; gap: 0.75rem; }
+            nav ul { gap: 1.25rem; flex-wrap: wrap; justify-content: center; }
+            section { padding: 4rem 0; }
+            .hero { padding: 160px 0 3rem; }
         }
     </style>
 </head>
@@ -380,10 +340,9 @@
             <a href="/" class="logo">Nervous Machine</a>
             <nav>
                 <ul>
-                    <li><a href="/space">Space</a></li>
-                    <li><a href="/robotics">Robotics</a></li>
-                    <li><a href="/manufacturing">Manufacturing</a></li>
+                    <li><a href="/quantum">Quantum</a></li>
                     <li><a href="/data-centers" class="active">Data Centers</a></li>
+                    <li><a href="/space">Space</a></li>
                     <li><a href="/#contact">Contact</a></li>
                 </ul>
             </nav>
@@ -393,18 +352,369 @@
     <section class="hero">
         <div class="container">
             <div class="hero-inner">
-                <div class="hero-label">Data Centers</div>
-                <h1>Every rack has a <em>thermal signature</em></h1>
+                <div class="hero-label">HPC &middot; CINECA Marconi100 &middot; 2.5-year telemetry archive</div>
+                <h1>Inside a multi-vendor data center, the edges between systems have no owner. That is where assurance has to live.</h1>
                 <p class="hero-sub">
-                    CFD models and design-time thermal simulations predict airflow for the ideal layout. In practice,
-                    every rack, every row, every hot aisle develops its own thermal behavior. Nervous Machine learns it
-                    and optimizes cooling in real time.
+                    Modern HPC and data centers run on independently-owned controllers: each cooling
+                    vendor's loop, each operator's compute layer, each facility's environmental
+                    monitoring. Digital twins exist inside these silos today, but each twin treats
+                    the other silos as environmental observations rather than as adapting systems
+                    with their own controllers. The CINECA Marconi100 telemetry archive is
+                    structurally rare in giving us all five owners' data in one place. Nervous
+                    Machine ran on it and surfaced one edge no single silo could ever observe,
+                    classified eight cooling edges into a vulnerability taxonomy, and identified a
+                    drift pattern that silently invalidates control laws while leaving forecasts
+                    looking healthy.
                 </p>
                 <div class="hero-ctas">
-                    <a href="https://calendly.com/heidi-everychart/30min" class="btn btn-primary">Book a Data Center
-                        Consultation</a>
-                    <a href="https://github.com/Nervous-Machine/causalAI-demo" target="_blank" class="btn btn-ghost">CLI
-                        Demo on GitHub</a>
+                    <a href="https://calendly.com/heidi-everychart/30min" class="btn btn-primary">Book a 30-minute walk-through</a>
+                    <a href="#taxonomy" class="btn btn-ghost">See the taxonomy</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stat-band">
+        <div class="container">
+            <div class="stat-grid">
+                <div class="stat">
+                    <div class="v cyan">5</div>
+                    <div class="k">telemetry owners audited (IT and facility silos)</div>
+                </div>
+                <div class="stat">
+                    <div class="v">8</div>
+                    <div class="k">cooling edges classified into vulnerability classes</div>
+                </div>
+                <div class="stat">
+                    <div class="v">&rho; = 0.76</div>
+                    <div class="k">offline cross-regime variance predicts held-out-regime error (p = 0.028)</div>
+                </div>
+                <div class="stat">
+                    <div class="v">8&times;</div>
+                    <div class="k">slope decline on node_power &rarr; fan_speed (winter 2021 &rarr; winter 2022)</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="taxonomy">
+        <div class="container">
+            <div class="section-label">The vulnerability taxonomy</div>
+            <h2 class="section-title">Eight edges. Four classes. Where a digital twin would fail, and how to fix it.</h2>
+            <p class="section-lead">
+                Each causal edge was fit per window across ten regimes spanning 2.5 years. We tracked
+                its slope, its residual noise, and a corroboration-based certainty Z. The variance
+                across regimes (CV) rank-orders the edge's held-out-regime error at Spearman
+                <span class="mono">&rho; = +0.76 (n = 8, p = 0.028)</span>. Within the well-specified
+                subset (DRIFTING + INVARIANT, n = 5), the correlation strengthens slightly to
+                <span class="mono">&rho; = +0.80 (p = 0.10)</span> &mdash; ruling out the
+                shared-cause confound that high-CV WEAK edges introduce. Each class has a different
+                fix.
+            </p>
+            <div class="scroll-x">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Edge</th>
+                            <th>Class</th>
+                            <th class="num">CV</th>
+                            <th class="num">Held-out relRMSE</th>
+                            <th class="num">Coef drift &rarr; 2022</th>
+                            <th>Fix</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="edge">node_power &rarr; gpu_core_temp</td>
+                            <td class="class cyan">INVARIANT</td>
+                            <td class="num">0.08</td>
+                            <td class="num">0.079</td>
+                            <td class="num">0.09</td>
+                            <td>None needed &mdash; twin-safe</td>
+                        </tr>
+                        <tr>
+                            <td class="edge">rack_coupling</td>
+                            <td class="class cyan">INVARIANT</td>
+                            <td class="num">0.08</td>
+                            <td class="num">0.057</td>
+                            <td class="num">0.02</td>
+                            <td>None needed &mdash; twin-safe</td>
+                        </tr>
+                        <tr>
+                            <td class="edge">cooling_to_ambient</td>
+                            <td class="class amber">DRIFTING</td>
+                            <td class="num">0.21</td>
+                            <td class="num">0.086</td>
+                            <td class="num">0.2</td>
+                            <td>Online recalibration (coef decays)</td>
+                        </tr>
+                        <tr>
+                            <td class="edge">node_power &rarr; fan_speed</td>
+                            <td class="class amber">DRIFTING</td>
+                            <td class="num">0.7</td>
+                            <td class="num">0.091</td>
+                            <td class="num">0.69</td>
+                            <td>Online recalibration (coef decays)</td>
+                        </tr>
+                        <tr>
+                            <td class="edge">node_power &rarr; dimm_temp</td>
+                            <td class="class amber">DRIFTING</td>
+                            <td class="num">0.86</td>
+                            <td class="num">0.091</td>
+                            <td class="num">1.16</td>
+                            <td>Online recalibration (coef decays)</td>
+                        </tr>
+                        <tr>
+                            <td class="edge">ambient_inlet &rarr; cpu_core_temp</td>
+                            <td class="class">WEAK</td>
+                            <td class="num">0.28</td>
+                            <td class="num">0.172</td>
+                            <td class="num">0.38</td>
+                            <td>Add feature (cpu_user: &minus;25% err)</td>
+                        </tr>
+                        <tr>
+                            <td class="edge">fan_speed &rarr; cpu_core_temp</td>
+                            <td class="class">WEAK</td>
+                            <td class="num">0.85</td>
+                            <td class="num">0.18</td>
+                            <td class="num">1.65</td>
+                            <td>Add feature (cpu_user: &minus;25% err)</td>
+                        </tr>
+                        <tr>
+                            <td class="edge">node_power &rarr; cpu_core_temp</td>
+                            <td class="class">WEAK</td>
+                            <td class="num">0.85</td>
+                            <td class="num">0.177</td>
+                            <td class="num">0.11</td>
+                            <td>Add feature (cpu_user: &minus;25% err)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="table-cap">
+                <span class="cyan">INVARIANT</span>: stable physics across regimes &mdash; learn once,
+                trust everywhere. <span class="amber">DRIFTING</span>: pointwise predictions accurate
+                but coefficients drift &mdash; safe to forecast with, unsafe to invert as a control
+                law without continual recalibration. <span style="color:var(--color-text);">WEAK</span>:
+                missing a feature (cpu_user); the decomposition prescribes the fix and cuts held-out
+                error 25%. INVARIANT edges are the negative control that proves the audit isn't
+                flagging everything.
+            </p>
+        </div>
+    </section>
+
+    <section class="alt-bg">
+        <div class="container">
+            <div class="section-label">The drift trap</div>
+            <h2 class="section-title">Predictions look healthy. The control law goes silently stale.</h2>
+            <p class="section-lead">
+                The DRIFTING class is the subtlest finding in the audit, and it's the one a methods
+                reviewer should weigh most. Pointwise predictions on these edges stay accurate
+                across the 2.5-year window: held-out relRMSE around 0.086&ndash;0.091, comparable to
+                the INVARIANT edges. By the metric most teams would monitor, these edges look fine.
+            </p>
+            <p class="section-lead">
+                The coefficients tell a different story. The starkest case is
+                <span class="mono">node_power &rarr; fan_speed</span>: its slope fell from
+                approximately 1.3 in winter 2021 to approximately 0.16 in winter 2022 &mdash; an
+                <span class="mono">8&times; monotone decline</span>, almost certainly real
+                control-firmware evolution rather than noise. relRMSE is normalized by target
+                magnitude, so it under-weights exactly this failure mode: the prediction can track
+                the target while the relationship underneath it changes.
+            </p>
+            <div class="callout">
+                <p>
+                    A twin used for <strong>prediction</strong> looks fine and is fine.
+                    The same twin used as a <strong>control law</strong> &mdash; inverting the
+                    relationship to choose an actuator setting &mdash; is silently stale, acting on a
+                    coefficient that no longer holds.
+                </p>
+            </div>
+            <p class="section-lead dim">
+                No feature fixes a temporal drift of this kind &mdash; only continual recalibration
+                does. The audit identifies which edges have this property before deployment; the
+                online recalibration loop is what closes them.
+            </p>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="section-label">The non-owned edge</div>
+            <h2 class="section-title">Each owner has an inner loop. No outer loop exists between owners. The edges between them are structurally invisible.</h2>
+            <p class="section-lead">
+                The Marconi100 cooling system has five telemetry owners: two IT-side (compute,
+                thermal) and three facility-side (Vertiv air cooling, Schneider liquid cooling,
+                external weather). Each owner runs their own inner loop &mdash; their own controller,
+                their own model, their own data tap. DCIM platforms aggregate polled summary metrics
+                across vendors for dashboards and PUE / capacity reporting; the raw closed-loop
+                control telemetry needed to learn or even observe the edges between vendors stays
+                inside each vendor's appliance. No outer loop exists at that granularity. The CINECA
+                M100 archive is structurally rare in the field &mdash; the Borghesi et al. data
+                paper calls it the largest public dataset of its kind and notes that public data in
+                this field is mostly kept on premises &mdash; which makes it one of the few archives
+                where the cross-owner edge is even visible.
+            </p>
+            <div class="callout">
+                <p>
+                    A digital twin built inside one silo treats the other silos the way a self-driving
+                    car treats a stoplight: as a point observation of the environment, not as an
+                    autonomously controlled system with its own logic. Both views can be wrong in the
+                    same way, at the same time, on the edge between them &mdash; and neither system
+                    can see it.
+                </p>
+            </div>
+            <p class="section-lead">
+                We tested an early Phase-0 hypothesis that the two cooling loops coordinate
+                complementarily under load. The pattern held for one month and did not generalize:
+                the two winter regime reps disagree in sign, spring is complementary throughout,
+                summer is decoupled. There is no stable coordination policy for any single model to
+                learn in this data. Two claims follow, kept separate because they have different
+                evidential standing:
+            </p>
+            <div class="two-col">
+                <div>
+                    <h3>Measured</h3>
+                    <p>
+                        Across the instrumented regimes, coordination between the two loops is
+                        non-stationary. The one-month flip is not a learnable invariant. We tested
+                        and rejected the obvious artifact explanation &mdash; the pattern survives
+                        excluding non-cooling units.
+                    </p>
+                </div>
+                <div>
+                    <h3>Structural</h3>
+                    <p>
+                        This coordination lives in the one edge no single owner instruments &mdash;
+                        neither vendor sees the other loop's &Delta;T &mdash; so even
+                        <em>detecting</em> whether the two loops have drifted out of their
+                        jointly-validated regime is impossible from inside either silo. It requires
+                        a cross-owner layer to observe at all.
+                    </p>
+                </div>
+            </div>
+            <p class="section-lead dim" style="margin-top: 2rem;">
+                The non-stationarity itself isn't novel &mdash; it's the well-known central problem
+                of multi-agent learning, where each adapting agent makes the environment
+                non-stationary for the others. The standard mitigations (multi-agent RL, federated
+                digital twins) all assume you either control the agents or they cooperate.
+                Hyperscalers handle this by collapsing the stakeholders into one organization that
+                owns the full stack. Everyone else &mdash; supercomputer centers, enterprise data
+                centers, colocation operators &mdash; lives with the cross-vendor reality. M100 is
+                the rare archive where the non-owned edge is even observable; in the typical
+                multi-vendor environment it isn't, which means twins built inside today's silos are
+                structurally blind there &mdash; whether or not they look healthy on every metric
+                the silo's owner can see.
+            </p>
+        </div>
+    </section>
+
+    <section class="alt-bg">
+        <div class="container">
+            <div class="section-label">Honest scope</div>
+            <h2 class="section-title">What this audit establishes, and what it doesn't.</h2>
+            <div class="two-col">
+                <div>
+                    <h3>Effect size is small-n</h3>
+                    <p>
+                        The headline correlation is computed on 8 edges; the within-subset robustness
+                        check on 5 edges (p = 0.10). Both are proof-of-principle, not population
+                        estimates. The within-subset survival rules out the shared-cause confound
+                        between WEAK edges and held-out error, but a single rank swap moves the result.
+                    </p>
+                </div>
+                <div>
+                    <h3>Twin vulnerability prediction not yet tested against a deployed twin</h3>
+                    <p>
+                        Digital twins exist in production data centers today, but we don't have
+                        access to test the audit's predictions against any of them directly. What
+                        has been validated is the proxy: cross-regime variance predicts held-out
+                        regime error at &rho; = 0.76. That is the closest available evidence that
+                        an audit of this type forecasts where a twin trained on the same data would
+                        fail. Direct against-twin validation is a follow-on.
+                    </p>
+                </div>
+            </div>
+            <p class="section-lead" style="margin-top: 2rem;">
+                Two of our own mid-stream hypotheses were rejected by the data:
+            </p>
+            <div class="two-col">
+                <div>
+                    <h3>The load-flip didn't generalize</h3>
+                    <p>
+                        We hypothesized that liquid and air loops coordinate complementarily under
+                        load. The pattern held for one month and did not survive cross-regime
+                        testing. We report it as a negative.
+                    </p>
+                </div>
+                <div>
+                    <h3>The climate hasn't shifted</h3>
+                    <p>
+                        We checked whether the training envelope had drifted. Summer max is flat at
+                        38&deg;C, mean shift is +0.2&deg;C, 0% of post-window summer hours exceed
+                        the training max. The archive isn't stale &mdash; because it captured the
+                        2022 heatwave by luck of the collection window. We report this as a negative
+                        too; an archive ending in 2021 would not have passed.
+                    </p>
+                </div>
+            </div>
+            <p class="section-lead dim" style="margin-top: 2rem;">
+                Other bounds: single weather station, monthly windows, linear edge forms. Nonlinear
+                couplings appear as un-validated edges, not false ones. Facility instrumentation
+                begins 2021-04, so the five-owner graph is only complete from then onward; the
+                feature-availability audit that surfaces this is the most portable result &mdash; any
+                team can run it on any archive before training a single line of model code.
+            </p>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="section-label">What operators gain</div>
+            <h2 class="section-title">A pre-training reliability check, a drift diagnostic, and a way to see the edge between vendors.</h2>
+            <p class="section-lead">
+                The audit's outputs are operator-readable artifacts: a vulnerability map per edge,
+                an explicit drift metric on coefficients, a documented data-provenance audit, and a
+                cross-owner edge surfacing. Each one slots into a different operational decision.
+            </p>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="who">HPC sites &middot; supercomputer centers, enterprise & colocation</div>
+                    <h3>Cross-vendor assurance without forcing data-sharing</h3>
+                    <p>Hyperscalers sidestep this problem by owning the stack end-to-end (Meta
+                       Fairwater, Google closed-loop, Microsoft Mt. Diablo). Most other sites can't
+                       collapse the stakeholders into one org. NM deploys an inner loop per silo
+                       and an outer loop across them &mdash; cross-vendor coordination drift
+                       becomes observable without any vendor having to share raw telemetry. The
+                       site operator gets the assurance signal; the vendors keep their data.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="who">Cooling vendors &middot; Vertiv, Schneider, Stulz</div>
+                    <h3>An inner loop you control plus a cross-owner flag you can read</h3>
+                    <p>Each vendor runs their own substrate instance against their own telemetry &mdash;
+                       no data leaves the vendor silo. State deltas published to the outer loop let
+                       the vendor see whether their loop's policy has drifted out of joint regime with
+                       the other vendors' loops, without exposing the underlying telemetry that would
+                       reveal proprietary control logic.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="who">Digital-twin developers &middot; Omniverse, EcoStruxure, ANSYS, in-house</div>
+                    <h3>Know which edges your twin can't see &mdash; before it ships</h3>
+                    <p>Twins built inside one silo are structurally blind to non-owned edges. The
+                       audit identifies which edges fall in that category at the prior-design stage,
+                       so the twin's deployment scope is bounded by what it can actually represent.
+                       Separately: DRIFTING edges look healthy as forecasts and silently fail as
+                       control laws &mdash; the audit prescribes which edges need online
+                       recalibration before they enter the control loop.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="who">DCIM / BMS &middot; facility-management platforms</div>
+                    <h3>An anomaly signal that watches the edges, not the sensors</h3>
+                    <p>Per-sensor alerting fires on individual telemetry channels. The causal layer
+                       fires on coupling drift between channels &mdash; the failure mode where the
+                       sensors all look fine but the relationship between them has changed. For
+                       multi-vendor sites, the outer loop adds anomaly flags on edges that span
+                       organizational boundaries, which per-channel monitoring can't see at all.</p>
                 </div>
             </div>
         </div>
@@ -412,88 +722,66 @@
 
     <section class="alt-bg">
         <div class="container">
+            <div class="section-label">On-site architecture</div>
+            <h2 class="section-title">In-situ learning per silo. Flags for every edge &mdash; including the ones no owner can see.</h2>
+            <p class="section-lead">
+                The substrate's runtime is a deterministic per-edge causal-learning framework, small
+                enough to deploy inside each owner's silo. There is no neural network making
+                predictions, no gradient descent during operation, no model weights to retrain in
+                production. The prior and validation functions can be composed offline by whatever
+                method an operator prefers &mdash; engineering rules, published literature, or
+                LLM-assisted authoring against the substrate's API. Once composed, the runtime is
+                deterministic. Each silo runs its own instance on-premises; raw telemetry never
+                leaves the silo it was generated in. The only artifacts that cross organizational
+                boundaries are compact per-edge state deltas (W, Z updates) &mdash; small enough to
+                share, abstract enough that they don't leak the underlying telemetry.
+            </p>
             <div class="two-col">
                 <div>
-                    <div class="section-label">The Challenge</div>
-                    <h2 class="section-title">Thermal models are stale the day they're deployed</h2>
-                    <p class="section-lead">
-                        Data center thermal models are built from CFD simulations of the designed layout. But workloads
-                        shift, racks get reconfigured, blanking panels go missing, and seasonal ambient conditions
-                        change. The simulation drifts from reality rack by rack.
-                    </p>
-                    <p style="color: var(--color-text-muted); font-size: 0.95rem; line-height: 1.75;">
-                        Operators compensate by overcooling&mdash;running CRAC units harder than necessary to ensure
-                        nothing overheats. That's energy waste driven by uncertainty. The model says the room is fine;
-                        the operator knows individual racks tell a different story.
+                    <h3>Inner loop &mdash; per silo</h3>
+                    <p>
+                        Each owner runs their own instance against their own telemetry. The
+                        substrate maintains per-edge W and Z on every causal edge inside the silo,
+                        triggers operator-readable flags when certainty stalls or residuals persist,
+                        and runs continuously in the background of the existing DCIM / BMS stack. No
+                        replacement, no integration battle &mdash; an overlay.
                     </p>
                 </div>
                 <div>
-                    <div class="section-label">What Changes</div>
-                    <h2 class="section-title" style="margin-bottom: 1rem;">Per-zone causal thermal models</h2>
-                    <p
-                        style="color: var(--color-text-muted); font-size: 0.95rem; line-height: 1.75; margin-bottom: 1.5rem;">
-                        Nervous Machine builds causal models for each thermal zone&mdash;learning the actual
-                        relationships between workload, airflow, ambient conditions, and temperature. When a zone
-                        drifts, the system identifies the driver: is it a workload spike, a failed fan, or a
-                        recirculation path the CFD model never predicted?
-                    </p>
-                    <p style="color: var(--color-text-muted); font-size: 0.95rem; line-height: 1.75;">
-                        Validated thermal relationships propagate across zones and facilities. A discovery in one data
-                        hall&mdash;say, a specific rack configuration that creates a hot spot under certain
-                        workloads&mdash;becomes fleet knowledge, shared as causal vectors (~1KB), not raw sensor
-                        streams.
+                    <h3>Outer loop &mdash; across silos</h3>
+                    <p>
+                        Per-silo instances publish compact state-delta messages to a shared
+                        assurance layer. That layer maintains the cross-owner edges &mdash; the ones
+                        no single silo can see &mdash; and surfaces flags when joint regimes drift
+                        out of their validated envelope. Without it there is no outer loop; with it,
+                        cross-vendor assurance happens without any owner having to share raw data
+                        they don't want to share.
                     </p>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <section>
-        <div class="container">
-            <div class="section-label">Capabilities</div>
-            <h2 class="section-title">What the causal engine learns</h2>
-            <p class="section-lead">
-                Continuous thermal calibration per zone, per rack, per workload profile&mdash;enriching CFD baselines
-                with operational reality.
+            <p class="section-lead dim" style="margin-top: 2rem;">
+                The audit demonstrated on M100 is the offline version of the inner loop running
+                against an archive instead of live telemetry. The same primitives, same state
+                representation, same update rule. Pilots that run the inner loop only are the
+                shortest path to value for a single-owner site; multi-vendor sites get the bigger
+                operational lift from running both.
             </p>
-            <div class="feature-grid">
-                <div class="feature-card">
-                    <h3>Real-time thermal attribution</h3>
-                    <p>Decompose temperature deviations into individual drivers: workload, airflow, ambient,
-                        recirculation. Know which factor is causing the hot spot, not just that it exists.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Cooling optimization</h3>
-                    <p>Replace overcooling with precision. The causal model predicts thermal response to workload
-                        changes, enabling just-in-time cooling adjustments that reduce PUE without increasing risk.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Cross-facility learning</h3>
-                    <p>Thermal discoveries propagate across data halls and campuses. Similar rack configurations and
-                        workload profiles benefit from shared causal knowledge. Raw telemetry stays local.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Sensor-level deployment</h3>
-                    <p>Runs alongside existing BMS and DCIM infrastructure. No cloud dependency for real-time decisions.
-                        Lightweight enough for edge controllers in each zone.</p>
-                </div>
-            </div>
         </div>
     </section>
 
-    <section id="contact" class="cta-section alt-bg">
-        <div class="container" style="position: relative; z-index: 2;">
-            <div class="section-label">Get Started</div>
-            <h2 class="section-title">Stop overcooling. Start learning what each zone actually needs.</h2>
+    <section id="contact" class="cta-section">
+        <div class="container">
+            <div class="section-label">Audit your archive</div>
+            <h2 class="section-title">Thirty minutes. Your telemetry. Where would your twin fail?</h2>
             <p class="section-lead">
-                From single-hall pilots to multi-campus rollouts, Nervous Machine adapts to your thermal environment and
-                your workload.
+                The walk-through is the audit-in-conversation: we look at the shape of your
+                telemetry archive, what the vulnerability taxonomy would surface, where the
+                cross-owner edges live in your specific ecosystem, and what the online recalibration
+                loop would look like running on your site.
             </p>
             <div class="cta-buttons">
-                <a href="https://calendly.com/nervousmachine/data-centers" class="btn btn-primary">Book a Data Center
-                    Consultation</a>
-                <a href="https://github.com/Nervous-Machine/causalAI-demo" target="_blank" class="btn btn-ghost">CLI
-                    Demo on GitHub</a>
+                <a href="https://calendly.com/heidi-everychart/30min" class="btn btn-primary">Book a 30-minute walk-through</a>
+                <a href="mailto:heidi@everychart.io" class="btn btn-ghost">heidi@everychart.io</a>
             </div>
         </div>
     </section>
@@ -501,16 +789,10 @@
     <footer>
         <div class="container">
             <div style="display: flex; justify-content: center; gap: 2.5rem; margin-bottom: 1.25rem; flex-wrap: wrap;">
-                <a href="https://www.techrxiv.org/users/975562/articles/1343063-the-pure-error-signal-dissipative-causal-learning-for-intrinsically-safe-autonomy"
-                    target="_blank"
-                    style="color: var(--color-text-muted); text-decoration: none; font-size: 0.85rem; transition: color 0.3s;">Research
-                    Paper</a>
-                <a href="https://nervousmachine.substack.com" target="_blank"
-                    style="color: var(--color-text-muted); text-decoration: none; font-size: 0.85rem; transition: color 0.3s;">Substack</a>
-                <a href="https://github.com/Nervous-Machine/causalAI-demo" target="_blank"
-                    style="color: var(--color-text-muted); text-decoration: none; font-size: 0.85rem; transition: color 0.3s;">GitHub</a>
+                <a href="https://nervousmachine.substack.com" target="_blank">Substack</a>
+                <a href="/assurance">Retractions &amp; negative results</a>
             </div>
-            <p>&copy; 2025 Nervous Machine. All rights reserved.</p>
+            <p>&copy; 2026 Nervous Machine. All rights reserved.</p>
         </div>
     </footer>
 

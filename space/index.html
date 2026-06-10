@@ -17,6 +17,7 @@
             --color-accent-indigo: #4C00FF;
             --color-accent-violet: #8A2BE2;
             --color-cyan: #00FFFF;
+            --color-amber: #FFB454;
             --color-text: #C8C8E0;
             --color-text-muted: #8888AA;
             --font-display: 'Instrument Serif', Georgia, serif;
@@ -24,11 +25,7 @@
             --font-mono: 'JetBrains Mono', monospace;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: var(--font-body);
@@ -39,13 +36,8 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
 
-        /* Header */
         header {
             position: fixed;
             width: 100%;
@@ -56,280 +48,273 @@
             border-bottom: 1px solid rgba(76, 0, 255, 0.1);
             padding: 1rem 0;
         }
-
-        header .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-family: var(--font-display);
-            font-size: 1.5rem;
-            color: #fff;
-            text-decoration: none;
-        }
-
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 2rem;
-        }
-
+        header .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--font-display); font-size: 1.5rem; color: #fff; text-decoration: none; }
+        nav ul { list-style: none; display: flex; gap: 2rem; }
         nav a {
-            color: var(--color-text-muted);
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 500;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            transition: color 0.3s;
+            color: var(--color-text-muted); text-decoration: none;
+            font-size: 0.85rem; font-weight: 500; letter-spacing: 0.04em;
+            text-transform: uppercase; transition: color 0.3s;
         }
+        nav a:hover, nav a.active { color: var(--color-cyan); }
 
-        nav a:hover {
-            color: var(--color-cyan);
-        }
-
-        nav a.active {
-            color: var(--color-cyan);
-        }
-
-        /* Hero */
         .hero {
-            min-height: 70vh;
-            display: flex;
-            align-items: center;
+            padding: 140px 0 4rem;
             position: relative;
             overflow: hidden;
-            padding-top: 80px;
         }
-
         .hero::before {
             content: '';
             position: absolute;
             inset: 0;
-            background:
-                radial-gradient(ellipse 60% 50% at 15% 80%, rgba(76, 0, 255, 0.18) 0%, transparent 70%),
-                radial-gradient(ellipse 40% 60% at 85% 25%, rgba(0, 255, 255, 0.08) 0%, transparent 70%);
+            background: radial-gradient(ellipse 60% 50% at 15% 80%, rgba(76, 0, 255, 0.12) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 60% at 85% 25%, rgba(0, 255, 255, 0.05) 0%, transparent 70%);
             pointer-events: none;
         }
-
-        .hero-inner {
-            position: relative;
-            z-index: 2;
-            max-width: 720px;
-        }
+        .hero-inner { position: relative; z-index: 2; max-width: 820px; }
 
         .hero-label {
-            font-family: var(--font-mono);
-            font-size: 0.8rem;
-            color: var(--color-cyan);
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            margin-bottom: 1.5rem;
-            opacity: 0;
-            animation: fadeUp 0.8s 0.2s forwards;
+            font-family: var(--font-mono); font-size: 0.78rem;
+            color: var(--color-cyan); letter-spacing: 0.14em;
+            text-transform: uppercase; margin-bottom: 1.5rem;
         }
-
         .hero h1 {
-            font-family: var(--font-display);
-            font-size: clamp(2.4rem, 5vw, 3.8rem);
-            color: #fff;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-            letter-spacing: -0.02em;
-            opacity: 0;
-            animation: fadeUp 0.8s 0.4s forwards;
-        }
-
-        .hero h1 em {
-            font-style: italic;
-            color: var(--color-cyan);
-        }
-
-        .hero-sub {
-            font-size: 1.15rem;
-            line-height: 1.75;
-            color: var(--color-text);
-            max-width: 600px;
-            margin-bottom: 2rem;
-            opacity: 0;
-            animation: fadeUp 0.8s 0.6s forwards;
-        }
-
-        .hero-ctas {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            opacity: 0;
-            animation: fadeUp 0.8s 0.8s forwards;
-        }
-
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(24px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Buttons */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.85rem 2rem;
-            border-radius: 6px;
             font-family: var(--font-body);
             font-weight: 600;
-            font-size: 0.9rem;
-            text-decoration: none;
-            transition: all 0.3s;
-            cursor: pointer;
-            border: none;
-            letter-spacing: 0.02em;
+            font-size: clamp(2rem, 3.8vw, 2.9rem);
+            color: #fff; line-height: 1.2;
+            margin-bottom: 1.5rem; letter-spacing: -0.015em;
         }
+        .hero-sub {
+            font-size: 1.08rem; line-height: 1.75;
+            color: var(--color-text); max-width: 720px; margin-bottom: 2.5rem;
+        }
+        .hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; }
 
+        .btn {
+            display: inline-flex; align-items: center;
+            padding: 0.85rem 2rem; border-radius: 6px;
+            font-family: var(--font-body); font-weight: 600; font-size: 0.9rem;
+            text-decoration: none; transition: all 0.3s;
+            cursor: pointer; border: none; letter-spacing: 0.02em;
+        }
         .btn-primary {
             background: linear-gradient(135deg, var(--color-accent-indigo), var(--color-accent-violet));
             color: #fff;
             box-shadow: 0 4px 20px rgba(76, 0, 255, 0.3);
         }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(76, 0, 255, 0.45);
-        }
-
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(76, 0, 255, 0.45); }
         .btn-ghost {
-            background: transparent;
-            color: var(--color-text);
+            background: transparent; color: var(--color-text);
             border: 1px solid rgba(200, 200, 224, 0.2);
         }
+        .btn-ghost:hover { border-color: var(--color-cyan); color: var(--color-cyan); }
 
-        .btn-ghost:hover {
-            border-color: var(--color-cyan);
-            color: var(--color-cyan);
+        .stat-band {
+            background: var(--color-card-bg);
+            border-top: 1px solid var(--color-card-border);
+            border-bottom: 1px solid var(--color-card-border);
+            padding: 2.5rem 0;
         }
-
-        /* Sections */
-        section {
-            padding: 6rem 0;
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
         }
-
-        .section-label {
+        .stat {
+            padding: 0.75rem 0 0.75rem 1.5rem;
+            border-left: 2px solid var(--color-accent-indigo);
+        }
+        .stat .v {
+            font-family: var(--font-body);
+            font-weight: 500;
+            font-size: 2.2rem;
+            color: #fff;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.01em;
+        }
+        .stat .v.cyan { color: var(--color-cyan); }
+        .stat .k {
             font-family: var(--font-mono);
             font-size: 0.75rem;
-            color: var(--color-accent-violet);
-            letter-spacing: 0.15em;
+            color: var(--color-text-muted);
             text-transform: uppercase;
-            margin-bottom: 1rem;
+            letter-spacing: 0.06em;
+            line-height: 1.5;
         }
 
-        .section-title {
-            font-family: var(--font-display);
-            font-size: clamp(1.8rem, 3.5vw, 2.6rem);
-            color: #fff;
-            line-height: 1.15;
-            margin-bottom: 1.25rem;
-            letter-spacing: -0.02em;
-        }
-
-        .section-lead {
-            font-size: 1.05rem;
-            color: var(--color-text);
-            max-width: 600px;
-            margin-bottom: 3rem;
-            line-height: 1.75;
-        }
-
-        /* Alternating sections */
+        section { padding: 5.5rem 0; }
         .alt-bg {
             background: var(--color-card-bg);
             border-top: 1px solid var(--color-card-border);
             border-bottom: 1px solid var(--color-card-border);
         }
 
-        /* Two-col layout */
-        .two-col {
+        .section-label {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--color-accent-violet);
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+        .section-title {
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: clamp(1.5rem, 2.6vw, 2rem);
+            color: #fff; line-height: 1.25;
+            margin-bottom: 1.25rem; letter-spacing: -0.01em;
+        }
+        .section-lead {
+            font-size: 1rem;
+            color: var(--color-text);
+            max-width: 760px;
+            margin-bottom: 2rem;
+            line-height: 1.75;
+        }
+        .section-lead.dim { color: var(--color-text-muted); font-size: 0.95rem; }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--color-card-bg);
+            border: 1px solid var(--color-card-border);
+            border-radius: 8px;
+            overflow: hidden;
+            font-size: 0.88rem;
+        }
+        .data-table th, .data-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(76, 0, 255, 0.08);
+            vertical-align: top;
+        }
+        .data-table th {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: var(--color-text-muted);
+            font-weight: 500;
+            background: rgba(76, 0, 255, 0.06);
+            white-space: nowrap;
+        }
+        .data-table td.mono { font-family: var(--font-mono); font-size: 0.82rem; color: var(--color-text); }
+        .data-table td.cyan { color: var(--color-cyan); }
+        .data-table td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+        .data-table td.regime { font-weight: 600; color: #fff; }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table tr:hover td { background: rgba(76, 0, 255, 0.04); }
+        .table-cap {
+            font-family: var(--font-mono);
+            font-size: 0.74rem;
+            color: var(--color-text-muted);
+            margin-top: 0.8rem;
+            line-height: 1.55;
+        }
+
+        .scroll-x { overflow-x: auto; margin: 0 -1rem; padding: 0 1rem; }
+
+        .discovery-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: start;
+            gap: 1.5rem;
+            margin-top: 2rem;
         }
-
-        /* Stat blocks */
-        .stat-block {
-            padding: 1.75rem;
-            background: rgba(76, 0, 255, 0.06);
+        .discovery-card {
+            background: var(--color-card-bg);
             border: 1px solid var(--color-card-border);
-            border-radius: 10px;
-            margin-bottom: 1.25rem;
+            border-left: 3px solid var(--color-cyan);
+            border-radius: 8px;
+            padding: 1.75rem 2rem;
         }
-
-        .stat-num {
+        .discovery-card .tag {
             font-family: var(--font-mono);
-            font-size: 2.2rem;
+            font-size: 0.72rem;
             color: var(--color-cyan);
-            font-weight: 500;
-            line-height: 1;
-            margin-bottom: 0.4rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.6rem;
+        }
+        .discovery-card h3 {
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 1.15rem;
+            color: #fff;
+            margin-bottom: 0.85rem;
+            line-height: 1.3;
+        }
+        .discovery-card p {
+            font-size: 0.93rem;
+            color: var(--color-text);
+            line-height: 1.7;
+            margin-bottom: 0.85rem;
+        }
+        .discovery-card p:last-child { margin-bottom: 0; }
+        .discovery-card .nums {
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            color: var(--color-cyan);
+            background: rgba(0, 255, 255, 0.05);
+            padding: 0.5rem 0.8rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+            line-height: 1.7;
         }
 
-        .stat-num span {
-            font-size: 1rem;
-            color: var(--color-text-muted);
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            color: var(--color-text-muted);
-            line-height: 1.6;
-        }
-
-        /* Feature cards */
         .feature-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
+            gap: 1.25rem;
         }
-
         .feature-card {
-            padding: 2rem;
+            padding: 1.75rem;
             background: var(--color-card-bg);
             border: 1px solid var(--color-card-border);
             border-radius: 10px;
-            transition: all 0.3s;
         }
-
-        .feature-card:hover {
-            border-color: rgba(76, 0, 255, 0.3);
-            transform: translateY(-3px);
-        }
-
         .feature-card h3 {
-            font-family: var(--font-display);
-            font-size: 1.3rem;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 1.05rem;
             color: #fff;
             margin-bottom: 0.6rem;
         }
-
         .feature-card p {
             font-size: 0.9rem;
             color: var(--color-text-muted);
             line-height: 1.65;
         }
-
-        /* CTA section */
-        .cta-section {
-            text-align: center;
-            padding: 7rem 0;
-            position: relative;
+        .feature-card .who {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--color-cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.5rem;
         }
 
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+        .two-col h3 {
+            font-family: var(--font-body);
+            font-weight: 600;
+            color: #fff;
+            font-size: 1.05rem;
+            margin-bottom: 0.8rem;
+        }
+        .two-col p {
+            font-size: 0.93rem;
+            color: var(--color-text);
+            line-height: 1.7;
+        }
+
+        .cta-section { text-align: center; padding: 6rem 0; position: relative; }
         .cta-section::before {
             content: '';
             position: absolute;
@@ -337,23 +322,25 @@
             background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(76, 0, 255, 0.1) 0%, transparent 70%);
             pointer-events: none;
         }
-
-        .cta-section .section-title,
-        .cta-section .section-lead {
-            text-align: center;
-            max-width: 550px;
-            margin-left: auto;
-            margin-right: auto;
+        .cta-section .container { position: relative; z-index: 2; }
+        .cta-section .section-title, .cta-section .section-lead {
+            text-align: center; max-width: 620px; margin-left: auto; margin-right: auto;
         }
+        .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
 
-        .cta-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
+        code, .mono {
+            font-family: var(--font-mono);
+            font-size: 0.88em;
+            color: var(--color-cyan);
         }
+        a.link {
+            color: var(--color-cyan);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+            transition: border-color 0.3s;
+        }
+        a.link:hover { border-bottom-color: var(--color-cyan); }
 
-        /* Footer */
         footer {
             padding: 2rem 0;
             border-top: 1px solid var(--color-card-border);
@@ -361,55 +348,16 @@
             font-size: 0.8rem;
             color: var(--color-text-muted);
         }
+        footer a { color: var(--color-text-muted); text-decoration: none; transition: color 0.3s; }
+        footer a:hover { color: var(--color-cyan); }
 
-        footer a:hover {
-            color: var(--color-cyan);
-        }
-
-        /* Responsive */
         @media (max-width: 860px) {
-            .two-col {
-                grid-template-columns: 1fr;
-                gap: 2.5rem;
-            }
-
-            .feature-grid {
-                grid-template-columns: 1fr;
-            }
-
-            header .container {
-                flex-direction: column;
-                gap: 0.75rem;
-            }
-
-            nav ul {
-                gap: 1.25rem;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            section {
-                padding: 4rem 0;
-            }
-
-            .hero {
-                min-height: 60vh;
-                padding-top: 140px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            nav ul {
-                gap: 0.75rem 1rem;
-            }
-
-            nav a {
-                font-size: 0.8rem;
-            }
-
-            .hero {
-                padding-top: 160px;
-            }
+            .two-col, .discovery-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+            .feature-grid { grid-template-columns: 1fr; }
+            header .container { flex-direction: column; gap: 0.75rem; }
+            nav ul { gap: 1.25rem; flex-wrap: wrap; justify-content: center; }
+            section { padding: 4rem 0; }
+            .hero { padding: 160px 0 3rem; }
         }
     </style>
 </head>
@@ -421,237 +369,484 @@
             <a href="/" class="logo">Nervous Machine</a>
             <nav>
                 <ul>
-                    <li><a href="/space" class="active">Space</a></li>
-                    <li><a href="/robotics">Robotics</a></li>
-                    <li><a href="/manufacturing">Manufacturing</a></li>
+                    <li><a href="/quantum">Quantum</a></li>
                     <li><a href="/data-centers">Data Centers</a></li>
+                    <li><a href="/space" class="active">Space</a></li>
                     <li><a href="/#contact">Contact</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <!-- Hero -->
     <section class="hero">
         <div class="container">
             <div class="hero-inner">
-                <div class="hero-label">Space Atlas</div>
-                <h1>Your satellite doesn't fly in the <em>mean thermosphere</em></h1>
+                <div class="hero-label">Space &middot; LEO &middot; GEO &middot; Mars &middot; Cislunar</div>
+                <h1>Operational space-weather models as priors. Telemetry as ground truth. Calibrated certainty plus a measurement-gap roadmap for mission autonomy.</h1>
                 <p class="hero-sub">
-                    General space weather models predict bulk density for the entire thermosphere at once. That's like
-                    checking the weather for all of Europe to decide if you need an umbrella in London. Nervous Machine
-                    learns at the voxel level&mdash;your orbital corridor, your drivers, your time lags.
+                    Nervous Machine encodes the operational physics &mdash; NRLMSISE-00 for LEO drag,
+                    SWPC REFM for GEO electrons, NAIRAS for Mars dose, naive ballistic for cislunar
+                    fields &mdash; as the starting prior for a per-edge causal substrate, then
+                    calibrates certainty against real archive telemetry from GRACE-FO, GOES-19,
+                    MSL/RAD, and ARTEMIS-P1/P2. The substrate runs byte-identical across all four
+                    regimes, surfaces regime-dependent physics that the operational priors didn't
+                    encode (magnetotail decoupling at the Moon; the voxel-dependent Martian Forbush
+                    decrease), and produces a per-regime measurement-gap diagnostic showing where the
+                    current science can't yet support autonomous decisions.
                 </p>
                 <div class="hero-ctas">
-                    <a href="https://calendly.com/heidi-everychart/30min" class="btn btn-primary">Book a Space
-                        Consultation</a>
-                    <a href="https://space-atlas.nervousmachine.com" class="btn btn-ghost">Explore Space Atlas →</a>
+                    <a href="https://calendly.com/heidi-everychart/30min" class="btn btn-primary">Book a 30-minute walk-through</a>
+                    <a href="#scorecard" class="btn btn-ghost">See the scorecard</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Problem -->
+    <section class="stat-band">
+        <div class="container">
+            <div class="stat-grid">
+                <div class="stat">
+                    <div class="v cyan">4</div>
+                    <div class="k">space-environment regimes covered by the byte-identical substrate</div>
+                </div>
+                <div class="stat">
+                    <div class="v">92.4%</div>
+                    <div class="k">LEO anomaly-flag precision against NRLMSISE-00 errors</div>
+                </div>
+                <div class="stat">
+                    <div class="v">2</div>
+                    <div class="k">regime-dependent physical phenomena independently discovered</div>
+                </div>
+                <div class="stat">
+                    <div class="v">~50 kB</div>
+                    <div class="k">flight-memory footprint including learning loops &mdash; runs on a radiation-hardened CPU</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="scorecard">
+        <div class="container">
+            <div class="section-label">Four-regime scorecard</div>
+            <h2 class="section-title">The same primitives, byte-identical across regimes, riding on four operational priors against four real archive datasets.</h2>
+            <p class="section-lead">
+                Each regime's benchmark runs the substrate as a single prequential pass: the
+                operational model is the starting prior, predictions are made before the observation
+                they target, and edge certainty evolves as actuals arrive. There is no train/test
+                split. The "external comparator" column names the operational prior NM rides on; the
+                precision and lift columns measure how much information the substrate extracts beyond
+                what the prior already provides. Where no time-aligned operational comparator exists
+                publicly (Mars surface dose), the substrate reports lift over its own prior-W
+                internal baseline and the missing-comparator status is documented explicitly.
+            </p>
+            <div class="scroll-x">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Regime</th>
+                            <th>Ground truth</th>
+                            <th>Window</th>
+                            <th class="num">Observations</th>
+                            <th class="num">Edges</th>
+                            <th>Operational prior</th>
+                            <th>Substrate evaluation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="regime">LEO</td>
+                            <td>GRACE-FO density</td>
+                            <td class="mono">7.5 yr</td>
+                            <td class="num mono">~510k</td>
+                            <td class="num mono">356</td>
+                            <td>NRLMSISE-00</td>
+                            <td><span class="cyan">92.4% anomaly-flag precision</span> against MSIS errors; 7.9&times; over base rate on the strongest storms</td>
+                        </tr>
+                        <tr>
+                            <td class="regime">GEO</td>
+                            <td>GOES-19 SEISS + MAG</td>
+                            <td class="mono">7 d</td>
+                            <td class="num mono">17,809</td>
+                            <td class="num mono">360</td>
+                            <td>SWPC REFM Day-1</td>
+                            <td>Substrate prediction tracks GOES-19 at <span class="cyan">log-MAE 0.043</span> on the REFM-overlap window (REFM Day-1: 0.169)</td>
+                        </tr>
+                        <tr>
+                            <td class="regime">Mars</td>
+                            <td>MSL/RAD dose-rate</td>
+                            <td class="mono">1 yr</td>
+                            <td class="num mono">30,067</td>
+                            <td class="num mono">24</td>
+                            <td>(no time-aligned public model)</td>
+                            <td>Best-available prior from sparse data; substrate autonomously learned <span class="cyan">Forbush coupling W = &minus;0.071 at Z = 1.0</span></td>
+                        </tr>
+                        <tr>
+                            <td class="regime">Cislunar</td>
+                            <td>ARTEMIS-P1/P2 FGM</td>
+                            <td class="mono">1 mo (May 2024 G5)</td>
+                            <td class="num mono">2,976</td>
+                            <td class="num mono">72</td>
+                            <td>Naive ballistic L1 &rarr; lunar (voxel-dependent)</td>
+                            <td>Voxel-dependent W flip: outer +0.55 at Z = 1.0, magnetotail <span class="cyan">&minus;0.08 at Z = 0.84</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="table-cap">
+                LEO and GEO have operational baselines the substrate can be compared against directly.
+                Mars and cislunar do not have time-aligned public operational models for the full
+                window &mdash; the substrate's role in those regimes is to build the best-available
+                prior from sparse archive data and provide the learning structure for future in-situ
+                telemetry. Detailed per-edge tables and reproduction instructions are in the per-regime
+                Zenodo bundles linked in the footer.
+            </p>
+        </div>
+    </section>
+
     <section class="alt-bg">
         <div class="container">
-            <div class="two-col">
-                <div>
-                    <div class="section-label">The Challenge</div>
-                    <h2 class="section-title">Operational models compress the variance that kills missions</h2>
-                    <p class="section-lead">
-                        Operational thermospheric models provide bulk density estimates but lack driver-resolved
-                        attribution. They can't tell you which driver caused a density spike, how long its influence
-                        persists, or how perturbations propagate across orbital shells.
+            <div class="section-label">Two modes of operation</div>
+            <h2 class="section-title">Augmentation where operational models exist. Best-available prior plus in-situ learning structure where they don't.</h2>
+            <p class="section-lead">
+                The four regimes split into two structurally different cases for the substrate. In
+                LEO and GEO, decades of operational modeling have produced trusted baselines. In Mars
+                and cislunar, there is no legacy operational model the substrate could possibly beat
+                &mdash; the problem in those regimes is data sparsity, and the work in front of the
+                community is building the structure that lets future missions learn the local
+                environment as their telemetry comes online.
+            </p>
+            <div class="discovery-grid">
+                <div class="discovery-card" style="border-left-color: var(--color-accent-violet);">
+                    <div class="tag" style="color: var(--color-accent-violet);">Mode A &middot; LEO, GEO</div>
+                    <h3>Augmentation overlay on operational models</h3>
+                    <p>
+                        NRLMSISE-00 and SWPC REFM are the priors. The substrate evolves a per-edge
+                        certainty around them and surfaces anomaly flags where the operational model
+                        will drift. Operators continue to use their existing forecasts &mdash; the
+                        substrate adds a per-forecast trust signal and a voxel-aware structure that
+                        the point-prediction outputs of the operational models don't carry.
                     </p>
-                    <p style="color: var(--color-text-muted); font-size: 0.95rem; line-height: 1.75;">
-                        The sudden, highly variable density spikes driven by geomagnetic storms are what force emergency
-                        collision avoidance maneuvers and drain a spacecraft's fuel budget. Simulations get you
-                        80&ndash;95% of the way&mdash;but the shadow 5&ndash;20% is where the variance hides, and
-                        variance is what determines mission life.
+                    <p>
+                        Where the comparison is meaningful (operational baseline present): LEO 92.4%
+                        anomaly-flag precision against MSIS errors with 7.9&times; lift; GEO log-MAE
+                        0.043 on the REFM-overlap window vs REFM Day-1 log-MAE 0.169.
                     </p>
                 </div>
-                <div>
-                    <div class="stat-block">
-                        <div class="stat-num">85% <span>MAPE</span></div>
-                        <div class="stat-label">JB2008 operational model under equivalent storm conditions&mdash;the
-                            current standard for thermospheric density prediction</div>
-                    </div>
-                    <div class="stat-block" style="border-color: rgba(0, 255, 255, 0.2);">
-                        <div class="stat-num">16% <span>MAPE</span></div>
-                        <div class="stat-label">Nervous Machine on TLE debris catalog data across 156 voxels and 726
-                            validated causal edges&mdash;same pipeline, same drivers</div>
-                    </div>
-                    <div class="stat-block"
-                        style="border-color: rgba(0, 255, 255, 0.35); background: rgba(0, 255, 255, 0.04);">
-                        <div class="stat-num">&gt;0.91 <span>certainty</span></div>
-                        <div class="stat-label">All five drivers on GRACE-FO sub-minute data. Higher cadence unlocked
-                            temporal lag structure for driver-resolved attribution and multi-day forward prediction.
-                        </div>
-                    </div>
+                <div class="discovery-card">
+                    <div class="tag">Mode B &middot; Mars, cislunar</div>
+                    <h3>Best-available prior plus in-situ learning structure</h3>
+                    <p>
+                        There is no operational model with a time-aligned public archive at Gale
+                        Crater or at lunar distance for the full window. The substrate's role here is
+                        different: build the best-available prior from sparse archive data, and
+                        provide the per-edge learning structure that a future mission can pick up
+                        and immediately learn from when new telemetry arrives.
+                    </p>
+                    <p>
+                        The per-edge primitives are small enough to run on a radiation-hardened
+                        flight CPU. About 50 kB of state including the learning loops, microseconds per update at typical
+                        telemetry cadence, no GPU, no constant cloud connection, no massive data
+                        movement &mdash; the spacecraft can learn the local environment from its own
+                        telemetry, against the priors the substrate already converged on the ground.
+                    </p>
                 </div>
             </div>
+            <p class="section-lead dim" style="margin-top: 2.5rem;">
+                Across both modes, the substrate produces the same four outputs: per-edge calibrated
+                certainty (W and Z), voxel-aware structure, surfacing of unmodeled physics that the
+                priors didn't encode, and a measurement-gap diagnostic showing where current data is
+                too thin to support autonomous decisions. The two modes differ in what they compare
+                against, not in what the substrate does.
+            </p>
         </div>
     </section>
 
-    <!-- How It Works for Space -->
     <section>
         <div class="container">
-            <div class="section-label">How It Works</div>
-            <h2 class="section-title">Causal discovery at the voxel level</h2>
+            <div class="section-label">Autonomous discovery</div>
+            <h2 class="section-title">Two unmodeled physical phenomena, discovered from telemetry alone, against neutral priors.</h2>
             <p class="section-lead">
-                The framework decomposes density variations into individual drivers&mdash;solar EUV, geomagnetic
-                activity, seasonal-latitudinal patterns, solar wind dynamic pressure, and Joule heating&mdash;while
-                learning the time-lag structure governing how each driver's influence persists across orbital shells.
+                The defining metric for an autonomy-grade physics substrate is not curve-fitting against
+                known physics, but discovery of physical interactions the priors did not encode.
+                Across the four regimes, the substrate independently surfaced two such phenomena.
+                Both are consistent with the published physics literature; both were arrived at from
+                data alone, with priors identical across voxels.
             </p>
+            <div class="discovery-grid">
+                <div class="discovery-card">
+                    <div class="tag">Cislunar &middot; Magnetotail</div>
+                    <h3>Magnetotail lobe-field decoupling at the Moon</h3>
+                    <p>
+                        Operational physics for cislunar IMF assumes the L1 measurement convects
+                        unchanged to lunar distance. The substrate confirmed this with high certainty
+                        outside the magnetotail. Inside the magnetotail, the L1-to-lunar coupling
+                        flipped sign autonomously as ballistic propagation broke down &mdash; arriving
+                        at the published tail-lobe physics result without prior coding.
+                    </p>
+                    <div class="nums">
+                        Outer voxel: W = +0.5475, Z = 1.00, n = 1,034<br>
+                        Magnetotail voxel: W = &minus;0.0796, Z = 0.84, n = 104
+                    </div>
+                </div>
+                <div class="discovery-card">
+                    <div class="tag">Mars &middot; Forbush</div>
+                    <h3>Voxel-dependent Martian Forbush decrease</h3>
+                    <p>
+                        With neutral priors (W = 0) for the Ap &rarr; dose relationship across all
+                        seasonal voxels, the substrate registered persistent over-predictions during
+                        active heliospheric storms in the ls_90&ndash;180 voxel. It settled on a
+                        negative coupling at Z = 1.000 &mdash; independently surfacing the Forbush
+                        decrease, where CMEs sweep away background galactic cosmic rays and
+                        <em>lower</em> surface dose against operator intuition.
+                    </p>
+                    <div class="nums">
+                        ls_90&ndash;180 (GCR regime): W = &minus;0.071, Z = 1.00, n = 10,121<br>
+                        ls_270&ndash;360 (SEP regime): W = +0.188, Z = 1.00 (sep_proton &rarr; dose)
+                    </div>
+                </div>
+            </div>
+            <p class="section-lead dim" style="margin-top: 2.5rem;">
+                A single-coupling forecaster forced to average across voxels would learn W &approx; 0
+                in both cases &mdash; neither signal &mdash; and would be confidently wrong in both
+                regimes. The substrate's voxel structure makes the regime-dependence structurally
+                unavoidable.
+            </p>
+        </div>
+    </section>
 
+    <section class="alt-bg">
+        <div class="container">
+            <div class="section-label">Measurement-gap roadmap</div>
+            <h2 class="section-title">Where Z fails to converge is the blueprint for what to instrument next.</h2>
+            <p class="section-lead">
+                The four benchmarks share a structural feature that turns the substrate from a
+                forecaster into a measurement-gap diagnostic. Edges in voxels with sparse coverage
+                stay at the prior; the framework's W = 0 in such a voxel tells you not that the
+                coupling is null but that the data does not yet say. The pattern of where
+                Z-convergence stalls per regime maps directly to a per-regime instrumentation
+                prescription, prioritized by mission-autonomy criticality.
+            </p>
+            <div class="scroll-x">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Regime</th>
+                            <th>Top Z-convergence gap</th>
+                            <th>Recommended instrument or data path</th>
+                            <th>Autonomy criticality</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="regime">LEO</td>
+                            <td>Storm-time density resolution at Dst &le; &minus;200 nT; GRACE-FO aging</td>
+                            <td>Secondary accel-density platforms (CHAMP-successor, MAGIC, CIRCE) producing GRACE-FO-equivalent error signals</td>
+                            <td class="mono">Medium</td>
+                        </tr>
+                        <tr>
+                            <td class="regime">GEO</td>
+                            <td>1&ndash;50 keV MPS-LO band; multi-year SEP-event coverage</td>
+                            <td>Operational JSON publication of GOES-R MPS-LO L1b <span class="cyan">(data-distribution gap, not a new instrument)</span></td>
+                            <td class="mono">Medium-high</td>
+                        </tr>
+                        <tr>
+                            <td class="regime">Mars</td>
+                            <td>Driver-side continuity post-MAVEN</td>
+                            <td>ESCAPADE partnership access (arrives 2027); longer-term continuous Mars-distance SW/SEP spectrometers</td>
+                            <td class="mono">High</td>
+                        </tr>
+                        <tr>
+                            <td class="regime">Cislunar</td>
+                            <td>Surface dose; composition resolution; post-2012 CRaTER pathway</td>
+                            <td>CLPS dosimetry; Artemis crew dose archive release; ESCAPADE loiter-phase access</td>
+                            <td class="mono">High</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="table-cap">
+                Three of the four recommended actions are <span class="cyan">data-distribution gaps</span>
+                rather than new-instrument gaps. GOES-R MPS-LO L1b exists; it is not yet published in
+                a time-aligned operational feed. Post-2012 CRaTER data exists; it requires team
+                outreach to access. ESCAPADE will measure Mars-distance solar wind; the partnership
+                engagement is the gating step. Only the LEO redundancy recommendation requires actual
+                new instrument flight. Publication-side investment may yield more mission-autonomy
+                lift per dollar than new instrument programs for the next 3&ndash;5 years.
+            </p>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="section-label">Honest scope</div>
+            <h2 class="section-title">What these benchmarks establish, and what they don't.</h2>
+            <div class="two-col">
+                <div>
+                    <h3>Window sizes vary by regime</h3>
+                    <p>
+                        LEO covers 7.5 years of GRACE-FO; Mars 1 year of MSL/RAD; GEO 7 days of the
+                        current SWPC rolling window; cislunar 1 month over the May 2024 G5 superstorm.
+                        Multi-year backfill is the obvious next step for the three shorter regimes
+                        &mdash; bounded by disk space and ingest engineering, not data availability.
+                    </p>
+                </div>
+                <div>
+                    <h3>Sign-convergence not yet adversarially tested</h3>
+                    <p>
+                        Across the four regimes, converged-and-signed edges show 67% correct sign at
+                        GEO (4 of 6 voxels on dst &rarr; B-field magnitude) and 67% signed correct
+                        plus 83% null-held on cislunar no-coupling-expected edges. The substrate has
+                        not yet been challenged with adversarial test data designed to flip a sign at
+                        high Z. That is a worthwhile follow-on falsifiability study.
+                    </p>
+                </div>
+            </div>
+            <p class="section-lead dim" style="margin-top: 2rem;">
+                What would falsify the architecture: a regime where edges with strong a-priori
+                physics expectations consistently converge to wrong-sign W at high Z. None of the
+                four regimes showed this pattern. Had the substrate not surfaced the
+                magnetotail-decoupling or the Mars Forbush coupling from data alone, the
+                autonomous-discovery claim would not hold. Both did, on real archive data, in single
+                prequential passes.
+            </p>
+        </div>
+    </section>
+
+    <section class="alt-bg">
+        <div class="container">
+            <div class="section-label">What operators gain</div>
+            <h2 class="section-title">A trust signal on the forecasts you already use, plus the gap diagnostic for where they need help.</h2>
+            <p class="section-lead">
+                Every operational space-weather forecast received today &mdash; Kp predicted, REFM
+                fluence forecast, NAIRAS dose estimate &mdash; is a point prediction with no
+                per-forecast trust signal. The substrate's per-edge certainty is exactly that,
+                evolved per (voxel, time) and conditioned on the operational model. Operators see
+                different trust levels for different parts of the same forecast, and where the
+                substrate's certainty stays low, the gap diagnostic tells them why.
+            </p>
             <div class="feature-grid">
                 <div class="feature-card">
-                    <h3>Driver-resolved attribution</h3>
-                    <p>Five causal drivers individually weighted per voxel. The system learns which drivers matter
-                        where, and by how much&mdash;not a single global coefficient.</p>
+                    <div class="who">LEO &middot; NOAA SWPC, constellations, USSF SDA</div>
+                    <h3>Calibrated trust on MSIS during storms</h3>
+                    <p>Substrate riding on NRLMSISE-00 as prior surfaces storm-window anomaly flags with
+                       92% precision against MSIS errors and +4.6 day median lead time on the strongest
+                       storms. Direct use case: conjunction-analysis confidence intervals, lifetime-budget
+                       refresh, maneuver scheduling under storm risk &mdash; with a per-forecast trust
+                       gate the operator can act on.</p>
                 </div>
                 <div class="feature-card">
-                    <h3>Temporal lag learning</h3>
-                    <p>Each driver's influence persists differently&mdash;from minutes (a sudden Bz flip) to days (a Dst
-                        ring current recovery). The pipeline learns the lag structure from error signals.</p>
+                    <div class="who">GEO &middot; Intelsat, SES, Inmarsat, USSF GEO</div>
+                    <h3>Per-LT-voxel calibration on top of REFM</h3>
+                    <p>Substrate prediction tracks GOES-19 daily fluence at log-MAE 0.043 on the
+                       REFM-overlap window, with REFM as prior; per-LT-voxel certainty surfaces
+                       pre-midnight growth-phase substorm risk separately from afternoon-side. Direct
+                       use case: thruster-firing scheduling during high-charging windows, deep-dielectric
+                       precursor awareness for sensitive payload modes.</p>
                 </div>
                 <div class="feature-card">
-                    <h3>Forward prediction</h3>
-                    <p>Given a driver impulse, the model forecasts how the resulting density perturbation evolves across
-                        voxels over hours to days, with certainty quantified per edge.</p>
+                    <div class="who">Mars &middot; NASA Mars Program, ExoMars, future crewed-Mars</div>
+                    <h3>Best-available dose prior plus in-situ learning structure</h3>
+                    <p>No operational dose model has a public time-aligned archive at Gale Crater.
+                       The substrate provides the best-available prior from MSL/RAD plus the per-edge
+                       structure that future Mars missions can deploy on-board to learn the local SSA
+                       as their own telemetry comes online &mdash; against the priors the substrate
+                       already converged. Direct use case: rover-instrument scheduling during SEP
+                       windows, future crew shelter timing, dose-budget tracking that improves as the
+                       mission collects data.</p>
                 </div>
                 <div class="feature-card">
-                    <h3>Cadence-adaptive learning</h3>
-                    <p>The same pipeline works across observation cadences. TLE debris data proved the architecture;
-                        GRACE-FO sub-minute data unlocked causal depth. The system knows what it can and can't learn
-                        from each source.</p>
+                    <div class="who">Cislunar &middot; Artemis, CLPS, cislunar-economy</div>
+                    <h3>Voxel-aware prior plus learning structure for missions arriving now</h3>
+                    <p>The cislunar regime is where Artemis and CLPS are heading and where the
+                       operational community has no time-aligned model. The substrate provides the
+                       voxel-aware prior (magnetotail-vs-outer regime distinction surfaced from
+                       ARTEMIS data alone) and the on-spacecraft learning structure that lets Artemis
+                       crew transit and CLPS surface missions improve their local SSA as they collect
+                       new telemetry. Direct use case: voxel-aware transit dose forecasting,
+                       comm-degradation prediction during magnetotail passage, autonomous local
+                       calibration without ground-loop latency.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Validation -->
-    <section class="alt-bg">
+    <section>
         <div class="container">
+            <div class="section-label">On-spacecraft architecture</div>
+            <h2 class="section-title">Efficient enough to run on a flight CPU. No GPU, no constant cloud connection, no massive data movement.</h2>
+            <p class="section-lead">
+                The per-edge primitive is small and deterministic. The cross-regime substrate as
+                benchmarked here carries roughly 300&ndash;400 edges total across all four regimes,
+                with a full flight-memory footprint of about 50 kB &mdash; the serialized edge state
+                plus the learning loops that update W and Z on each observation. Update budget per
+                observation is microseconds on a RAD750-class radiation-hardened flight CPU. The
+                architecture is split into two loops that share byte-identical primitives.
+            </p>
             <div class="two-col">
                 <div>
-                    <div class="section-label">Validation</div>
-                    <h2 class="section-title">Two data regimes, one pipeline</h2>
-                    <p class="section-lead">
-                        We validated across two data regimes to isolate the role of observation cadence. Same pipeline,
-                        same five space weather drivers, same time window. The only variable was measurement quality.
-                    </p>
-                    <p
-                        style="color: var(--color-text-muted); font-size: 0.95rem; line-height: 1.75; margin-bottom: 1.5rem;">
-                        <strong style="color: #fff;">Phase 1 — TLE debris catalog:</strong> 156 voxels, 726 validated
-                        causal edges, 16% MAPE vs 85% for JB2008. Daily cadence proved the architecture but couldn't
-                        resolve temporal lag structure.
-                    </p>
-                    <p style="color: var(--color-text-muted); font-size: 0.95rem; line-height: 1.75;">
-                        <strong style="color: #fff;">Phase 2 — GRACE-FO accelerometer:</strong> Sub-minute cadence
-                        recovered both attribution and prediction. All five drivers exceeded 0.91 certainty, 93% of
-                        edges surpassed Z=0.80, and the learned lag model produced validated multi-day forecasts.
+                    <h3>Outer loop &mdash; ground-side or cloud-side</h3>
+                    <p>
+                        Ingests public archives plus spacecraft telemetry where available. Maintains
+                        the per-edge environmental graph: driver &rarr; environmental observable,
+                        voxelized per regime. This is what the four-regime benchmark exercises.
+                        Converges priors that are then deployed to the inner loop on-board.
                     </p>
                 </div>
                 <div>
-                    <div class="section-label">What's Next</div>
-                    <h2 class="section-title" style="margin-bottom: 1rem;">LEO GPS drag residuals</h2>
-                    <p
-                        style="color: var(--color-text-muted); font-size: 0.95rem; line-height: 1.75; margin-bottom: 1.5rem;">
-                        Live LEO GPS drag residuals already provide GRACE-FO-comparable cadence but remain unexploited
-                        for thermospheric characterization. Our framework can ingest these signals to deliver
-                        certainty-quantified, driver-resolved nowcasts and spatiotemporal perturbation
-                        forecasts&mdash;without dedicated science missions.
-                    </p>
-                    <p style="color: var(--color-text-muted); font-size: 0.95rem; line-height: 1.75;">
-                        Every satellite in a GPS-equipped constellation becomes a sensor. The fleet learns the
-                        thermosphere together, sharing causal vectors (~1KB) without sharing raw telemetry.
+                    <h3>Inner loop &mdash; on the spacecraft flight computer</h3>
+                    <p>
+                        Same primitives, mechanical driver-observable graph: battery degradation,
+                        attitude-controller bias, propulsion drift per burn, thermal cycles, gimbal
+                        residuals. Starts from the outer loop's converged priors and learns the
+                        vehicle-specific structure from on-board telemetry the spacecraft already
+                        produces. No retraining cycle, no model rebuild &mdash; outer-loop updates
+                        arrive over the comm link as compact per-edge (W, Z) messages.
                     </p>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Demos -->
-    <section>
-        <div class="container" style="text-align: center;">
-            <div class="section-label" style="text-align: center;">See It Work</div>
-            <h2 class="section-title"
-                style="text-align: center; max-width: 720px; margin-left: auto; margin-right: auto;">
-                Two simulations, two questions.</h2>
-            <p class="section-lead" style="text-align: center; max-width: 720px; margin: 0 auto 3rem;">
-                How does space weather propagate <em>through</em> the voxel grid? And how does the engine
-                earn certainty <em>about</em> each voxel as evidence arrives? Both, interactively.
+            <p class="section-lead dim" style="margin-top: 2rem;">
+                The structural property that makes this matter for Mars and cislunar: missions in
+                those regimes cannot wait for ground-loop physics-modeling cycles to catch up. The
+                substrate's per-edge structure means a spacecraft can learn the local SSA from its
+                own telemetry, against the best-available priors converged on the ground &mdash;
+                without depending on continuous comm, without GPU compute, and without exporting raw
+                telemetry off the vehicle. Outer-loop pilots are available today; the inner-loop
+                deployment is the architectural follow-on this work points at.
             </p>
-
-            <!-- Group 1: Spatial propagation -->
-            <div style="max-width: 720px; margin: 0 auto 3.5rem;">
-                <h3
-                    style="font-size: 1.05rem; color: #fff; margin-bottom: 0.4rem; letter-spacing: 0.3px; font-weight: 600;">
-                    Spatial propagation</h3>
-                <p style="color: var(--color-text-muted); font-size: 0.92rem; margin-bottom: 1.5rem;">
-                    How a geomagnetic event moves through orbital shells in time — the voxel grid as a
-                    physical structure, not a lookup table.
-                </p>
-                <iframe width="100%"
-                    style="aspect-ratio: 16/9; border-radius: 10px; border: 1px solid var(--color-card-border);"
-                    src="https://www.youtube.com/embed/ayFMtAvYkQo" title="Causal engine learning over voxels"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowfullscreen></iframe>
-                <div style="margin-top: 1.25rem;">
-                    <a href="/DecemberAtlas" class="btn btn-ghost">December 2025 Space Weather Simulation</a>
-                </div>
-            </div>
-
-            <!-- Group 2: Learning dynamics -->
-            <div style="max-width: 720px; margin: 0 auto;">
-                <h3
-                    style="font-size: 1.05rem; color: #fff; margin-bottom: 0.4rem; letter-spacing: 0.3px; font-weight: 600;">
-                    Learning dynamics</h3>
-                <p style="color: var(--color-text-muted); font-size: 0.92rem; margin-bottom: 1.5rem;">
-                    How certainty evolves as evidence arrives — across voxels over a 31-day run (outer loop),
-                    and within a single spacecraft as the dissipative learning rate adapts (inner loop).
-                </p>
-                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                    <a href="/voxels" class="btn btn-ghost">Outer Loop · 31-Day Causal Run</a>
-                    <a href="/simulation" class="btn btn-ghost">Inner Loop · Dissipative Learning</a>
-                </div>
-            </div>
         </div>
     </section>
 
-    <!-- CTA -->
     <section id="contact" class="cta-section alt-bg">
-        <div class="container" style="position: relative; z-index: 2;">
-            <div class="section-label">Get Started</div>
-            <h2 class="section-title">Make every satellite a sensor. Make the fleet a learning network.</h2>
+        <div class="container">
+            <div class="section-label">Pilot the substrate</div>
+            <h2 class="section-title">Thirty minutes. Your regime. Your archive data.</h2>
             <p class="section-lead">
-                Whether you operate one spacecraft or a constellation, Nervous Machine learns the variance your current
-                models average away.
+                The walk-through runs the substrate against an operator's regime &mdash; constellation
+                drag forecasting, charging-anomaly precursors, surface dose, cislunar transit &mdash;
+                and shows where it flags, where it stays silent, and how its calibrated certainty
+                compares against the operator's current forecast process.
             </p>
             <div class="cta-buttons">
-                <a href="https://calendly.com/nervousmachine/space" class="btn btn-primary">Book a Space
-                    Consultation</a>
-                <a href="https://github.com/Nervous-Machine/causalAI-demo" target="_blank" class="btn btn-ghost">CLI
-                    Demo on GitHub</a>
+                <a href="https://calendly.com/heidi-everychart/30min" class="btn btn-primary">Book a 30-minute walk-through</a>
+                <a href="mailto:heidi@everychart.io" class="btn btn-ghost">heidi@everychart.io</a>
             </div>
         </div>
     </section>
 
     <footer>
         <div class="container">
-            <div style="display: flex; justify-content: center; gap: 2.5rem; margin-bottom: 1.25rem; flex-wrap: wrap;">
-                <a href="https://www.techrxiv.org/users/975562/articles/1343063-the-pure-error-signal-dissipative-causal-learning-for-intrinsically-safe-autonomy"
-                    target="_blank"
-                    style="color: var(--color-text-muted); text-decoration: none; font-size: 0.85rem; transition: color 0.3s;">Research
-                    Paper</a>
-                <a href="https://nervousmachine.substack.com" target="_blank"
-                    style="color: var(--color-text-muted); text-decoration: none; font-size: 0.85rem; transition: color 0.3s;">Substack</a>
-                <a href="https://github.com/Nervous-Machine/causalAI-demo" target="_blank"
-                    style="color: var(--color-text-muted); text-decoration: none; font-size: 0.85rem; transition: color 0.3s;">GitHub</a>
+            <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 1.25rem; flex-wrap: wrap;">
+                <a href="https://doi.org/10.5281/zenodo.20563491" target="_blank">Four-regime paper</a>
+                <a href="https://doi.org/10.5281/zenodo.20331839" target="_blank">LEO benchmark</a>
+                <a href="https://doi.org/10.5281/zenodo.20563166" target="_blank">GEO benchmark</a>
+                <a href="https://doi.org/10.5281/zenodo.20563381" target="_blank">Mars benchmark</a>
+                <a href="https://doi.org/10.5281/zenodo.20563338" target="_blank">Cislunar benchmark</a>
             </div>
-            <p>&copy; 2025 Nervous Machine. All rights reserved.</p>
+            <div style="display: flex; justify-content: center; gap: 2.5rem; margin-bottom: 1.25rem; flex-wrap: wrap;">
+                <a href="https://nervousmachine.substack.com" target="_blank">Substack</a>
+                <a href="/assurance">Retractions &amp; negative results</a>
+            </div>
+            <p>&copy; 2026 Nervous Machine. All rights reserved.</p>
         </div>
     </footer>
 

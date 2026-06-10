@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum — Nervous Machine</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <style>
+        :root {
+            --color-dark-bg: #06060F;
+            --color-card-bg: #0E0E1E;
+            --color-card-border: rgba(76, 0, 255, 0.15);
+            --color-accent-indigo: #4C00FF;
+            --color-accent-violet: #8A2BE2;
+            --color-cyan: #00FFFF;
+            --color-amber: #FFB454;
+            --color-text: #C8C8E0;
+            --color-text-muted: #8888AA;
+            --font-display: 'Instrument Serif', Georgia, serif;
+            --font-body: 'DM Sans', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-dark-bg);
+            color: var(--color-text);
+            line-height: 1.7;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+
+        header {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background: rgba(6, 6, 15, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(76, 0, 255, 0.1);
+            padding: 1rem 0;
+        }
+        header .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--font-display); font-size: 1.5rem; color: #fff; text-decoration: none; }
+        nav ul { list-style: none; display: flex; gap: 2rem; }
+        nav a {
+            color: var(--color-text-muted); text-decoration: none;
+            font-size: 0.85rem; font-weight: 500; letter-spacing: 0.04em;
+            text-transform: uppercase; transition: color 0.3s;
+        }
+        nav a:hover, nav a.active { color: var(--color-cyan); }
+
+        .hero {
+            padding: 140px 0 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 60% 50% at 15% 80%, rgba(76, 0, 255, 0.12) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 60% at 85% 25%, rgba(0, 255, 255, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .hero-inner { position: relative; z-index: 2; max-width: 820px; }
+
+        .hero-label {
+            font-family: var(--font-mono); font-size: 0.78rem;
+            color: var(--color-cyan); letter-spacing: 0.14em;
+            text-transform: uppercase; margin-bottom: 1.5rem;
+        }
+        .hero h1 {
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: clamp(2rem, 3.8vw, 2.9rem);
+            color: #fff; line-height: 1.2;
+            margin-bottom: 1.5rem; letter-spacing: -0.015em;
+        }
+        .hero-sub {
+            font-size: 1.08rem; line-height: 1.75;
+            color: var(--color-text); max-width: 720px; margin-bottom: 2.5rem;
+        }
+        .hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+        .btn {
+            display: inline-flex; align-items: center;
+            padding: 0.85rem 2rem; border-radius: 6px;
+            font-family: var(--font-body); font-weight: 600; font-size: 0.9rem;
+            text-decoration: none; transition: all 0.3s;
+            cursor: pointer; border: none; letter-spacing: 0.02em;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-accent-indigo), var(--color-accent-violet));
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(76, 0, 255, 0.3);
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(76, 0, 255, 0.45); }
+        .btn-ghost {
+            background: transparent; color: var(--color-text);
+            border: 1px solid rgba(200, 200, 224, 0.2);
+        }
+        .btn-ghost:hover { border-color: var(--color-cyan); color: var(--color-cyan); }
+
+        .stat-band {
+            background: var(--color-card-bg);
+            border-top: 1px solid var(--color-card-border);
+            border-bottom: 1px solid var(--color-card-border);
+            padding: 2.5rem 0;
+        }
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+        .stat {
+            padding: 0.75rem 0 0.75rem 1.5rem;
+            border-left: 2px solid var(--color-accent-indigo);
+        }
+        .stat .v {
+            font-family: var(--font-body);
+            font-weight: 500;
+            font-size: 2.2rem;
+            color: #fff;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.01em;
+        }
+        .stat .v.cyan { color: var(--color-cyan); }
+        .stat .k {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            line-height: 1.5;
+        }
+
+        section { padding: 5.5rem 0; }
+        .alt-bg {
+            background: var(--color-card-bg);
+            border-top: 1px solid var(--color-card-border);
+            border-bottom: 1px solid var(--color-card-border);
+        }
+
+        .section-label {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--color-accent-violet);
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+        .section-title {
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: clamp(1.5rem, 2.6vw, 2rem);
+            color: #fff; line-height: 1.25;
+            margin-bottom: 1.25rem; letter-spacing: -0.01em;
+        }
+        .section-lead {
+            font-size: 1rem;
+            color: var(--color-text);
+            max-width: 760px;
+            margin-bottom: 2rem;
+            line-height: 1.75;
+        }
+        .section-lead.dim { color: var(--color-text-muted); font-size: 0.95rem; }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--color-card-bg);
+            border: 1px solid var(--color-card-border);
+            border-radius: 8px;
+            overflow: hidden;
+            font-size: 0.88rem;
+        }
+        .data-table th, .data-table td {
+            padding: 0.7rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(76, 0, 255, 0.08);
+        }
+        .data-table th {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: var(--color-text-muted);
+            font-weight: 500;
+            background: rgba(76, 0, 255, 0.06);
+            white-space: nowrap;
+        }
+        .data-table td.mono { font-family: var(--font-mono); font-size: 0.82rem; color: var(--color-text); }
+        .data-table td.cyan { color: var(--color-cyan); }
+        .data-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table tr:hover td { background: rgba(76, 0, 255, 0.04); }
+        .data-table .star { color: var(--color-cyan); margin-left: 0.4rem; }
+        .table-cap {
+            font-family: var(--font-mono);
+            font-size: 0.74rem;
+            color: var(--color-text-muted);
+            margin-top: 0.8rem;
+            line-height: 1.55;
+        }
+
+        .scroll-x { overflow-x: auto; margin: 0 -1rem; padding: 0 1rem; }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem;
+        }
+        .feature-card {
+            padding: 1.75rem;
+            background: var(--color-card-bg);
+            border: 1px solid var(--color-card-border);
+            border-radius: 10px;
+        }
+        .feature-card h3 {
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 1.05rem;
+            color: #fff;
+            margin-bottom: 0.6rem;
+        }
+        .feature-card p {
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+            line-height: 1.65;
+        }
+
+        .cta-section { text-align: center; padding: 6rem 0; position: relative; }
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(76, 0, 255, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .cta-section .container { position: relative; z-index: 2; }
+        .cta-section .section-title, .cta-section .section-lead {
+            text-align: center; max-width: 620px; margin-left: auto; margin-right: auto;
+        }
+        .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+        code, .mono {
+            font-family: var(--font-mono);
+            font-size: 0.88em;
+            color: var(--color-cyan);
+        }
+        a.link {
+            color: var(--color-cyan);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+            transition: border-color 0.3s;
+        }
+        a.link:hover { border-bottom-color: var(--color-cyan); }
+
+        footer {
+            padding: 2rem 0;
+            border-top: 1px solid var(--color-card-border);
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--color-text-muted);
+        }
+        footer a { color: var(--color-text-muted); text-decoration: none; transition: color 0.3s; }
+        footer a:hover { color: var(--color-cyan); }
+
+        @media (max-width: 860px) {
+            .two-col { grid-template-columns: 1fr; gap: 2rem; }
+            .feature-grid { grid-template-columns: 1fr; }
+            header .container { flex-direction: column; gap: 0.75rem; }
+            nav ul { gap: 1.25rem; flex-wrap: wrap; justify-content: center; }
+            section { padding: 4rem 0; }
+            .hero { padding: 160px 0 3rem; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="container">
+            <a href="/" class="logo">Nervous Machine</a>
+            <nav>
+                <ul>
+                    <li><a href="/quantum" class="active">Quantum</a></li>
+                    <li><a href="/data-centers">Data Centers</a></li>
+                    <li><a href="/space">Space</a></li>
+                    <li><a href="/#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-inner">
+                <div class="hero-label">Quantum · ibm_fez · 156 qubits · 106-day window</div>
+                <h1>Seventeen shared-resource clusters discovered on IBM's ibm_fez. Fifteen validated across multiple coordinated-motion events.</h1>
+                <p class="hero-sub">
+                    Nervous Machine ran on <span class="mono">ibm_fez</span> for 106 days from 2026-02-12
+                    to 2026-05-28, registering 61,708 predictions &mdash; each one timestamped before
+                    the next-day calibration telemetry it targets &mdash; and scoring them against
+                    actuals as they arrived. The clusters were discovered from raw telemetry alone,
+                    against neutral priors, with no coupling-map input and no vendor-side hints. The
+                    scorecard, the benchmark against standard tools, and the calibration breakdown
+                    are below.
+                </p>
+                <div class="hero-ctas">
+                    <a href="https://calendly.com/heidi-everychart/30min" class="btn btn-primary">Book a 30-minute walk-through</a>
+                    <a href="#scorecard" class="btn btn-ghost">See the scorecard</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stat-band">
+        <div class="container">
+            <div class="stat-grid">
+                <div class="stat">
+                    <div class="v cyan">17</div>
+                    <div class="k">shared-resource clusters discovered from telemetry alone</div>
+                </div>
+                <div class="stat">
+                    <div class="v">15 / 17</div>
+                    <div class="k">multi-event-confirmed within the 106-day window</div>
+                </div>
+                <div class="stat">
+                    <div class="v">41</div>
+                    <div class="k">readout-coordinated events across all clusters</div>
+                </div>
+                <div class="stat">
+                    <div class="v">59,192</div>
+                    <div class="k">predictions scored against next-day actuals</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="scorecard">
+        <div class="container">
+            <div class="section-label">Cluster scorecard</div>
+            <h2 class="section-title">Seventeen clusters. Two events were the cutoff at the start of the data window; the other fifteen recurred.</h2>
+            <p class="section-lead">
+                A cluster is registered when a group of qubits shows persistent within-group correlation
+                above a noise-floor null distribution. Confirmation requires at least two distinct
+                coordinated-motion events at least 14 days apart, each with within-cluster |r| above 0.5
+                in a 7-day rolling window. The two single-event clusters at the bottom of the table
+                were registered close enough to the start of the collection window that earlier events
+                could be present in the archive but outside what we pulled.
+            </p>
+            <div class="scroll-x">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Cluster</th>
+                            <th>Type</th>
+                            <th class="num">Size</th>
+                            <th>Members</th>
+                            <th class="num">Events</th>
+                            <th class="num">T1 co-moves</th>
+                            <th class="num">Peak |r|</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="mono">78e15a79</td><td>chain</td><td class="num">2</td><td>Q14, Q85</td><td class="num">4</td><td class="num">1/4</td><td class="num cyan">0.999</td></tr>
+                        <tr><td class="mono">1cee4ce7</td><td>chain</td><td class="num">2</td><td>Q20, Q153</td><td class="num">3</td><td class="num">2/3</td><td class="num cyan">0.997</td></tr>
+                        <tr><td class="mono">3625b1c4</td><td>chain</td><td class="num">2</td><td>Q58, Q109</td><td class="num">3</td><td class="num">1/3</td><td class="num cyan">0.984</td></tr>
+                        <tr><td class="mono">49b87d14</td><td>chain</td><td class="num">2</td><td>Q81, Q142</td><td class="num">3</td><td class="num">0/3</td><td class="num cyan">0.975</td></tr>
+                        <tr><td class="mono">8ef82ebd<span class="star">★</span></td><td>chain</td><td class="num">9</td><td>Q17, Q24, Q36, Q52, Q53, Q55, Q61, Q73, Q91</td><td class="num">3</td><td class="num">2/3</td><td class="num">0.811</td></tr>
+                        <tr><td class="mono">d7dd4ee8</td><td>regional</td><td class="num">2</td><td>Q115, Q132</td><td class="num">2</td><td class="num">0/2</td><td class="num cyan">0.999</td></tr>
+                        <tr><td class="mono">f441a7fb</td><td>regional</td><td class="num">2</td><td>Q6, Q8</td><td class="num">2</td><td class="num">0/2</td><td class="num cyan">0.994</td></tr>
+                        <tr><td class="mono">72cad12f</td><td>chain</td><td class="num">3</td><td>Q1, Q7, Q135</td><td class="num">2</td><td class="num">0/2</td><td class="num cyan">0.993</td></tr>
+                        <tr><td class="mono">1fa2d19a</td><td>chain</td><td class="num">2</td><td>Q22, Q136</td><td class="num">2</td><td class="num">1/2</td><td class="num cyan">0.988</td></tr>
+                        <tr><td class="mono">6786bc2e</td><td>chain</td><td class="num">2</td><td>Q103, Q113</td><td class="num">2</td><td class="num">0/2</td><td class="num cyan">0.982</td></tr>
+                        <tr><td class="mono">51e064db</td><td>chain</td><td class="num">2</td><td>Q9, Q146</td><td class="num">2</td><td class="num">0/2</td><td class="num cyan">0.982</td></tr>
+                        <tr><td class="mono">ca1cdf2a</td><td>chain</td><td class="num">4</td><td>Q119, Q124, Q131, Q143</td><td class="num">2</td><td class="num">0/2</td><td class="num cyan">0.981</td></tr>
+                        <tr><td class="mono">2f82883c</td><td>chain</td><td class="num">2</td><td>Q31, Q75</td><td class="num">2</td><td class="num">0/2</td><td class="num">0.974</td></tr>
+                        <tr><td class="mono">4c96bbb9</td><td>chain</td><td class="num">2</td><td>Q15, Q116</td><td class="num">2</td><td class="num">1/2</td><td class="num">0.953</td></tr>
+                        <tr><td class="mono">fe542648</td><td>chain</td><td class="num">2</td><td>Q66, Q117</td><td class="num">2</td><td class="num">1/2</td><td class="num">0.939</td></tr>
+                        <tr><td class="mono">16594770</td><td>chain</td><td class="num">2</td><td>Q40, Q100</td><td class="num">1</td><td class="num">0/1</td><td class="num">0.992</td></tr>
+                        <tr><td class="mono">6e26122e</td><td>regional</td><td class="num">2</td><td>Q84, Q107</td><td class="num">1</td><td class="num">0/1</td><td class="num">0.990</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="table-cap">
+                ★ The 9-qubit cluster is the one we wrote up in detail on Substack:
+                <a class="link" href="https://nervousmachine.substack.com/p/how-uncertainty-evolved-around-a" target="_blank">How
+                uncertainty evolved around a 9-qubit cluster</a>. T1 co-moves counts events with
+                simultaneous T1 movement; the remainder are readout-only.
+            </p>
+        </div>
+    </section>
+
+    <section class="alt-bg">
+        <div class="container">
+            <div class="section-label">Benchmark against standard tools</div>
+            <h2 class="section-title">How the substrate compares to the five tools an engineer already has.</h2>
+            <p class="section-lead">
+                The substrate's event-window detector was benchmarked against five standard methods on
+                the same 9-qubit telemetry, 106 days, T1 and readout error from MongoDB. Event-window
+                AUC measures how cleanly each method separates inside-event days from outside-event
+                days in the 12-day March cluster event.
+            </p>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>What it natively produces</th>
+                        <th class="num">Event-window AUC</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Nervous Machine (rolling bipartite)</td><td>Per-edge causal certainty + structural signal</td><td class="num cyan">0.718</td></tr>
+                    <tr><td>Spectral clustering</td><td>Static partition once you choose k</td><td class="num mono">diagnostic</td></tr>
+                    <tr><td>Hierarchical clustering</td><td>Dendrogram + cluster threshold</td><td class="num mono">diagnostic</td></tr>
+                    <tr><td>PC algorithm (causal-learn)</td><td>Static DAG over variables</td><td class="num mono">diagnostic</td></tr>
+                    <tr><td>Per-qubit isolation forest</td><td>Per-(qubit, day) outlier flag</td><td class="num">0.369</td></tr>
+                    <tr><td>Per-day z-score</td><td>Per-(qubit, day) anomaly flag</td><td class="num">0.344</td></tr>
+                </tbody>
+            </table>
+            <p class="table-cap">
+                Spectral, hierarchical, and PC are diagnostic methods that produce partitions or graphs,
+                not real-time event detectors — they're not directly AUC-comparable. The per-qubit
+                detectors are. Both score below 0.5 on the event because the event manifests as
+                correlated structure across the cluster; per-qubit detectors observe each qubit
+                independently and miss the correlation by construction.
+            </p>
+            <p class="section-lead dim" style="margin-top: 2rem;">
+                On the A/B bipartite split inside the 9-qubit cluster, spectral and hierarchical
+                clustering recovered the partition exactly (Adjusted Rand Index = 1.000) when given
+                the right 9-qubit correlation matrix — that finding isn't the substrate's
+                differentiator. The differentiator is that the substrate flagged the two qubits the
+                bipartite analysis would later split on (Q55 and Q61) by leaving their certainty Z
+                stalled in the 0.40–0.65 band <em>before</em> any bipartite analysis ran.
+            </p>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="section-label">Calibration breakdown</div>
+            <h2 class="section-title">What is calibrated today, and what still needs work.</h2>
+            <p class="section-lead">
+                Not every verdict the substrate produces is ready to be sold as an alert. The
+                breakdown below is from 59,192 scored predictions across all 156 qubits at 1-day
+                horizon. Row reads as: of the substrate's predicted verdicts in that row, percentage
+                that ended up in each state at horizon.
+            </p>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Predicted verdict</th>
+                        <th class="num">→ HEALTHY</th>
+                        <th class="num">→ TRANSIENT</th>
+                        <th class="num">→ DEGRADING</th>
+                        <th class="num">→ PERSIST_FAIL</th>
+                        <th class="num">n</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>HEALTHY</td><td class="num cyan">72%</td><td class="num">16%</td><td class="num">7%</td><td class="num">2%</td><td class="num mono">9,836</td></tr>
+                    <tr><td>PERSISTENT_FAIL</td><td class="num">18%</td><td class="num">3%</td><td class="num">6%</td><td class="num cyan">71%</td><td class="num mono">1,188</td></tr>
+                    <tr><td>DEGRADING</td><td class="num">43%</td><td class="num">10%</td><td class="num">43%</td><td class="num">3%</td><td class="num mono">1,726</td></tr>
+                    <tr><td>TRANSIENT_ANOMALY</td><td class="num">73%</td><td class="num">15%</td><td class="num">9%</td><td class="num">2%</td><td class="num mono">2,187</td></tr>
+                </tbody>
+            </table>
+            <p class="table-cap">
+                PERSISTENT_FAIL is calibrated and sellable today (71% precision on a real "this is
+                broken" signal). DEGRADING is essentially a coin flip — 3% escalation to
+                PERSISTENT_FAIL is barely above the 2% base rate from HEALTHY — and needs
+                recalibration before going into a paid alerting product. Raw prediction-error
+                magnitude (z_residual) is robust regardless of verdict label.
+            </p>
+        </div>
+    </section>
+
+    <section class="alt-bg">
+        <div class="container">
+            <div class="section-label">The 9-qubit cluster</div>
+            <h2 class="section-title">The first cluster we wrote up — and the first one where the substrate told us, in advance, where to look.</h2>
+            <p class="section-lead">
+                The 9-qubit cluster <span class="mono">8ef82ebd</span> (Q17, Q24, Q36, Q52, Q53, Q55,
+                Q61, Q73, Q91) was the original case. It had a 12-day March event window, a bipartite
+                A/B split in the readout-error correlation structure, and a mechanism that localized to
+                shared readout electronics rather than coherence. A second, larger bipartite event in
+                May was visible in the substrate's signal before the calibration verdicts caught up to
+                it.
+            </p>
+            <p class="section-lead dim">
+                The substrate's certainty for two of the nine members (Q55 at 0.413, Q61 at 0.522)
+                sat in the stalled band 0.40–0.65 despite 50+ updates. Those are exactly the two
+                qubits that straddle the bipartite A/B partition the cluster later split on. The
+                framework raised its hand about the right partition before the partition was identified
+                by other means. The full piece is on Substack:
+                <a class="link" href="https://nervousmachine.substack.com/p/how-uncertainty-evolved-around-a" target="_blank">How uncertainty evolved around a 9-qubit cluster</a>.
+            </p>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="section-label">For chip and platform teams</div>
+            <h2 class="section-title">A method that transfers off the quantum chip.</h2>
+            <p class="section-lead">
+                <span class="mono">ibm_fez</span> is the public proof. The substrate is built to run
+                on any device that exposes a per-element calibration feed — quantum hardware,
+                classical silicon, HPC cooling fleets, or model-based forecasting systems. The
+                methodology stays the same. The integration is what's bespoke.
+            </p>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>Discovery without priors</h3>
+                    <p>Shared-resource clusters surface from telemetry alone, against neutral priors.
+                       No coupling map, no vendor hints, no topology assumptions.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Per-edge certainty, not chip-wide scores</h3>
+                    <p>Every causal relationship carries its own evolving certainty. The substrate
+                       tells you which conclusions it stands behind and which it doesn't.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Correlation-aware signal</h3>
+                    <p>Structural signals are first-class outputs. The kinds of events per-qubit
+                       detectors are blind to are exactly what the substrate is built to surface.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Deployable on your telemetry</h3>
+                    <p>Raw data stays on-site. Calibrated findings cross organizational boundaries.
+                       The production implementation is what we license.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="cta-section alt-bg">
+        <div class="container">
+            <div class="section-label">Talk to us</div>
+            <h2 class="section-title">Thirty minutes. Live ibm_fez. Your questions.</h2>
+            <p class="section-lead">
+                The walk-through pulls current telemetry, runs through what the substrate is flagging
+                right now, and goes deeper than the page on whichever findings you want to examine.
+            </p>
+            <div class="cta-buttons">
+                <a href="https://calendly.com/heidi-everychart/30min" class="btn btn-primary">Book a 30-minute walk-through</a>
+                <a href="mailto:heidi@everychart.io" class="btn btn-ghost">heidi@everychart.io</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div style="display: flex; justify-content: center; gap: 2.5rem; margin-bottom: 1.25rem; flex-wrap: wrap;">
+                <a href="https://nervousmachine.substack.com" target="_blank">Substack</a>
+                <a href="https://nervousmachine.substack.com/p/how-uncertainty-evolved-around-a" target="_blank">9-qubit cluster writeup</a>
+                <a href="https://doi.org/10.5281/zenodo.20575885" target="_blank">Methodology archive</a>
+            </div>
+            <p>&copy; 2026 Nervous Machine. All rights reserved.</p>
+        </div>
+    </footer>
+
+</body>
+
+</html>
