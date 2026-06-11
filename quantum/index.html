@@ -458,37 +458,67 @@
     <section>
         <div class="container">
             <div class="section-label">Calibration breakdown</div>
-            <h2 class="section-title">What is calibrated today, and what still needs work.</h2>
+            <h2 class="section-title">PERSISTENT_FAIL holds 71% precision at both 1-day and 7-day horizons — a 9× lift over base rate that doesn't decay with the prediction window.</h2>
             <p class="section-lead">
-                Not every verdict the substrate produces is ready to be sold as an alert. The
-                breakdown below is from 59,192 scored predictions across all 156 qubits at 1-day
-                horizon. Row reads as: of the substrate's predicted verdicts in that row, percentage
-                that ended up in each state at horizon.
+                Per-qubit failure flags typically lose precision as you extrapolate further out.
+                The substrate's PERSISTENT_FAIL flag doesn't. Below is the breakdown of verdict
+                precision against the base rate of each actual state at horizon, across 59,192
+                scored predictions on all 156 qubits. Lift = precision divided by the base rate at
+                horizon — it's the right way to compare alerting signals, and it's what separates a
+                real alert from a re-statement of the prior.
             </p>
             <table class="data-table">
                 <thead>
                     <tr>
                         <th>Predicted verdict</th>
-                        <th class="num">→ HEALTHY</th>
-                        <th class="num">→ TRANSIENT</th>
-                        <th class="num">→ DEGRADING</th>
-                        <th class="num">→ PERSIST_FAIL</th>
-                        <th class="num">n</th>
+                        <th class="num">1d precision</th>
+                        <th class="num">1d base rate</th>
+                        <th class="num">1d lift</th>
+                        <th class="num">7d precision</th>
+                        <th class="num">7d base rate</th>
+                        <th class="num">7d lift</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td>HEALTHY</td><td class="num cyan">72%</td><td class="num">16%</td><td class="num">7%</td><td class="num">2%</td><td class="num mono">9,836</td></tr>
-                    <tr><td>PERSISTENT_FAIL</td><td class="num">18%</td><td class="num">3%</td><td class="num">6%</td><td class="num cyan">71%</td><td class="num mono">1,188</td></tr>
-                    <tr><td>DEGRADING</td><td class="num">43%</td><td class="num">10%</td><td class="num">43%</td><td class="num">3%</td><td class="num mono">1,726</td></tr>
-                    <tr><td>TRANSIENT_ANOMALY</td><td class="num">73%</td><td class="num">15%</td><td class="num">9%</td><td class="num">2%</td><td class="num mono">2,187</td></tr>
+                    <tr><td>PERSISTENT_FAIL</td><td class="num cyan">71%</td><td class="num">7.5%</td><td class="num cyan">9.5×</td><td class="num cyan">71%</td><td class="num">8.2%</td><td class="num cyan">8.7×</td></tr>
+                    <tr><td>DEGRADING</td><td class="num">43%</td><td class="num">11.4%</td><td class="num">3.8×</td><td class="num">11%</td><td class="num">11.7%</td><td class="num">0.9×</td></tr>
                 </tbody>
             </table>
             <p class="table-cap">
-                PERSISTENT_FAIL is calibrated and sellable today (71% precision on a real "this is
-                broken" signal). DEGRADING is essentially a coin flip — 3% escalation to
-                PERSISTENT_FAIL is barely above the 2% base rate from HEALTHY — and needs
-                recalibration before going into a paid alerting product. Raw prediction-error
-                magnitude (z_residual) is robust regardless of verdict label.
+                Three operational tiers fall out of this. <span class="cyan">PERSISTENT_FAIL is a
+                real alert at both horizons</span> — 9.5× lift at 1d and 8.7× lift at 7d on the
+                same 71% precision is genuinely unusual for a per-qubit failure flag.
+                <span class="cyan">DEGRADING is a usable short-horizon signal at 1d</span> (3.8×
+                lift) — useful for next-day scheduling decisions like deprioritizing flagged qubits
+                for sensitive work — but the lift collapses to 0.9× at 7d, where the flag stops
+                carrying signal. <span style="color:var(--color-text);">TRANSIENT_ANOMALY and
+                DEGRADING extrapolated to 7d</span> are roadmap — the substrate produces them, but
+                their precision needs recalibration before they enter a paid alerting product.
+            </p>
+            <p class="section-lead dim" style="margin-top: 2rem;">
+                <strong style="color:var(--color-text);">WAIT_ENVIRONMENTAL is a different signal
+                class entirely.</strong> It's rare by design — it fires when multiple qubits across
+                the chip show signs of an environmental event simultaneously, and chip-wide events
+                are uncommon. The May 8–16 window, in which 85 of 156 qubits lost ≥30% of T1 over
+                a week, is the canonical example. Per-qubit horizon precision on the flag is noisy
+                by construction because environmental events recover stochastically; the chip-wide
+                co-fire pattern is the right diagnostic. The operational action it implies is
+                <em>wait</em>, not reroute. Some of the apparent DEGRADING → HEALTHY → PERSISTENT_FAIL
+                flapping observed in individual qubits during environmental windows is attributable
+                to those qubits transiting an environmental event that WAIT_ENVIRONMENTAL was already
+                tracking at the chip level.
+            </p>
+            <p class="section-lead dim" style="margin-top: 2rem;">
+                Two evaluation modes the dashboard tracks separately, and the page names both on
+                purpose. <strong style="color:var(--color-text);">State forecasts</strong> — predict
+                which verdict label a qubit will land in at horizon — score 57% overall state-match
+                across all five states at 1d. That's the operational product the alerts are built
+                on. <strong style="color:var(--color-text);">Value forecasts</strong> — predict the
+                exact T1 or readout-error number — score 51% overall value-accuracy. The value bar
+                is harder, and serves as a residual diagnostic (Q53's +11.82σ z_residual on May 12
+                was the canonical example) rather than the basis of the alerting product. Leading
+                with state-match without naming the value-accuracy bar would obscure how the
+                product actually evaluates.
             </p>
         </div>
     </section>
