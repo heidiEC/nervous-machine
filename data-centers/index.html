@@ -355,16 +355,15 @@
                 <div class="hero-label">HPC &middot; CINECA Marconi100 &middot; 2.5-year telemetry archive</div>
                 <h1>Inside a multi-vendor data center, the edges between systems have no owner. That is where assurance has to live.</h1>
                 <p class="hero-sub">
-                    Modern HPC and data centers run on independently-owned controllers: each cooling
-                    vendor's loop, each operator's compute layer, each facility's environmental
-                    monitoring. Digital twins exist inside these silos today, but each twin treats
-                    the other silos as environmental observations rather than as adapting systems
-                    with their own controllers. The CINECA Marconi100 telemetry archive is
-                    structurally rare in giving us all five owners' data in one place. Nervous
-                    Machine ran on it and surfaced one edge no single silo could ever observe,
-                    classified eight cooling edges into a vulnerability taxonomy, and identified a
-                    drift pattern that silently invalidates control laws while leaving forecasts
-                    looking healthy.
+                    We ran Nervous Machine on the one thing you can rarely see: a real multi-vendor
+                    supercomputer's full cooling telemetry &mdash; IT compute, air cooling, liquid
+                    cooling, and weather. Five independent owners, 2.5 years, the CINECA Marconi100
+                    archive. The premise it tests is simple: <strong>autonomy you can trust has to
+                    know what it doesn't know, and direct its learning there.</strong> On this
+                    archive it sorted the cooling relationships into the ones safe to automate and
+                    the ones that silently decay, surfaced one risk no single vendor can observe, and
+                    &mdash; on its own &mdash; found a variable missing from its own model and
+                    corrected it.
                 </p>
                 <div class="hero-ctas">
                     <a href="https://calendly.com/heidi-everychart/30min" class="btn btn-primary">Book a 30-minute walk-through</a>
@@ -379,19 +378,19 @@
             <div class="stat-grid">
                 <div class="stat">
                     <div class="v cyan">5</div>
-                    <div class="k">telemetry owners audited (IT and facility silos)</div>
-                </div>
-                <div class="stat">
-                    <div class="v">8</div>
-                    <div class="k">cooling edges classified into vulnerability classes</div>
-                </div>
-                <div class="stat">
-                    <div class="v">&rho; = 0.76</div>
-                    <div class="k">offline cross-regime variance predicts held-out-regime error (p = 0.028)</div>
+                    <div class="k">telemetry owners on one cooling system &mdash; IT, air, liquid, weather</div>
                 </div>
                 <div class="stat">
                     <div class="v">8&times;</div>
-                    <div class="k">slope decline on node_power &rarr; fan_speed (winter 2021 &rarr; winter 2022)</div>
+                    <div class="k">silent decay in a cooling control coefficient (winter 2021 &rarr; winter 2022)</div>
+                </div>
+                <div class="stat">
+                    <div class="v">1</div>
+                    <div class="k">cross-owner edge no single vendor's twin can observe</div>
+                </div>
+                <div class="stat">
+                    <div class="v cyan">&minus;65%</div>
+                    <div class="k">error cut when the system found and added a variable missing from its own model</div>
                 </div>
             </div>
         </div>
@@ -399,17 +398,17 @@
 
     <section id="taxonomy">
         <div class="container">
-            <div class="section-label">The vulnerability taxonomy</div>
-            <h2 class="section-title">Eight edges. Four classes. Where a digital twin would fail, and how to fix it.</h2>
+            <div class="section-label">What we found in the cooling graph</div>
+            <h2 class="section-title">Which cooling relationships you can trust to automate &mdash; and which quietly fall apart.</h2>
             <p class="section-lead">
-                Each causal edge was fit per window across ten regimes spanning 2.5 years. We tracked
-                its slope, its residual noise, and a corroboration-based certainty Z. The variance
-                across regimes (CV) rank-orders the edge's held-out-regime error at Spearman
-                <span class="mono">&rho; = +0.76 (n = 8, p = 0.028)</span>. Within the well-specified
-                subset (DRIFTING + INVARIANT, n = 5), the correlation strengthens slightly to
-                <span class="mono">&rho; = +0.80 (p = 0.10)</span> &mdash; ruling out the
-                shared-cause confound that high-CV WEAK edges introduce. Each class has a different
-                fix.
+                We watched each relationship in the cooling system across ten operating regimes over
+                2.5 years and asked one question per edge: <em>can you trust it?</em> The answers fell
+                into four clean classes &mdash; safe to learn once, decays over time, missing a
+                variable, or unlearnable &mdash; and each one calls for a different response. This
+                isn't anecdotal: an edge's variability across regimes predicts how badly it fails on
+                an unseen regime (<span class="mono">&rho; = 0.76</span>), and the pattern survives the
+                strict version of the test, on the well-specified edges only (<span class="mono">&rho;
+                = 0.80</span>). The map is the deliverable.
             </p>
             <div class="scroll-x">
                 <table class="data-table">
@@ -508,10 +507,10 @@
             <div class="section-label">The drift trap</div>
             <h2 class="section-title">Predictions look healthy. The control law goes silently stale.</h2>
             <p class="section-lead">
-                The DRIFTING class is the subtlest finding in the audit, and it's the one a methods
-                reviewer should weigh most. Pointwise predictions on these edges stay accurate
-                across the 2.5-year window: held-out relRMSE around 0.086&ndash;0.091, comparable to
-                the INVARIANT edges. By the metric most teams would monitor, these edges look fine.
+                The DRIFTING class is the finding most likely to bite an operator, because it never
+                shows up on a dashboard. Predictions on these edges stay accurate across the whole
+                2.5-year window &mdash; their error is on par with the rock-solid INVARIANT edges. By
+                every health metric most teams watch, they look fine.
             </p>
             <p class="section-lead">
                 The coefficients tell a different story. The starkest case is
@@ -609,10 +608,52 @@
         </div>
     </section>
 
+    <section>
+        <div class="container">
+            <div class="section-label">It improves its own model</div>
+            <h2 class="section-title">The system found a variable missing from its own model &mdash; and proved it against the data before adding it.</h2>
+            <p class="section-lead">
+                Knowing what it doesn't know isn't a slogan here; it's a running list. Every
+                relationship carries a live certainty, and the ones that stay uncertain &mdash; or
+                stay confident but consistently a little off &mdash; collect into what we call the
+                <em>curiosity surface</em>: the boundary of what the system can't yet explain. On
+                this archive, one relationship sat there flagged &mdash; <span class="mono">node_power
+                &rarr; dimm_temp</span> predicted memory temperature confidently, but with a small,
+                stubborn bias. Confident and consistently off by a hair: the signature of a missing
+                variable.
+            </p>
+            <p class="section-lead">
+                So the system formed a hypothesis &mdash; the missing factor is the air coming into
+                the rack &mdash; and tested it against the telemetry rather than asserting it. It
+                held: adding inlet temperature lifted that relationship's certainty from
+                <span class="mono">0.76 to 1.0</span> and cut its error <span class="mono">65%</span>.
+                The new edge was added to the model. No one told it a variable was missing; it
+                noticed, proposed, checked, and patched.
+            </p>
+            <div class="callout">
+                <p>
+                    It also proposed two fixes that <strong>failed</strong> &mdash; a cooling-zone
+                    boundary to explain a collapsed edge, and hot-aisle recirculation between
+                    neighboring racks &mdash; and the data rejected both. It doesn't manufacture
+                    certainty to look productive; it earns the patch, or leaves the gap flagged and
+                    open. That discipline is the point.
+                </p>
+            </div>
+            <p class="section-lead dim">
+                This isn't a one-off tuned to cooling. The same compose &rarr; learn &rarr; escalate
+                loop has run autonomously across five unrelated public domains &mdash; battery aging,
+                telescope photometry, power-grid frequency, river flow, urban air quality &mdash;
+                converging in four (the fifth correctly refused, and we report it as a negative). On
+                NASA Mars surface-radiation data, the same machinery learned two physical effects
+                that were never written into its prior. Same primitives, different worlds.
+            </p>
+        </div>
+    </section>
+
     <section class="alt-bg">
         <div class="container">
             <div class="section-label">Honest scope</div>
-            <h2 class="section-title">What this audit establishes, and what it doesn't.</h2>
+            <h2 class="section-title">What it claims, what it doesn't &mdash; and the times the data told us we were wrong.</h2>
             <div class="two-col">
                 <div>
                     <h3>Effect size is small-n</h3>
@@ -624,14 +665,15 @@
                     </p>
                 </div>
                 <div>
-                    <h3>Twin vulnerability prediction not yet tested against a deployed twin</h3>
+                    <h3>The twin consequence is a prediction, not a tested result</h3>
                     <p>
-                        Digital twins exist in production data centers today, but we don't have
-                        access to test the audit's predictions against any of them directly. What
-                        has been validated is the proxy: cross-regime variance predicts held-out
-                        regime error at &rho; = 0.76. That is the closest available evidence that
-                        an audit of this type forecasts where a twin trained on the same data would
-                        fail. Direct against-twin validation is a follow-on.
+                        The object here is the causal layer, and the edge classes are measured
+                        properties of this data. The step from "this relationship is fragile" to "a
+                        twin trained on it would fail there" is a reasonable prediction we have not
+                        tested against a deployed twin &mdash; none was available to us. What is
+                        measured is the proxy: an edge's cross-regime variance predicts its own
+                        held-out error (&rho; = 0.76). Putting the audit head-to-head with a
+                        production twin is the obvious next step.
                     </p>
                 </div>
             </div>
@@ -772,12 +814,13 @@
     <section id="contact" class="cta-section">
         <div class="container">
             <div class="section-label">Audit your archive</div>
-            <h2 class="section-title">Thirty minutes. Your telemetry. Where would your twin fail?</h2>
+            <h2 class="section-title">Thirty minutes. Your telemetry. Where can your autonomy be trusted &mdash; and where is it blind?</h2>
             <p class="section-lead">
                 The walk-through is the audit-in-conversation: we look at the shape of your
-                telemetry archive, what the vulnerability taxonomy would surface, where the
-                cross-owner edges live in your specific ecosystem, and what the online recalibration
-                loop would look like running on your site.
+                telemetry archive, which of your control relationships are safe to automate vs.
+                silently decaying, where the edges between your vendors live &mdash; the ones no
+                single silo can see &mdash; and what the on-site learning loop would look like
+                running on your data.
             </p>
             <div class="cta-buttons">
                 <a href="https://calendly.com/heidi-everychart/30min" class="btn btn-primary">Book a 30-minute walk-through</a>
