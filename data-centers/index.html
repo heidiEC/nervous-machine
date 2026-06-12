@@ -744,15 +744,19 @@
             <p class="section-lead">
                 The Marconi100 cooling system has five telemetry owners: two IT-side (compute,
                 thermal) and three facility-side (Vertiv air cooling, Schneider liquid cooling,
-                external weather). Each owner runs their own inner loop; their own controller,
-                their own model, their own data tap. DCIM platforms aggregate polled summary metrics
-                across vendors for dashboards and PUE / capacity reporting; the raw closed-loop
-                control telemetry needed to learn or even observe the edges between vendors stays
-                inside each vendor's appliance. No outer loop exists at that granularity. The CINECA
-                M100 archive is structurally rare in the field. The Borghesi et al. data
-                paper calls it the largest public dataset of its kind and notes that public data in
-                this field is mostly kept on premises, which makes it one of the few archives
-                where the cross-owner edge is even visible.
+                external weather). Typically, in data centers each owner runs their own inner loop; their own
+                controller, their own model, their own data tap. DCIM platforms
+                aggregate polled summary metrics across vendors for dashboards and PUE / capacity
+                reporting. The high-rate, closed-loop control telemetry needed to learn, or
+                even observe, the edges between vendors typically isn't centralized across
+                vendors at that granularity. It resides in each unit's own controller and is exported only
+                as coarse polled summaries. No outer loop exists at that granularity. The CINECA M100
+                archive is structurally rare in the field: the Borghesi et al. data paper assembled it
+                from independent per-subsystem collectors; IPMI, Vertiv, and Schneider each
+                gathered separately. It is referenced as the largest public dataset of its kind, and notes
+                that public data in this field is mostly kept on premises. That separate-tap
+                collection is itself the evidence of the siloing, and it's what makes this one of the
+                few archives where the cross-owner edge is even visible.
             </p>
             <div class="callout">
                 <p>
