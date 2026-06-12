@@ -25,7 +25,11 @@
             --font-mono: 'JetBrains Mono', monospace;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
             font-family: var(--font-body);
@@ -36,7 +40,11 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
 
         header {
             position: fixed;
@@ -48,21 +56,47 @@
             border-bottom: 1px solid rgba(76, 0, 255, 0.1);
             padding: 1rem 0;
         }
-        header .container { display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-family: var(--font-display); font-size: 1.5rem; color: #fff; text-decoration: none; }
-        nav ul { list-style: none; display: flex; gap: 2rem; }
-        nav a {
-            color: var(--color-text-muted); text-decoration: none;
-            font-size: 0.85rem; font-weight: 500; letter-spacing: 0.04em;
-            text-transform: uppercase; transition: color 0.3s;
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        nav a:hover, nav a.active { color: var(--color-cyan); }
+
+        .logo {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--color-text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+
+        nav a:hover,
+        nav a.active {
+            color: var(--color-cyan);
+        }
 
         .hero {
             padding: 140px 0 4rem;
             position: relative;
             overflow: hidden;
         }
+
         .hero::before {
             content: '';
             position: absolute;
@@ -71,44 +105,82 @@
                 radial-gradient(ellipse 40% 60% at 85% 25%, rgba(0, 255, 255, 0.05) 0%, transparent 70%);
             pointer-events: none;
         }
-        .hero-inner { position: relative; z-index: 2; max-width: 820px; }
+
+        .hero-inner {
+            position: relative;
+            z-index: 2;
+            max-width: 820px;
+        }
 
         .hero-label {
-            font-family: var(--font-mono); font-size: 0.78rem;
-            color: var(--color-cyan); letter-spacing: 0.14em;
-            text-transform: uppercase; margin-bottom: 1.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--color-cyan);
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
         }
+
         .hero h1 {
             font-family: var(--font-body);
             font-weight: 600;
             font-size: clamp(2rem, 3.8vw, 2.9rem);
-            color: #fff; line-height: 1.2;
-            margin-bottom: 1.5rem; letter-spacing: -0.015em;
+            color: #fff;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.015em;
         }
+
         .hero-sub {
-            font-size: 1.08rem; line-height: 1.75;
-            color: var(--color-text); max-width: 720px; margin-bottom: 2.5rem;
+            font-size: 1.08rem;
+            line-height: 1.75;
+            color: var(--color-text);
+            max-width: 720px;
+            margin-bottom: 2.5rem;
         }
-        .hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+        .hero-ctas {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
 
         .btn {
-            display: inline-flex; align-items: center;
-            padding: 0.85rem 2rem; border-radius: 6px;
-            font-family: var(--font-body); font-weight: 600; font-size: 0.9rem;
-            text-decoration: none; transition: all 0.3s;
-            cursor: pointer; border: none; letter-spacing: 0.02em;
+            display: inline-flex;
+            align-items: center;
+            padding: 0.85rem 2rem;
+            border-radius: 6px;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            letter-spacing: 0.02em;
         }
+
         .btn-primary {
             background: linear-gradient(135deg, var(--color-accent-indigo), var(--color-accent-violet));
             color: #fff;
             box-shadow: 0 4px 20px rgba(76, 0, 255, 0.3);
         }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(76, 0, 255, 0.45); }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(76, 0, 255, 0.45);
+        }
+
         .btn-ghost {
-            background: transparent; color: var(--color-text);
+            background: transparent;
+            color: var(--color-text);
             border: 1px solid rgba(200, 200, 224, 0.2);
         }
-        .btn-ghost:hover { border-color: var(--color-cyan); color: var(--color-cyan); }
+
+        .btn-ghost:hover {
+            border-color: var(--color-cyan);
+            color: var(--color-cyan);
+        }
 
         .stat-band {
             background: var(--color-card-bg);
@@ -116,15 +188,18 @@
             border-bottom: 1px solid var(--color-card-border);
             padding: 2.5rem 0;
         }
+
         .stat-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 1.5rem;
         }
+
         .stat {
             padding: 0.75rem 0 0.75rem 1.5rem;
             border-left: 2px solid var(--color-accent-indigo);
         }
+
         .stat .v {
             font-family: var(--font-body);
             font-weight: 500;
@@ -134,7 +209,11 @@
             margin-bottom: 0.5rem;
             letter-spacing: -0.01em;
         }
-        .stat .v.cyan { color: var(--color-cyan); }
+
+        .stat .v.cyan {
+            color: var(--color-cyan);
+        }
+
         .stat .k {
             font-family: var(--font-mono);
             font-size: 0.75rem;
@@ -144,7 +223,10 @@
             line-height: 1.5;
         }
 
-        section { padding: 5.5rem 0; }
+        section {
+            padding: 5.5rem 0;
+        }
+
         .alt-bg {
             background: var(--color-card-bg);
             border-top: 1px solid var(--color-card-border);
@@ -159,13 +241,17 @@
             text-transform: uppercase;
             margin-bottom: 1rem;
         }
+
         .section-title {
             font-family: var(--font-body);
             font-weight: 600;
             font-size: clamp(1.5rem, 2.6vw, 2rem);
-            color: #fff; line-height: 1.25;
-            margin-bottom: 1.25rem; letter-spacing: -0.01em;
+            color: #fff;
+            line-height: 1.25;
+            margin-bottom: 1.25rem;
+            letter-spacing: -0.01em;
         }
+
         .section-lead {
             font-size: 1rem;
             color: var(--color-text);
@@ -173,7 +259,11 @@
             margin-bottom: 2rem;
             line-height: 1.75;
         }
-        .section-lead.dim { color: var(--color-text-muted); font-size: 0.95rem; }
+
+        .section-lead.dim {
+            color: var(--color-text-muted);
+            font-size: 0.95rem;
+        }
 
         .data-table {
             width: 100%;
@@ -184,12 +274,15 @@
             overflow: hidden;
             font-size: 0.88rem;
         }
-        .data-table th, .data-table td {
+
+        .data-table th,
+        .data-table td {
             padding: 0.75rem 1rem;
             text-align: left;
             border-bottom: 1px solid rgba(76, 0, 255, 0.08);
             vertical-align: top;
         }
+
         .data-table th {
             font-family: var(--font-mono);
             font-size: 0.7rem;
@@ -200,14 +293,49 @@
             background: rgba(76, 0, 255, 0.06);
             white-space: nowrap;
         }
-        .data-table td.mono { font-family: var(--font-mono); font-size: 0.82rem; color: var(--color-text); }
-        .data-table td.cyan { color: var(--color-cyan); }
-        .data-table td.amber { color: var(--color-amber); }
-        .data-table td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
-        .data-table td.edge { font-weight: 500; color: #fff; font-family: var(--font-mono); font-size: 0.82rem; }
-        .data-table td.class { font-weight: 600; font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.04em; }
-        .data-table tr:last-child td { border-bottom: none; }
-        .data-table tr:hover td { background: rgba(76, 0, 255, 0.04); }
+
+        .data-table td.mono {
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            color: var(--color-text);
+        }
+
+        .data-table td.cyan {
+            color: var(--color-cyan);
+        }
+
+        .data-table td.amber {
+            color: var(--color-amber);
+        }
+
+        .data-table td.num {
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+        }
+
+        .data-table td.edge {
+            font-weight: 500;
+            color: #fff;
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+        }
+
+        .data-table td.class {
+            font-weight: 600;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            letter-spacing: 0.04em;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tr:hover td {
+            background: rgba(76, 0, 255, 0.04);
+        }
+
         .table-cap {
             font-family: var(--font-mono);
             font-size: 0.74rem;
@@ -216,7 +344,11 @@
             line-height: 1.55;
         }
 
-        .scroll-x { overflow-x: auto; margin: 0 -1rem; padding: 0 1rem; }
+        .scroll-x {
+            overflow-x: auto;
+            margin: 0 -1rem;
+            padding: 0 1rem;
+        }
 
         .callout {
             background: linear-gradient(135deg, rgba(76, 0, 255, 0.08), rgba(0, 255, 255, 0.04));
@@ -226,13 +358,18 @@
             padding: 1.5rem 2rem;
             margin: 2rem 0;
         }
+
         .callout p {
             font-family: var(--font-body);
             font-size: 1.05rem;
             line-height: 1.6;
             color: #fff;
         }
-        .callout p strong { color: var(--color-cyan); font-weight: 600; }
+
+        .callout p strong {
+            color: var(--color-cyan);
+            font-weight: 600;
+        }
 
         .two-col {
             display: grid;
@@ -240,6 +377,7 @@
             gap: 3rem;
             align-items: start;
         }
+
         .two-col h3 {
             font-family: var(--font-body);
             font-weight: 600;
@@ -247,6 +385,7 @@
             font-size: 1.05rem;
             margin-bottom: 0.8rem;
         }
+
         .two-col p {
             font-size: 0.93rem;
             color: var(--color-text);
@@ -258,12 +397,14 @@
             grid-template-columns: repeat(2, 1fr);
             gap: 1.25rem;
         }
+
         .feature-card {
             padding: 1.75rem;
             background: var(--color-card-bg);
             border: 1px solid var(--color-card-border);
             border-radius: 10px;
         }
+
         .feature-card h3 {
             font-family: var(--font-body);
             font-weight: 600;
@@ -271,11 +412,13 @@
             color: #fff;
             margin-bottom: 0.6rem;
         }
+
         .feature-card p {
             font-size: 0.9rem;
             color: var(--color-text-muted);
             line-height: 1.65;
         }
+
         .feature-card .who {
             font-family: var(--font-mono);
             font-size: 0.7rem;
@@ -285,7 +428,12 @@
             margin-bottom: 0.5rem;
         }
 
-        .cta-section { text-align: center; padding: 6rem 0; position: relative; }
+        .cta-section {
+            text-align: center;
+            padding: 6rem 0;
+            position: relative;
+        }
+
         .cta-section::before {
             content: '';
             position: absolute;
@@ -293,24 +441,44 @@
             background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(76, 0, 255, 0.1) 0%, transparent 70%);
             pointer-events: none;
         }
-        .cta-section .container { position: relative; z-index: 2; }
-        .cta-section .section-title, .cta-section .section-lead {
-            text-align: center; max-width: 620px; margin-left: auto; margin-right: auto;
-        }
-        .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
 
-        code, .mono {
+        .cta-section .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-section .section-title,
+        .cta-section .section-lead {
+            text-align: center;
+            max-width: 620px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        code,
+        .mono {
             font-family: var(--font-mono);
             font-size: 0.88em;
             color: var(--color-cyan);
         }
+
         a.link {
             color: var(--color-cyan);
             text-decoration: none;
             border-bottom: 1px solid rgba(0, 255, 255, 0.3);
             transition: border-color 0.3s;
         }
-        a.link:hover { border-bottom-color: var(--color-cyan); }
+
+        a.link:hover {
+            border-bottom-color: var(--color-cyan);
+        }
 
         footer {
             padding: 2rem 0;
@@ -319,16 +487,45 @@
             font-size: 0.8rem;
             color: var(--color-text-muted);
         }
-        footer a { color: var(--color-text-muted); text-decoration: none; transition: color 0.3s; }
-        footer a:hover { color: var(--color-cyan); }
+
+        footer a {
+            color: var(--color-text-muted);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: var(--color-cyan);
+        }
 
         @media (max-width: 860px) {
-            .two-col { grid-template-columns: 1fr; gap: 2rem; }
-            .feature-grid { grid-template-columns: 1fr; }
-            header .container { flex-direction: column; gap: 0.75rem; }
-            nav ul { gap: 1.25rem; flex-wrap: wrap; justify-content: center; }
-            section { padding: 4rem 0; }
-            .hero { padding: 160px 0 3rem; }
+            .two-col {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            header .container {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            nav ul {
+                gap: 1.25rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            section {
+                padding: 4rem 0;
+            }
+
+            .hero {
+                padding: 160px 0 3rem;
+            }
         }
     </style>
 </head>
@@ -353,20 +550,21 @@
         <div class="container">
             <div class="hero-inner">
                 <div class="hero-label">HPC &middot; CINECA Marconi100 &middot; 2.5-year telemetry archive</div>
-                <h1>Inside a multi-vendor data center, the edges between systems have no owner. That is where assurance has to live.</h1>
+                <h1>Inside a multi-vendor data center, the edges between systems have no owner. That is where assurance
+                    has to live.</h1>
                 <p class="hero-sub">
                     We ran Nervous Machine on the one thing you can rarely see: a real multi-vendor
-                    supercomputer's full cooling telemetry &mdash; IT compute, air cooling, liquid
+                    supercomputer's full cooling telemetry; IT compute, air cooling, liquid
                     cooling, and weather. Five independent owners, 2.5 years, the CINECA Marconi100
                     archive. The premise it tests is simple: <strong>autonomy you can trust has to
-                    know what it doesn't know, and direct its learning there.</strong> On this
+                        know what it doesn't know, and direct its learning there.</strong> On this
                     archive it sorted the cooling relationships into the ones safe to automate and
                     the ones that silently decay, surfaced one risk no single vendor can observe, and
-                    &mdash; on its own &mdash; found a variable missing from its own model and
-                    corrected it.
+                    found a variable missing from its own model and corrected it.
                 </p>
                 <div class="hero-ctas">
-                    <a href="https://calendly.com/heidi-everychart/30min" class="btn btn-primary">Book a 30-minute walk-through</a>
+                    <a href="https://calendly.com/heidi-everychart/30min" class="btn btn-primary">Book a 30-minute
+                        walk-through</a>
                     <a href="#taxonomy" class="btn btn-ghost">See the taxonomy</a>
                 </div>
             </div>
@@ -378,7 +576,7 @@
             <div class="stat-grid">
                 <div class="stat">
                     <div class="v cyan">5</div>
-                    <div class="k">telemetry owners on one cooling system &mdash; IT, air, liquid, weather</div>
+                    <div class="k">telemetry owners on one cooling system; IT, air, liquid, weather</div>
                 </div>
                 <div class="stat">
                     <div class="v">8&times;</div>
@@ -399,16 +597,17 @@
     <section id="taxonomy">
         <div class="container">
             <div class="section-label">What we found in the cooling graph</div>
-            <h2 class="section-title">Which cooling relationships you can trust to automate &mdash; and which quietly fall apart.</h2>
+            <h2 class="section-title">Which cooling relationships you can trust to automate &mdash; and which quietly
+                fall apart.</h2>
             <p class="section-lead">
                 We watched each relationship in the cooling system across ten operating regimes over
                 2.5 years and asked one question per edge: <em>can you trust it?</em> The answers fell
-                into four clean classes &mdash; safe to learn once, decays over time, missing a
-                variable, or unlearnable &mdash; and each one calls for a different response. This
-                isn't anecdotal: an edge's variability across regimes predicts how badly it fails on
+                into four classes; safe to learn once, decays over time, missing a
+                variable, or unlearnable. Each one calls for a different response. An edge's variability across regimes
+                predicts how badly it fails on
                 an unseen regime (<span class="mono">&rho; = 0.76</span>), and the pattern survives the
                 strict version of the test, on the well-specified edges only (<span class="mono">&rho;
-                = 0.80</span>). The map is the deliverable.
+                    = 0.80</span>).
             </p>
             <div class="scroll-x">
                 <table class="data-table">
@@ -429,7 +628,7 @@
                             <td class="num">0.08</td>
                             <td class="num">0.079</td>
                             <td class="num">0.09</td>
-                            <td>None needed &mdash; twin-safe</td>
+                            <td>None needed, twin-safe</td>
                         </tr>
                         <tr>
                             <td class="edge">rack_coupling</td>
@@ -437,7 +636,7 @@
                             <td class="num">0.08</td>
                             <td class="num">0.057</td>
                             <td class="num">0.02</td>
-                            <td>None needed &mdash; twin-safe</td>
+                            <td>None needed, twin-safe</td>
                         </tr>
                         <tr>
                             <td class="edge">cooling_to_ambient</td>
@@ -491,9 +690,9 @@
                 </table>
             </div>
             <p class="table-cap">
-                <span class="cyan">INVARIANT</span>: stable physics across regimes &mdash; learn once,
+                <span class="cyan">INVARIANT</span>: stable physics across regimes; learn once,
                 trust everywhere. <span class="amber">DRIFTING</span>: pointwise predictions accurate
-                but coefficients drift &mdash; safe to forecast with, unsafe to invert as a control
+                but coefficients drift. Safe to forecast with, unsafe to invert as a control
                 law without continual recalibration. <span style="color:var(--color-text);">WEAK</span>:
                 missing a feature (cpu_user); the decomposition prescribes the fix and cuts held-out
                 error 25%. INVARIANT edges are the negative control that proves the audit isn't
@@ -509,13 +708,13 @@
             <p class="section-lead">
                 The DRIFTING class is the finding most likely to bite an operator, because it never
                 shows up on a dashboard. Predictions on these edges stay accurate across the whole
-                2.5-year window &mdash; their error is on par with the rock-solid INVARIANT edges. By
+                2.5-year window. Their error is on par with the rock-solid INVARIANT edges. By
                 every health metric most teams watch, they look fine.
             </p>
             <p class="section-lead">
                 The coefficients tell a different story. The starkest case is
                 <span class="mono">node_power &rarr; fan_speed</span>: its slope fell from
-                approximately 1.3 in winter 2021 to approximately 0.16 in winter 2022 &mdash; an
+                approximately 1.3 in winter 2021 to approximately 0.16 in winter 2022, an
                 <span class="mono">8&times; monotone decline</span>, almost certainly real
                 control-firmware evolution rather than noise. relRMSE is normalized by target
                 magnitude, so it under-weights exactly this failure mode: the prediction can track
@@ -524,14 +723,14 @@
             <div class="callout">
                 <p>
                     A twin used for <strong>prediction</strong> looks fine and is fine.
-                    The same twin used as a <strong>control law</strong> &mdash; inverting the
-                    relationship to choose an actuator setting &mdash; is silently stale, acting on a
+                    The same twin used as a <strong>control law</strong> inverting the
+                    relationship to choose an actuator setting is silently stale, acting on a
                     coefficient that no longer holds.
                 </p>
             </div>
             <p class="section-lead dim">
-                No feature fixes a temporal drift of this kind &mdash; only continual recalibration
-                does. The audit identifies which edges have this property before deployment; the
+                No feature fixes a temporal drift of this kind. Continual recalibration
+                is necessary. The audit identifies which edges have this property before deployment; the
                 online recalibration loop is what closes them.
             </p>
         </div>
@@ -540,18 +739,19 @@
     <section>
         <div class="container">
             <div class="section-label">The non-owned edge</div>
-            <h2 class="section-title">Each owner has an inner loop. No outer loop exists between owners. The edges between them are structurally invisible.</h2>
+            <h2 class="section-title">Each owner has an inner loop. No outer loop exists between owners. The edges
+                between them are structurally invisible.</h2>
             <p class="section-lead">
                 The Marconi100 cooling system has five telemetry owners: two IT-side (compute,
                 thermal) and three facility-side (Vertiv air cooling, Schneider liquid cooling,
-                external weather). Each owner runs their own inner loop &mdash; their own controller,
+                external weather). Each owner runs their own inner loop; their own controller,
                 their own model, their own data tap. DCIM platforms aggregate polled summary metrics
                 across vendors for dashboards and PUE / capacity reporting; the raw closed-loop
                 control telemetry needed to learn or even observe the edges between vendors stays
                 inside each vendor's appliance. No outer loop exists at that granularity. The CINECA
-                M100 archive is structurally rare in the field &mdash; the Borghesi et al. data
+                M100 archive is structurally rare in the field. The Borghesi et al. data
                 paper calls it the largest public dataset of its kind and notes that public data in
-                this field is mostly kept on premises &mdash; which makes it one of the few archives
+                this field is mostly kept on premises, which makes it one of the few archives
                 where the cross-owner edge is even visible.
             </p>
             <div class="callout">
@@ -559,7 +759,7 @@
                     A digital twin built inside one silo treats the other silos the way a self-driving
                     car treats a stoplight: as a point observation of the environment, not as an
                     autonomously controlled system with its own logic. Both views can be wrong in the
-                    same way, at the same time, on the edge between them &mdash; and neither system
+                    same way, at the same time, on the edge between them, and neither system
                     can see it.
                 </p>
             </div>
@@ -577,15 +777,15 @@
                     <p>
                         Across the instrumented regimes, coordination between the two loops is
                         non-stationary. The one-month flip is not a learnable invariant. We tested
-                        and rejected the obvious artifact explanation &mdash; the pattern survives
+                        and rejected the obvious artifact explanation; the pattern survives
                         excluding non-cooling units.
                     </p>
                 </div>
                 <div>
                     <h3>Structural</h3>
                     <p>
-                        This coordination lives in the one edge no single owner instruments &mdash;
-                        neither vendor sees the other loop's &Delta;T &mdash; so even
+                        This coordination lives in the one edge no single owner instruments.
+                        Neither vendor sees the other loop's &Delta;T, so even
                         <em>detecting</em> whether the two loops have drifted out of their
                         jointly-validated regime is impossible from inside either silo. It requires
                         a cross-owner layer to observe at all.
@@ -593,7 +793,7 @@
                 </div>
             </div>
             <p class="section-lead dim" style="margin-top: 2rem;">
-                The non-stationarity itself isn't novel &mdash; it's the well-known central problem
+                The non-stationarity itself isn't novel; it's the well-known central problem
                 of multi-agent learning, where each adapting agent makes the environment
                 non-stationary for the others. The standard mitigations (multi-agent RL, federated
                 digital twins) all assume you either control the agents or they cooperate.
@@ -602,8 +802,7 @@
                 centers, colocation operators &mdash; lives with the cross-vendor reality. M100 is
                 the rare archive where the non-owned edge is even observable; in the typical
                 multi-vendor environment it isn't, which means twins built inside today's silos are
-                structurally blind there &mdash; whether or not they look healthy on every metric
-                the silo's owner can see.
+                structurally blind there.
             </p>
         </div>
     </section>
@@ -611,20 +810,21 @@
     <section>
         <div class="container">
             <div class="section-label">It improves its own model</div>
-            <h2 class="section-title">The system found a variable missing from its own model &mdash; and proved it against the data before adding it.</h2>
+            <h2 class="section-title">The system found a variable missing from its own model, and adapted its own
+                structure.</h2>
             <p class="section-lead">
                 Knowing what it doesn't know isn't a slogan here; it's a running list. Every
-                relationship carries a live certainty, and the ones that stay uncertain &mdash; or
-                stay confident but consistently a little off &mdash; collect into what we call the
+                relationship carries a live certainty, and the ones that stay uncertain or
+                carry residual error, collect into what we call the
                 <em>curiosity surface</em>: the boundary of what the system can't yet explain. On
                 this archive, one relationship sat there flagged &mdash; <span class="mono">node_power
-                &rarr; dimm_temp</span> predicted memory temperature confidently, but with a small,
+                    &rarr; dimm_temp</span> predicted memory temperature confidently, but with a small,
                 stubborn bias. Confident and consistently off by a hair: the signature of a missing
                 variable.
             </p>
             <p class="section-lead">
-                So the system formed a hypothesis &mdash; the missing factor is the air coming into
-                the rack &mdash; and tested it against the telemetry rather than asserting it. It
+                So the system formed a new hypothesis; the missing factor is the air coming into
+                the rack, andtested it against the telemetry. It
                 held: adding inlet temperature lifted that relationship's certainty from
                 <span class="mono">0.76 to 1.0</span> and cut its error <span class="mono">65%</span>.
                 The new edge was added to the model. No one told it a variable was missing; it
@@ -632,198 +832,27 @@
             </p>
             <div class="callout">
                 <p>
-                    It also proposed two fixes that <strong>failed</strong> &mdash; a cooling-zone
+                    It also proposed two fixes that <strong>failed</strong>; a cooling-zone
                     boundary to explain a collapsed edge, and hot-aisle recirculation between
-                    neighboring racks &mdash; and the data rejected both. It doesn't manufacture
-                    certainty to look productive; it earns the patch, or leaves the gap flagged and
-                    open. That discipline is the point.
+                    neighboring racks. Certainty failed to rise in both cases, and the system correctly rejected them.
                 </p>
             </div>
             <p class="section-lead dim">
                 This isn't a one-off tuned to cooling. The same compose &rarr; learn &rarr; escalate
-                loop has run autonomously across five unrelated public domains &mdash; battery aging,
-                telescope photometry, power-grid frequency, river flow, urban air quality &mdash;
-                converging in four (the fifth correctly refused, and we report it as a negative). On
+                loop has run autonomously across five unrelated public domains; battery aging,
+                telescope photometry, power-grid frequency, river flow, and urban air quality.
+                Adaptation of priors was successful in four (the fifth correctly refused, and we report it as a
+                negative). On
                 NASA Mars surface-radiation data, the same machinery learned two physical effects
                 that were never written into its prior. Same primitives, different worlds.
             </p>
         </div>
     </section>
-
-    <section class="alt-bg">
-        <div class="container">
-            <div class="section-label">Honest scope</div>
-            <h2 class="section-title">What it claims, what it doesn't &mdash; and the times the data told us we were wrong.</h2>
-            <div class="two-col">
-                <div>
-                    <h3>Effect size is small-n</h3>
-                    <p>
-                        The headline correlation is computed on 8 edges; the within-subset robustness
-                        check on 5 edges (p = 0.10). Both are proof-of-principle, not population
-                        estimates. The within-subset survival rules out the shared-cause confound
-                        between WEAK edges and held-out error, but a single rank swap moves the result.
-                    </p>
-                </div>
-                <div>
-                    <h3>The twin consequence is a prediction, not a tested result</h3>
-                    <p>
-                        The object here is the causal layer, and the edge classes are measured
-                        properties of this data. The step from "this relationship is fragile" to "a
-                        twin trained on it would fail there" is a reasonable prediction we have not
-                        tested against a deployed twin &mdash; none was available to us. What is
-                        measured is the proxy: an edge's cross-regime variance predicts its own
-                        held-out error (&rho; = 0.76). Putting the audit head-to-head with a
-                        production twin is the obvious next step.
-                    </p>
-                </div>
-            </div>
-            <p class="section-lead" style="margin-top: 2rem;">
-                Two of our own mid-stream hypotheses were rejected by the data:
-            </p>
-            <div class="two-col">
-                <div>
-                    <h3>The load-flip didn't generalize</h3>
-                    <p>
-                        We hypothesized that liquid and air loops coordinate complementarily under
-                        load. The pattern held for one month and did not survive cross-regime
-                        testing. We report it as a negative.
-                    </p>
-                </div>
-                <div>
-                    <h3>The climate hasn't shifted</h3>
-                    <p>
-                        We checked whether the training envelope had drifted. Summer max is flat at
-                        38&deg;C, mean shift is +0.2&deg;C, 0% of post-window summer hours exceed
-                        the training max. The archive isn't stale &mdash; because it captured the
-                        2022 heatwave by luck of the collection window. We report this as a negative
-                        too; an archive ending in 2021 would not have passed.
-                    </p>
-                </div>
-            </div>
-            <p class="section-lead dim" style="margin-top: 2rem;">
-                Other bounds: single weather station, monthly windows, linear edge forms. Nonlinear
-                couplings appear as un-validated edges, not false ones. Facility instrumentation
-                begins 2021-04, so the five-owner graph is only complete from then onward; the
-                feature-availability audit that surfaces this is the most portable result &mdash; any
-                team can run it on any archive before training a single line of model code.
-            </p>
-        </div>
-    </section>
-
-    <section>
-        <div class="container">
-            <div class="section-label">What operators gain</div>
-            <h2 class="section-title">A pre-training reliability check, a drift diagnostic, and a way to see the edge between vendors.</h2>
-            <p class="section-lead">
-                The audit's outputs are operator-readable artifacts: a vulnerability map per edge,
-                an explicit drift metric on coefficients, a documented data-provenance audit, and a
-                cross-owner edge surfacing. Each one slots into a different operational decision.
-            </p>
-            <div class="feature-grid">
-                <div class="feature-card">
-                    <div class="who">HPC sites &middot; supercomputer centers, enterprise & colocation</div>
-                    <h3>Cross-vendor assurance without forcing data-sharing</h3>
-                    <p>Hyperscalers sidestep this problem by owning the stack end-to-end (Meta
-                       Fairwater, Google closed-loop, Microsoft Mt. Diablo). Most other sites can't
-                       collapse the stakeholders into one org. NM deploys an inner loop per silo
-                       and an outer loop across them &mdash; cross-vendor coordination drift
-                       becomes observable without any vendor having to share raw telemetry. The
-                       site operator gets the assurance signal; the vendors keep their data.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="who">Cooling vendors &middot; Vertiv, Schneider, Stulz</div>
-                    <h3>An inner loop you control plus a cross-owner flag you can read</h3>
-                    <p>Each vendor runs their own substrate instance against their own telemetry &mdash;
-                       no data leaves the vendor silo. State deltas published to the outer loop let
-                       the vendor see whether their loop's policy has drifted out of joint regime with
-                       the other vendors' loops, without exposing the underlying telemetry that would
-                       reveal proprietary control logic.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="who">Digital-twin developers &middot; Omniverse, EcoStruxure, ANSYS, in-house</div>
-                    <h3>Know which edges your twin can't see &mdash; before it ships</h3>
-                    <p>Twins built inside one silo are structurally blind to non-owned edges. The
-                       audit identifies which edges fall in that category at the prior-design stage,
-                       so the twin's deployment scope is bounded by what it can actually represent.
-                       Separately: DRIFTING edges look healthy as forecasts and silently fail as
-                       control laws &mdash; the audit prescribes which edges need online
-                       recalibration before they enter the control loop.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="who">DCIM / BMS &middot; facility-management platforms</div>
-                    <h3>An anomaly signal that watches the edges, not the sensors</h3>
-                    <p>Per-sensor alerting fires on individual telemetry channels. The causal layer
-                       fires on coupling drift between channels &mdash; the failure mode where the
-                       sensors all look fine but the relationship between them has changed. For
-                       multi-vendor sites, the outer loop adds anomaly flags on edges that span
-                       organizational boundaries, which per-channel monitoring can't see at all.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="alt-bg">
-        <div class="container">
-            <div class="section-label">On-site architecture</div>
-            <h2 class="section-title">In-situ learning per silo. Flags for every edge &mdash; including the ones no owner can see.</h2>
-            <p class="section-lead">
-                The substrate's runtime is a deterministic per-edge causal-learning framework, small
-                enough to deploy inside each owner's silo. There is no neural network making
-                predictions, no gradient descent during operation, no model weights to retrain in
-                production. The prior and validation functions can be composed offline by whatever
-                method an operator prefers &mdash; engineering rules, published literature, or
-                LLM-assisted authoring against the substrate's API. Once composed, the runtime is
-                deterministic. Each silo runs its own instance on-premises; raw telemetry never
-                leaves the silo it was generated in. The only artifacts that cross organizational
-                boundaries are compact per-edge state deltas (W, Z updates) &mdash; small enough to
-                share, abstract enough that they don't leak the underlying telemetry.
-            </p>
-            <div class="two-col">
-                <div>
-                    <h3>Inner loop &mdash; per silo</h3>
-                    <p>
-                        Each owner runs their own instance against their own telemetry. The
-                        substrate maintains per-edge W and Z on every causal edge inside the silo,
-                        triggers operator-readable flags when certainty stalls or residuals persist,
-                        and runs continuously in the background of the existing DCIM / BMS stack. No
-                        replacement, no integration battle &mdash; an overlay.
-                    </p>
-                </div>
-                <div>
-                    <h3>Outer loop &mdash; across silos</h3>
-                    <p>
-                        Per-silo instances publish compact state-delta messages to a shared
-                        assurance layer. That layer maintains the cross-owner edges &mdash; the ones
-                        no single silo can see &mdash; and surfaces flags when joint regimes drift
-                        out of their validated envelope. Without it there is no outer loop; with it,
-                        cross-vendor assurance happens without any owner having to share raw data
-                        they don't want to share.
-                    </p>
-                </div>
-            </div>
-            <p class="section-lead dim" style="margin-top: 2rem;">
-                The audit demonstrated on M100 is the offline version of the inner loop running
-                against an archive instead of live telemetry. The same primitives, same state
-                representation, same update rule. Pilots that run the inner loop only are the
-                shortest path to value for a single-owner site; multi-vendor sites get the bigger
-                operational lift from running both.
-            </p>
-        </div>
-    </section>
-
     <section id="contact" class="cta-section">
         <div class="container">
-            <div class="section-label">Audit your archive</div>
-            <h2 class="section-title">Thirty minutes. Your telemetry. Where can your autonomy be trusted &mdash; and where is it blind?</h2>
-            <p class="section-lead">
-                The walk-through is the audit-in-conversation: we look at the shape of your
-                telemetry archive, which of your control relationships are safe to automate vs.
-                silently decaying, where the edges between your vendors live &mdash; the ones no
-                single silo can see &mdash; and what the on-site learning loop would look like
-                running on your data.
-            </p>
+            <div class="section-title">Learn more about autonomy assurance with Nervous Machine</div>
             <div class="cta-buttons">
-                <a href="https://calendly.com/heidi-everychart/30min" class="btn btn-primary">Book a 30-minute walk-through</a>
+                <a href="https://calendly.com/heidi-everychart/30min" class="btn btn-primary">Book a call</a>
                 <a href="mailto:heidi@everychart.io" class="btn btn-ghost">heidi@everychart.io</a>
             </div>
         </div>
@@ -833,7 +862,6 @@
         <div class="container">
             <div style="display: flex; justify-content: center; gap: 2.5rem; margin-bottom: 1.25rem; flex-wrap: wrap;">
                 <a href="https://nervousmachine.substack.com" target="_blank">Substack</a>
-                <a href="/assurance">Retractions &amp; negative results</a>
             </div>
             <p>&copy; 2026 Nervous Machine. All rights reserved.</p>
         </div>
