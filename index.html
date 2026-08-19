@@ -770,7 +770,9 @@
                 <p class="hero-answer">You measure it.</p>
                 <p class="hero-sub">
                     Nervous Machine attaches a calibrated certainty to every cause-and-effect link in a system
-                    earned from real measurement, in place, without retraining.
+                    earned from real measurement, in place, without retraining. Simulations and digital twins are blind
+                    to shifting environments they weren't trained for. We help draw that boundary and catch anomalies
+                    before they become failures.
                 </p>
                 <div class="hero-ctas">
                     <a href="https://calendly.com/heidi-everychart/30min" class="btn btn-primary">Book a Call</a>
@@ -861,65 +863,62 @@
     <!-- Three Ways -->
     <section>
         <div class="container">
-            <div class="section-label">Three Ways to Point It</div>
-            <h2 class="section-title">Same kernel. Three questions.</h2>
+            <div class="section-label">The Framework</div>
+            <h2 class="section-title">Same kernel. Multiple systems.</h2>
             <div class="how-grid">
                 <div class="how-card">
-                    <div class="how-step">Eval</div>
-                    <h3>Model &amp; agent evaluation</h3>
-                    <p>Your model claims to understand a system. We measure where that's true. Per-link certainty shows
-                        which parts of its world the model has earned, which parts it's guessing, and what data would
-                        settle the difference.</p>
-                    <div class="how-for">For: foundation models, digital twins, agent pipelines</div>
-                </div>
-                <div class="how-card">
-                    <div class="how-step">Test-Bed</div>
-                    <h3>Candidate validation</h3>
-                    <p>Generative AI is good at proposing &mdash; materials, designs, hypotheses. It's bad at knowing
-                        which proposals are real. We score every candidate against measurement, refuse marginal signals
-                        instead of laundering them into facts, and return a ranked list with the certainty attached.</p>
-                    <div class="how-for">For: materials discovery, design of experiments, scientific AI</div>
-                </div>
-                <div class="how-card">
-                    <div class="how-step">Assurance</div>
-                    <h3>Autonomy assurance</h3>
-                    <p>A fielded system should act on what it has proven, abstain on what it hasn't, and escalate when
-                        certainty collapses. A platform's silent-attack budget is the unexplained variance of its own
-                        model &mdash; and it shrinks as the platform learns. Structure transfers across a fleet at
-                        kilobyte scale; certainty is re-earned on every unit, so a lie can never be inherited as truth.
+                    <div class="how-step">Configure</div>
+                    <h3>Start with a prior</h3>
+                    <p>Use the best available knowledge from domain expertise, LLMs, simulations, and digital twins to
+                        initialize the model.
+                        These outputs are the best possible guess about causal drivers and their impact within a system.
+                        The model is
+                        typically ~50kb serialized, and can be deployed to Rasberry-pi, Jetson-class, or cloud targets.
                     </p>
-                    <div class="how-for">For: satellites, drones, robotics, critical infrastructure</div>
+                </div>
+                <div class="how-card">
+                    <div class="how-step">Learn</div>
+                    <h3>Evolve certainty</h3>
+                    <p>Once deployed the model learns from real-world feedback, refining its understanding and improving
+                        its predictions over time.
+                        kilobyte-range updates can be sent to a fleet of devices, allowing for rapid adaptation and
+                        continuous improvement across the system.
+                        The framework can be used to flag anomalies, identify drift or blind spots in simulations and
+                        twins, and provide assured autonomy in critical systems.
+                    </p>
+                </div>
+                <div class="how-card">
+                    <div class="how-step">Improve</div>
+                    <h3>Register gaps</h3>
+                    <p>Edges that exaust all hypotheses without earning certainty are registered as gaps, with the
+                        missing measurement named and dated. The register is the record of unknowns and the boundary of
+                        knowledge, and can
+                        be used to prioritize future research or training, and inform decision-making in complex
+                        systems.
+                    </p>
                 </div>
             </div>
-            <p class="domain-line">
-                Satellite or hurricane model, qubit fleet or battery lab &mdash; if it's a system you need to trust, the
-                question is the same: <em>what do you actually know, how sure are you, and what measurement is
-                    missing?</em>
-            </p>
-        </div>
     </section>
 
     <!-- The Register -->
     <section id="register" class="register-section">
         <div class="container">
             <div class="section-label">Read the Register</div>
-            <h2 class="section-title">Measurement reports, not case studies.</h2>
+            <h2 class="section-title">Case studies.</h2>
             <p class="section-lead">
-                Real public data, pre-registered predictions, honest negatives included. Every entry ships with its
-                receipts.
+                Real public data with pre-registered predictions and earned certainty. Every prior learns from forward
+                prediction and no look ahead, not historical analysis.
             </p>
 
             <!-- TODO: point Substack links at the specific posts -->
             <article class="entry">
                 <div class="entry-head">
                     <p class="entry-id"><b>ATLAS</b> &middot; Atlas of Useful Space</p>
-                    <span class="stamp held">Living &middot; Updated 2026-08</span>
                 </div>
                 <p>A map of where knowledge of the space environment is earned &mdash; and where it runs out. 41.5
                     million in-orbit measurements across 8 years; 131 orbital regions assessed from LEO to the Mars
-                    surface; storm-model failure flagged in real time at 92% precision; every hole named alongside the
-                    measurement that closes it. Models are stamped and staked where they stand in &mdash; never
-                    laundered into fact.</p>
+                    surface; storm-model failure flagged in real time at 92% precision; every gap named alongside the
+                    measurement that closes it. </p>
                 <div class="entry-links">
                     <a href="https://space-atlas.nervousmachine.com">Open the atlas &rarr;</a>
                 </div>
@@ -928,16 +927,16 @@
             <article class="entry">
                 <div class="entry-head">
                     <p class="entry-id"><b>MSL-2024</b> &middot; Mars surface radiation</p>
-                    <span class="stamp open">Candidate Discovery &middot; Field Review</span>
                 </div>
-                <p>43,044 measurements, 9 learning cycles, 3 refused hypotheses &mdash; and a persistent dose deficit
-                    registered as a dated gap. Continued hypothesis cycles against independent archives then traced it:
-                    two uncatalogued solar-wind arrivals at Mars, found in MAVEN's plasma and magnetometer archives
+                <p>43,044 measurements, 9 learning cycles, 3 refused hypotheses, and a persistent dose deficit
+                    registered as a dated gap. Continued hypothesis cycles against independent archives found
+                    two uncatalogued solar-wind arrivals at Mars, verified in MAVEN's plasma and magnetometer archives
                     under detection criteria fixed before the data landed, the two instruments agreeing within an hour.
                     Now registered for the field to confirm or refute.</p>
                 <div class="entry-links">
-                    <a href="https://nervousmachine.substack.com">Read the campaign &rarr;</a>
-                    <a href="https://space-atlas.nervousmachine.com">Atlas of Useful Space &rarr;</a>
+                    <a href="https://nervousmachine.substack.com/p/the-error-that-survived-nine-learning">Read the
+                        article &rarr;</a>
+                    <a href="https://doi.org/10.5281/zenodo.20563381">Full findings on Zenodo &rarr;</a>
                 </div>
             </article>
 
@@ -945,49 +944,44 @@
                 <div class="entry-head">
                     <p class="entry-id"><b>SWARM-2024</b> &middot; Three satellites, one superstorm, one spoofed node
                     </p>
-                    <span class="stamp held">Held</span>
                 </div>
-                <p>Real ESA and NASA data through the G5 Gannon superstorm: zero false flags through a 600&nbsp;nT
+                <p>Real ESA and NASA data through the G5 Gannon superstorm. Zero false flags through a 600&nbsp;nT
                     storm, a spoofed signal thirteen times smaller caught in 0.8 hours, and a peer force-fed a groomed
-                    lie shed 93% of it &mdash; because certainty never transfers between platforms; it is re-earned
+                    lie shed 93% of it, because certainty never transfers between platforms. It is re-earned
                     against local reality.</p>
                 <div class="entry-links">
-                    <a href="https://nervousmachine.substack.com">Read the stress test &rarr;</a>
-                    <a href="https://space-atlas.nervousmachine.com">Atlas of Useful Space &rarr;</a>
+                    <a href="https://nervousmachine.substack.com/p/stress-testing-sensor-trust-through">Read the article
+                        &rarr;</a>
                 </div>
             </article>
 
             <article class="entry">
                 <div class="entry-head">
                     <p class="entry-id"><b>HERON-156</b> &middot; Quantum processor telemetry</p>
-                    <span class="stamp held">Held</span>
                 </div>
                 <p>A 106-day audit of a 156-qubit Heron processor: seventeen shared-resource clusters discovered from
-                    telemetry alone, with no coupling-map input and no vendor hints &mdash; fifteen confirmed across
-                    multiple coordinated-motion events. The cross-component structure per-component monitors are blind
+                    telemetry alone, with no coupling-map input and no vendor hints. Fifteen were confirmed across
+                    multiple coordinated-motion events. This is the cross-component structure that per-component
+                    monitors are blind
                     to by construction.</p>
                 <div class="entry-links">
-                    <a href="/quantum">Quantum domain &rarr;</a>
+                    <a href="https://doi.org/10.5281/zenodo.20575885">Full findings on Zenodo &rarr;</a>
                 </div>
             </article>
 
             <article class="entry">
                 <div class="entry-head">
-                    <p class="entry-id"><b>CINECA-2026</b> &middot; The twin we told you would fail</p>
-                    <span class="stamp held">2 Held &middot; 2 Re-registered</span>
+                    <p class="entry-id"><b>CINECA-2026</b> &middot; The m100 HPC dataset </p>
                 </div>
-                <p>A published certainty map of a supercomputer's telemetry, then the world model an RL stack would
-                    trust &mdash; prediction frozen and hashed before the first gradient step. The map rank-ordered the
+                <p>A published certainty map of a supercomputer's telemetry, and predictions on where a trained twin
+                    would drift and go blind. The map rank-ordered the
                     twin's 2022 failures at &rho;&nbsp;=&nbsp;+0.94; the twin's own ensemble variance localized nothing.
                     Two hypotheses missed their frozen bars and entered the register as dated re-tests.</p>
                 <div class="entry-links">
-                    <a href="https://nervousmachine.substack.com">Read the adjudication &rarr;</a>
-                    <a href="/data-centers">Data centers domain &rarr;</a>
+                    <a href="https://doi.org/10.5281/zenodo.20649152">Full findings on Zenodo &rarr;</a>
                 </div>
             </article>
 
-            <p class="register-note">Open slots, same format, as campaigns close: robotics (BITTLE), cubesat
-                design-and-test.</p>
         </div>
     </section>
 
@@ -999,9 +993,9 @@
                     <div class="section-label">Deployment</div>
                     <h2 class="section-title">From Raspberry Pi to full fleet</h2>
                     <p class="section-lead" style="margin-bottom: 0;">
-                        The learning loop is deterministic arithmetic &mdash; no model inference in the cycle, no GPU
+                        The learning loop is deterministic arithmetic. No model inference in the cycle, no GPU
                         cluster, no cloud dependency. Kilobyte-scale causal vectors are the unit of knowledge shared
-                        across a fleet: structure transfers, certainty is re-earned locally, and raw telemetry never
+                        across a fleet. Structure transfers, certainty is re-earned locally, and raw telemetry never
                         leaves the machine. Deploy where the physics happens.
                     </p>
                 </div>
@@ -1033,11 +1027,11 @@
     <section id="contact" class="cta-section">
         <div class="container" style="position: relative; z-index: 2;">
             <div class="section-label">Start</div>
-            <h2 class="section-title">Bring us one system you don't fully&nbsp;trust.</h2>
+            <h2 class="section-title">Measure certainty in your systems.</h2>
             <p class="section-lead">
-                In a working session, we'll map it &mdash; show you where certainty can be earned from data you already
-                have, and name the first measurement that's missing. Deploying into a new domain is two config files,
-                not a research program.
+                Deploying into a new domain is two config files. The kernel does the rest. Set up a call to learn more
+                about causal learning, assured autonomy, and how to register the gaps in your knowledge.
+
             </p>
             <div class="cta-buttons">
                 <a href="https://calendly.com/heidi-everychart/30min" class="btn btn-primary">Book a Call</a>
