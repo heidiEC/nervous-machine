@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nervous Machine — Certainty-Calibrated Runtime-Assured Autonomy</title>
+    <title>Nervous Machine — How do you know what your model doesn't know?</title>
+    <meta name="description"
+        content="Nervous Machine is a learning protocol that attaches a calibrated certainty to every cause-and-effect link in your system — earned from real measurement, in place, without retraining.">
     <link
         href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
         rel="stylesheet">
@@ -17,6 +19,8 @@
             --color-accent-indigo: #4C00FF;
             --color-accent-violet: #8A2BE2;
             --color-cyan: #00FFFF;
+            --color-amber: #FFB25E;
+            --color-warm: #FF7A7A;
             --color-text: #C8C8E0;
             --color-text-muted: #8888AA;
             --font-display: 'Instrument Serif', Georgia, serif;
@@ -113,7 +117,7 @@
         .hero-inner {
             position: relative;
             z-index: 2;
-            max-width: 820px;
+            max-width: 860px;
         }
 
         .hero-label {
@@ -133,10 +137,20 @@
             font-size: clamp(2.4rem, 4.5vw, 3.4rem);
             color: #fff;
             line-height: 1.2;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             letter-spacing: -0.015em;
             opacity: 0;
             animation: fadeUp 0.8s 0.4s forwards;
+        }
+
+        .hero-answer {
+            font-family: var(--font-display);
+            font-style: italic;
+            font-size: clamp(1.5rem, 2.6vw, 2rem);
+            color: var(--color-cyan);
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeUp 0.8s 0.55s forwards;
         }
 
         .hero-sub {
@@ -146,15 +160,49 @@
             max-width: 640px;
             margin-bottom: 2.5rem;
             opacity: 0;
-            animation: fadeUp 0.8s 0.6s forwards;
+            animation: fadeUp 0.8s 0.7s forwards;
         }
 
         .hero-ctas {
             display: flex;
             gap: 1rem;
             flex-wrap: wrap;
+            align-items: center;
             opacity: 0;
-            animation: fadeUp 0.8s 0.8s forwards;
+            animation: fadeUp 0.8s 0.85s forwards;
+            margin-bottom: 3rem;
+        }
+
+        .hero-note {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--color-text-muted);
+        }
+
+        /* hero edge figure */
+        .dim-figure {
+            background: rgba(14, 14, 30, 0.7);
+            border: 1px solid var(--color-card-border);
+            border-radius: 10px;
+            padding: 1.75rem 1.25rem 1rem;
+            max-width: 720px;
+            opacity: 0;
+            animation: fadeUp 0.8s 1s forwards;
+        }
+
+        .dim-figure svg {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .dim-caption {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            color: var(--color-text-muted);
+            text-align: center;
+            margin-top: 0.75rem;
+            letter-spacing: 0.06em;
         }
 
         @keyframes fadeUp {
@@ -234,102 +282,107 @@
         .section-lead {
             font-size: 1.1rem;
             color: var(--color-text);
-            max-width: 600px;
-            margin-bottom: 3.5rem;
+            max-width: 640px;
+            margin-bottom: 3rem;
             line-height: 1.75;
         }
 
-        /* ─── Case Studies ─── */
-        .case-section {
+        /* ─── Kernel ─── */
+        .kernel-section {
             background: var(--color-card-bg);
             border-top: 1px solid var(--color-card-border);
             border-bottom: 1px solid var(--color-card-border);
-            padding: 6rem 0;
         }
-        .case-intro {
-            margin-bottom: 3rem;
+
+        .loop {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            align-items: center;
+            font-family: var(--font-mono);
+            font-size: 0.88rem;
+            margin: 0 0 2.5rem;
         }
-        .case-intro .section-title {
-            font-family: var(--font-body);
-            font-weight: 600;
-            font-size: clamp(1.6rem, 3vw, 2.2rem);
-            letter-spacing: -0.01em;
-            margin-bottom: 1rem;
+
+        .loop .chip {
+            border: 1px solid rgba(0, 255, 255, 0.35);
+            color: var(--color-cyan);
+            border-radius: 6px;
+            padding: 0.4rem 1rem;
+            background: rgba(0, 255, 255, 0.04);
         }
-        .case-intro .section-lead {
-            font-size: 1.02rem;
-            color: var(--color-text);
-            max-width: 720px;
-            margin-bottom: 0;
+
+        .loop .arrow {
+            color: var(--color-text-muted);
         }
-        .case-grid {
+
+        .loop .repeat {
+            color: var(--color-text-muted);
+        }
+
+        .kernel-copy {
+            max-width: 680px;
+            margin-bottom: 2rem;
+            line-height: 1.75;
+        }
+
+        .readings {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: 1fr 1fr;
             gap: 1.5rem;
+            margin: 2.5rem 0;
         }
-        .case-card {
+
+        .reading {
             background: rgba(14, 14, 30, 0.7);
             border: 1px solid var(--color-card-border);
             border-radius: 10px;
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-            text-decoration: none;
-            color: inherit;
-            transition: all 0.3s;
-        }
-        .case-card:hover {
-            border-color: rgba(76, 0, 255, 0.4);
-            transform: translateY(-4px);
-            box-shadow: 0 12px 30px rgba(76, 0, 255, 0.18);
-        }
-        .case-tag {
-            font-family: var(--font-mono);
-            font-size: 0.72rem;
-            color: var(--color-cyan);
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            margin-bottom: 1rem;
-        }
-        .case-card h3 {
-            font-family: var(--font-body);
-            font-weight: 600;
-            font-size: 1.2rem;
-            color: #fff;
-            line-height: 1.3;
-            margin-bottom: 0.9rem;
-            letter-spacing: -0.01em;
-        }
-        .case-card p {
-            font-size: 0.92rem;
-            color: var(--color-text);
-            line-height: 1.7;
-            margin-bottom: 1.25rem;
-        }
-        .case-nums {
-            font-family: var(--font-mono);
-            font-size: 0.82rem;
-            color: var(--color-cyan);
-            background: rgba(0, 255, 255, 0.05);
-            padding: 0.55rem 0.8rem;
-            border-radius: 4px;
-            line-height: 1.7;
-            margin-bottom: 1.25rem;
-        }
-        .case-link {
-            font-family: var(--font-mono);
-            font-size: 0.78rem;
-            color: var(--color-cyan);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-top: auto;
-            transition: letter-spacing 0.3s;
-        }
-        .case-card:hover .case-link {
-            letter-spacing: 0.15em;
+            padding: 1.75rem;
         }
 
-        /* ─── How It Works ─── */
+        .reading .tag {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+
+        .reading .tag.anomaly {
+            color: var(--color-warm);
+        }
+
+        .reading .tag.driver {
+            color: var(--color-amber);
+        }
+
+        .reading h3 {
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 1.15rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .reading p {
+            font-size: 0.95rem;
+            color: var(--color-text-muted);
+        }
+
+        .reading p strong {
+            color: var(--color-text);
+        }
+
+        .kernel-close {
+            font-family: var(--font-mono);
+            font-size: 0.92rem;
+            color: var(--color-text);
+            border-left: 3px solid var(--color-accent-indigo);
+            padding: 0.25rem 0 0.25rem 1.25rem;
+            max-width: 620px;
+        }
+
+        /* ─── Three Ways (reuses how-card pattern) ─── */
         .how-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -343,6 +396,8 @@
             border-radius: 10px;
             transition: all 0.3s;
             position: relative;
+            display: flex;
+            flex-direction: column;
         }
 
         .how-card::before {
@@ -370,7 +425,7 @@
         .how-step {
             font-family: var(--font-mono);
             font-size: 0.7rem;
-            color: var(--color-accent-violet);
+            color: var(--color-cyan);
             letter-spacing: 0.1em;
             text-transform: uppercase;
             margin-bottom: 1rem;
@@ -391,13 +446,130 @@
             line-height: 1.7;
         }
 
-        /* ─── Deployment Section ─── */
-        .deploy-section {
+        .how-for {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(76, 0, 255, 0.12);
+            line-height: 1.6;
+        }
+
+        .domain-line {
+            font-family: var(--font-display);
+            font-style: italic;
+            font-size: clamp(1.2rem, 2.2vw, 1.5rem);
+            color: var(--color-text);
+            max-width: 760px;
+            margin-top: 3rem;
+            line-height: 1.55;
+        }
+
+        .domain-line em {
+            font-style: italic;
+            color: var(--color-cyan);
+        }
+
+        /* ─── Register ─── */
+        .register-section {
             background: var(--color-card-bg);
             border-top: 1px solid var(--color-card-border);
             border-bottom: 1px solid var(--color-card-border);
         }
 
+        .entry {
+            background: rgba(14, 14, 30, 0.7);
+            border: 1px solid var(--color-card-border);
+            border-radius: 10px;
+            padding: 1.75rem 2rem;
+            margin-bottom: 1.25rem;
+            transition: all 0.3s;
+        }
+
+        .entry:hover {
+            border-color: rgba(76, 0, 255, 0.35);
+        }
+
+        .entry-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.75rem;
+        }
+
+        .entry-id {
+            font-family: var(--font-mono);
+            font-size: 0.95rem;
+            color: #fff;
+        }
+
+        .entry-id b {
+            color: var(--color-cyan);
+            font-weight: 500;
+        }
+
+        .stamp {
+            font-family: var(--font-mono);
+            font-size: 0.66rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 0.3rem 0.7rem;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        .stamp.held {
+            color: var(--color-cyan);
+            border: 1px solid rgba(0, 255, 255, 0.4);
+            background: rgba(0, 255, 255, 0.06);
+        }
+
+        .stamp.open {
+            color: var(--color-amber);
+            border: 1px solid rgba(255, 178, 94, 0.45);
+            background: rgba(255, 178, 94, 0.07);
+        }
+
+        .entry p {
+            font-size: 0.95rem;
+            color: var(--color-text);
+            line-height: 1.7;
+            max-width: 820px;
+        }
+
+        .entry-links {
+            margin-top: 0.9rem;
+            display: flex;
+            gap: 1.75rem;
+            flex-wrap: wrap;
+        }
+
+        .entry-links a {
+            font-family: var(--font-mono);
+            font-size: 0.76rem;
+            color: var(--color-cyan);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            transition: letter-spacing 0.3s;
+        }
+
+        .entry-links a:hover {
+            letter-spacing: 0.12em;
+        }
+
+        .register-note {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--color-text-muted);
+            margin-top: 1.75rem;
+        }
+
+        /* ─── Deployment ─── */
         .deploy-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -430,11 +602,6 @@
             color: var(--color-text-muted);
         }
 
-        /* ─── Footer ─── */
-        footer a:hover {
-            color: var(--color-cyan);
-        }
-
         /* ─── CTA Section ─── */
         .cta-section {
             text-align: center;
@@ -452,14 +619,14 @@
 
         .cta-section .section-title {
             text-align: center;
-            max-width: 600px;
+            max-width: 640px;
             margin-left: auto;
             margin-right: auto;
         }
 
         .cta-section .section-lead {
             text-align: center;
-            max-width: 500px;
+            max-width: 560px;
             margin-left: auto;
             margin-right: auto;
         }
@@ -468,15 +635,34 @@
             display: flex;
             gap: 1rem;
             justify-content: center;
+            flex-wrap: wrap;
         }
 
         /* ─── Footer ─── */
         footer {
-            padding: 2rem 0;
+            padding: 3rem 0 2rem;
             border-top: 1px solid var(--color-card-border);
             text-align: center;
             font-size: 0.8rem;
             color: var(--color-text-muted);
+        }
+
+        .epigraph {
+            font-family: var(--font-display);
+            font-style: italic;
+            font-size: 1.15rem;
+            color: var(--color-text);
+            margin-bottom: 1.5rem;
+        }
+
+        footer a {
+            color: var(--color-text-muted);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: var(--color-cyan);
         }
 
         /* ─── Responsive ─── */
@@ -491,12 +677,8 @@
                 gap: 1.25rem;
             }
 
-            .case-grid {
+            .readings {
                 grid-template-columns: 1fr;
-                gap: 1.25rem;
-            }
-            .case-section {
-                padding: 4rem 0;
             }
 
             .deploy-specs {
@@ -545,6 +727,20 @@
                 padding-top: 160px;
             }
         }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            .hero-label,
+            .hero h1,
+            .hero-answer,
+            .hero-sub,
+            .hero-ctas,
+            .dim-figure {
+                animation: none;
+                opacity: 1;
+                transform: none;
+            }
+        }
     </style>
 </head>
 
@@ -558,7 +754,8 @@
                 <ul>
                     <li><a href="/quantum">Quantum</a></li>
                     <li><a href="/data-centers">Data Centers</a></li>
-                    <li><a href="/space">Space</a></li>
+                    <li><a href="https://space-atlas.nervousmachine.com">Space Atlas</a></li>
+                    <li><a href="#register">Register</a></li>
                     <li><a href="#contact" style="color: var(--color-cyan);">Contact</a></li>
                 </ul>
             </nav>
@@ -569,166 +766,265 @@
     <section class="hero">
         <div class="container">
             <div class="hero-inner">
-                <div class="hero-label">Certainty-Calibrated Runtime-Assured Autonomy</div>
-                <h1>Calibrating priors against deployment reality.</h1>
+                <div class="hero-label">A Learning Protocol — Not a Model</div>
+                <h1>How do you know what your model doesn't&nbsp;know?</h1>
+                <p class="hero-answer">You measure it.</p>
                 <p class="hero-sub">
-                    Sim, digital twin, world model&mdash;every model deployed in the physical world is a prior. Nervous
-                    Machine calibrates it against runtime telemetry on-device, with certainty-scored assurance flags.
-                    Raw data stays on-site; calibrated flags cross organizational boundaries.
+                    Nervous Machine attaches a calibrated certainty to every cause-and-effect link in your system
+                    &mdash; earned from real measurement, in place, without retraining.
                 </p>
                 <div class="hero-ctas">
                     <a href="https://calendly.com/heidi-everychart/30min" class="btn btn-primary">Book a Call</a>
-                    <a href="#case-studies" class="btn btn-ghost">See the case studies →</a>
+                    <a href="#register" class="btn btn-ghost">Read the register &rarr;</a>
                 </div>
+
+                <figure class="dim-figure"
+                    aria-label="A causal dependency drawn as a dimension line with its learned relationship, tolerance, and earned certainty">
+                    <svg viewBox="0 0 640 132" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+                        <g stroke="#8888AA" stroke-width="1">
+                            <line x1="70" y1="26" x2="70" y2="78" />
+                            <line x1="570" y1="26" x2="570" y2="78" />
+                            <line x1="70" y1="66" x2="255" y2="66" />
+                            <line x1="385" y1="66" x2="570" y2="66" />
+                        </g>
+                        <path d="M70 66 L82 61.5 L82 70.5 Z" fill="#8888AA" />
+                        <path d="M570 66 L558 61.5 L558 70.5 Z" fill="#8888AA" />
+                        <circle cx="70" cy="26" r="6.5" fill="rgba(0,255,255,0.12)" stroke="#00FFFF"
+                            stroke-width="1.5" />
+                        <circle cx="570" cy="26" r="6.5" fill="rgba(0,255,255,0.12)" stroke="#00FFFF"
+                            stroke-width="1.5" />
+                        <text x="70" y="11" text-anchor="middle" font-size="12" fill="#C8C8E0"
+                            font-family="'JetBrains Mono',monospace">driver</text>
+                        <text x="570" y="11" text-anchor="middle" font-size="12" fill="#C8C8E0"
+                            font-family="'JetBrains Mono',monospace">response</text>
+                        <text x="320" y="71" text-anchor="middle" font-size="15" fill="#FFFFFF"
+                            font-family="'JetBrains Mono',monospace">4.2 &#177;0.3</text>
+                        <text id="zread" x="320" y="100" text-anchor="middle" font-size="14" fill="#00FFFF"
+                            font-family="'JetBrains Mono',monospace" font-weight="500">Z = 0.000</text>
+                        <text x="320" y="122" text-anchor="middle" font-size="11.5" fill="#8888AA"
+                            font-family="'JetBrains Mono',monospace">last validated: cycle 48,201</text>
+                    </svg>
+                    <figcaption class="dim-caption">one causal edge &middot; learned relationship, tolerance, and earned
+                        certainty</figcaption>
+                </figure>
             </div>
         </div>
     </section>
 
-    <!-- Case Studies -->
-    <section id="case-studies" class="case-section">
+    <!-- The Kernel -->
+    <section class="kernel-section">
         <div class="container">
-            <div class="case-intro">
-                <div class="section-label">Where the substrate has been benchmarked</div>
-                <h2 class="section-title">Three substrates. The same primitives. Byte-identical across domains.</h2>
-                <p class="section-lead">
-                    Per-edge causal learning, applied to three different physical environments. Each
-                    case study runs on a real public archive, with the methodology fully published.
-                </p>
-            </div>
-            <div class="case-grid">
-                <a href="/quantum" class="case-card">
-                    <div class="case-tag">Quantum &middot; IBM ibm_fez</div>
-                    <h3>Seventeen shared-resource clusters discovered from telemetry alone.</h3>
-                    <p>
-                        A 106-day audit of IBM's <span style="font-family: var(--font-mono); color: var(--color-cyan); font-size: 0.88em;">ibm_fez</span>
-                        Heron processor. The substrate discovered clusters with no coupling-map input
-                        and no vendor hints; 15 of 17 were confirmed across multiple coordinated-motion
-                        events.
-                    </p>
-                    <div class="case-nums">
-                        17 clusters &middot; 15 / 17 multi-event<br>
-                        156 qubits &middot; 59,192 predictions scored
-                    </div>
-                    <div class="case-link">Explore &rarr;</div>
-                </a>
-                <a href="/data-centers" class="case-card">
-                    <div class="case-tag">Data Centers &middot; CINECA Marconi100</div>
-                    <h3>The edges between vendors have no owner. That is where assurance has to live.</h3>
-                    <p>
-                        A 2.5-year offline causal audit across five telemetry owners. Eight cooling
-                        edges classified into a vulnerability taxonomy; one non-owned edge surfaced
-                        that no single silo could observe; a drift pattern that silently invalidates
-                        control laws while forecasts look healthy.
-                    </p>
-                    <div class="case-nums">
-                        5 owners &middot; 8 edges audited<br>
-                        &rho; = 0.76 cross-regime &middot; p = 0.028
-                    </div>
-                    <div class="case-link">Explore &rarr;</div>
-                </a>
-                <a href="/space" class="case-card">
-                    <div class="case-tag">Space &middot; LEO, GEO, Mars, Cislunar</div>
-                    <h3>Operational models as priors. Telemetry as ground truth. Autonomous discovery of regime-dependent physics.</h3>
-                    <p>
-                        Per-edge causal learning across four space-environment regimes against real
-                        archive ground truth from GRACE-FO, GOES-19, MSL/RAD, and ARTEMIS-P1/P2.
-                        Calibrated certainty plus the discovery of two unmodeled physical phenomena
-                        the priors didn't encode.
-                    </p>
-                    <div class="case-nums">
-                        4 regimes &middot; ~50 kB flight footprint<br>
-                        92.4% LEO precision &middot; 2 discoveries
-                    </div>
-                    <div class="case-link">Explore &rarr;</div>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- How It Works -->
-    <section>
-        <div class="container">
-            <div class="section-label">How It Works</div>
-            <h2 class="section-title">Calibrate every prior against deployment reality</h2>
+            <div class="section-label">The Kernel</div>
+            <h2 class="section-title">One protocol.</h2>
             <p class="section-lead">
-                Nervous Machine takes your design-time prior&mdash;sim output, digital twin, world model&mdash;and
-                calibrates it continuously against runtime telemetry. No retraining. No cloud roundtrip. Just on-device
-                certainty calibration.
+                Nervous Machine keeps a living map of what drives what in your system. Every link on that map carries a
+                certainty score between 0 and 1 &mdash; and the score is earned exactly one way: by predicting,
+                measuring what actually happened, and learning from the difference.
             </p>
 
-            <div class="how-grid">
-                <div class="how-card">
-                    <div class="how-step">01 — Seed</div>
-                    <h3>Start with the prior</h3>
-                    <p>Bring your existing prior&mdash;sim output, digital twin, world model, domain literature. The
-                        system starts from the best available design-time knowledge, then calibrates it against
-                        deployment.</p>
+            <div class="loop" role="list" aria-label="The learning loop">
+                <span class="chip" role="listitem">Predict</span><span class="arrow" aria-hidden="true">&rarr;</span>
+                <span class="chip" role="listitem">Measure</span><span class="arrow" aria-hidden="true">&rarr;</span>
+                <span class="chip" role="listitem">Compare</span><span class="arrow" aria-hidden="true">&rarr;</span>
+                <span class="chip" role="listitem">Calibrate</span><span class="arrow" aria-hidden="true">&rarr;</span>
+                <span class="repeat" role="listitem">repeat &#8635;</span>
+            </div>
+
+            <p class="kernel-copy">
+                In-cycle, on-device, kilobytes not terabytes. Drift correction is a property of the substrate &mdash;
+                not a handoff to a retraining pipeline. And certainty is never assumed from simulation, because
+                simulation is the model grading its own homework. It is measured outside the model, against the world.
+            </p>
+
+            <div class="readings">
+                <div class="reading">
+                    <p class="tag anomaly">High certainty &middot; high error</p>
+                    <h3>Anomaly</h3>
+                    <p>The instrument is calibrated. The system changed. <strong>Act.</strong></p>
                 </div>
-                <div class="how-card">
-                    <div class="how-step">02 — Sense</div>
-                    <h3>Measure the gap</h3>
-                    <p>Runtime telemetry captures actual outcomes. The substrate exposes exactly where the prior
-                        diverges from deployment. No labels needed&mdash;just ground truth.</p>
-                </div>
-                <div class="how-card">
-                    <div class="how-step">03 — Adapt</div>
-                    <h3>Learn where uncertain</h3>
-                    <p>Agile where ignorant, stable where confident. The system knows what it doesn't know and adapts
-                        accordingly.</p>
-                </div>
-                <div class="how-card">
-                    <div class="how-step">04 — Detect</div>
-                    <h3>Trigger curiosity</h3>
-                    <p>The system autonomously flags knowledge gaps and surfaces hypotheses instead of masking them.
-                        Unknown unknowns become first-class signals.</p>
-                </div>
-                <div class="how-card">
-                    <div class="how-step">05 — Propagate</div>
-                    <h3>Share learning, not data</h3>
-                    <p>Calibrated learning propagates across the fleet at a tiny footprint. Raw telemetry never leaves
-                        the device. Every node benefits from collective certainty without sharing sensitive data.</p>
-                </div>
-                <div class="how-card">
-                    <div class="how-step">06 — Repeat</div>
-                    <h3>Never stop learning</h3>
-                    <p>The loop runs continuously on operational data. Models improve with every measurement cycle.
-                        Learning is architecture, not a scheduled retraining job.</p>
+                <div class="reading">
+                    <p class="tag driver">Certainty that won't climb</p>
+                    <h3>Missing driver</h3>
+                    <p>Something isn't being measured. <strong>Instrument it.</strong></p>
                 </div>
             </div>
 
+            <p class="kernel-copy">
+                And when a gap survives every hypothesis, it isn't smoothed over or fit by force. It's entered in the
+                <strong style="color:#fff;">gap register</strong>: a dated prediction with the missing measurement
+                named. The boundary of your knowledge &mdash; emitted as coordinates, magnitude, date, and what would
+                move it.
+            </p>
+
+            <p class="kernel-close">That's the whole kernel. Everything below is the same protocol, pointed at a
+                different question.</p>
         </div>
     </section>
 
-    <!-- Deploy -->
-    <section class="deploy-section">
+    <!-- Three Ways -->
+    <section>
+        <div class="container">
+            <div class="section-label">Three Ways to Point It</div>
+            <h2 class="section-title">Same kernel. Three questions.</h2>
+            <div class="how-grid">
+                <div class="how-card">
+                    <div class="how-step">Eval</div>
+                    <h3>Model &amp; agent evaluation</h3>
+                    <p>Your model claims to understand a system. We measure where that's true. Per-link certainty shows
+                        which parts of its world the model has earned, which parts it's guessing, and what data would
+                        settle the difference.</p>
+                    <div class="how-for">For: foundation models, digital twins, agent pipelines</div>
+                </div>
+                <div class="how-card">
+                    <div class="how-step">Test-Bed</div>
+                    <h3>Candidate validation</h3>
+                    <p>Generative AI is good at proposing &mdash; materials, designs, hypotheses. It's bad at knowing
+                        which proposals are real. We score every candidate against measurement, refuse marginal signals
+                        instead of laundering them into facts, and return a ranked list with the certainty attached.</p>
+                    <div class="how-for">For: materials discovery, design of experiments, scientific AI</div>
+                </div>
+                <div class="how-card">
+                    <div class="how-step">Assurance</div>
+                    <h3>Autonomy assurance</h3>
+                    <p>A fielded system should act on what it has proven, abstain on what it hasn't, and escalate when
+                        certainty collapses. A platform's silent-attack budget is the unexplained variance of its own
+                        model &mdash; and it shrinks as the platform learns. Structure transfers across a fleet at
+                        kilobyte scale; certainty is re-earned on every unit, so a lie can never be inherited as truth.
+                    </p>
+                    <div class="how-for">For: satellites, drones, robotics, critical infrastructure</div>
+                </div>
+            </div>
+            <p class="domain-line">
+                Satellite or hurricane model, qubit fleet or battery lab &mdash; if it's a system you need to trust, the
+                question is the same: <em>what do you actually know, how sure are you, and what measurement is
+                    missing?</em>
+            </p>
+        </div>
+    </section>
+
+    <!-- The Register -->
+    <section id="register" class="register-section">
+        <div class="container">
+            <div class="section-label">Read the Register</div>
+            <h2 class="section-title">Measurement reports, not case studies.</h2>
+            <p class="section-lead">
+                Real public data, pre-registered predictions, honest negatives included. Every entry ships with its
+                receipts.
+            </p>
+
+            <!-- TODO: point Substack links at the specific posts -->
+            <article class="entry">
+                <div class="entry-head">
+                    <p class="entry-id"><b>ATLAS</b> &middot; Atlas of Useful Space</p>
+                    <span class="stamp held">Living &middot; Updated 2026-08</span>
+                </div>
+                <p>A map of where knowledge of the space environment is earned &mdash; and where it runs out. 41.5
+                    million in-orbit measurements across 8 years; 131 orbital regions assessed from LEO to the Mars
+                    surface; storm-model failure flagged in real time at 92% precision; every hole named alongside the
+                    measurement that closes it. Models are stamped and staked where they stand in &mdash; never
+                    laundered into fact.</p>
+                <div class="entry-links">
+                    <a href="https://space-atlas.nervousmachine.com">Open the atlas &rarr;</a>
+                </div>
+            </article>
+
+            <article class="entry">
+                <div class="entry-head">
+                    <p class="entry-id"><b>MSL-2024</b> &middot; Mars surface radiation</p>
+                    <span class="stamp open">Candidate Discovery &middot; Field Review</span>
+                </div>
+                <p>43,044 measurements, 9 learning cycles, 3 refused hypotheses &mdash; and a persistent dose deficit
+                    registered as a dated gap. Continued hypothesis cycles against independent archives then traced it:
+                    two uncatalogued solar-wind arrivals at Mars, found in MAVEN's plasma and magnetometer archives
+                    under detection criteria fixed before the data landed, the two instruments agreeing within an hour.
+                    Now registered for the field to confirm or refute.</p>
+                <div class="entry-links">
+                    <a href="https://nervousmachine.substack.com">Read the campaign &rarr;</a>
+                    <a href="https://space-atlas.nervousmachine.com">Atlas of Useful Space &rarr;</a>
+                </div>
+            </article>
+
+            <article class="entry">
+                <div class="entry-head">
+                    <p class="entry-id"><b>SWARM-2024</b> &middot; Three satellites, one superstorm, one spoofed node
+                    </p>
+                    <span class="stamp held">Held</span>
+                </div>
+                <p>Real ESA and NASA data through the G5 Gannon superstorm: zero false flags through a 600&nbsp;nT
+                    storm, a spoofed signal thirteen times smaller caught in 0.8 hours, and a peer force-fed a groomed
+                    lie shed 93% of it &mdash; because certainty never transfers between platforms; it is re-earned
+                    against local reality.</p>
+                <div class="entry-links">
+                    <a href="https://nervousmachine.substack.com">Read the stress test &rarr;</a>
+                    <a href="https://space-atlas.nervousmachine.com">Atlas of Useful Space &rarr;</a>
+                </div>
+            </article>
+
+            <article class="entry">
+                <div class="entry-head">
+                    <p class="entry-id"><b>HERON-156</b> &middot; Quantum processor telemetry</p>
+                    <span class="stamp held">Held</span>
+                </div>
+                <p>A 106-day audit of a 156-qubit Heron processor: seventeen shared-resource clusters discovered from
+                    telemetry alone, with no coupling-map input and no vendor hints &mdash; fifteen confirmed across
+                    multiple coordinated-motion events. The cross-component structure per-component monitors are blind
+                    to by construction.</p>
+                <div class="entry-links">
+                    <a href="/quantum">Quantum domain &rarr;</a>
+                </div>
+            </article>
+
+            <article class="entry">
+                <div class="entry-head">
+                    <p class="entry-id"><b>CINECA-2026</b> &middot; The twin we told you would fail</p>
+                    <span class="stamp held">2 Held &middot; 2 Re-registered</span>
+                </div>
+                <p>A published certainty map of a supercomputer's telemetry, then the world model an RL stack would
+                    trust &mdash; prediction frozen and hashed before the first gradient step. The map rank-ordered the
+                    twin's 2022 failures at &rho;&nbsp;=&nbsp;+0.94; the twin's own ensemble variance localized nothing.
+                    Two hypotheses missed their frozen bars and entered the register as dated re-tests.</p>
+                <div class="entry-links">
+                    <a href="https://nervousmachine.substack.com">Read the adjudication &rarr;</a>
+                    <a href="/data-centers">Data centers domain &rarr;</a>
+                </div>
+            </article>
+
+            <p class="register-note">Open slots, same format, as campaigns close: robotics (BITTLE), cubesat
+                design-and-test.</p>
+        </div>
+    </section>
+
+    <!-- Deployment -->
+    <section>
         <div class="container">
             <div class="deploy-grid">
                 <div>
                     <div class="section-label">Deployment</div>
                     <h2 class="section-title">From Raspberry Pi to full fleet</h2>
-                    <p class="section-lead">
-                        The framework is lightweight enough to run on an MCU and robust enough to orchestrate fleet-wide
-                        learning across thousands of devices. No GPU cluster required. No cloud dependency. Deploy where
-                        the physics happens.
+                    <p class="section-lead" style="margin-bottom: 0;">
+                        The learning loop is deterministic arithmetic &mdash; no model inference in the cycle, no GPU
+                        cluster, no cloud dependency. Kilobyte-scale causal vectors are the unit of knowledge shared
+                        across a fleet: structure transfers, certainty is re-earned locally, and raw telemetry never
+                        leaves the machine. Deploy where the physics happens.
                     </p>
                 </div>
                 <div>
                     <div class="deploy-specs">
                         <div class="spec-item">
-                            <div class="spec-val">MCU-ready</div>
+                            <div class="spec-val">Edge-native</div>
                             <div class="spec-label">Runs on Raspberry Pi, ARM, embedded</div>
                         </div>
                         <div class="spec-item">
-                            <div class="spec-val">Edge-native</div>
-                            <div class="spec-label">No cloud inference required</div>
+                            <div class="spec-val">Kilobyte-scale</div>
+                            <div class="spec-label">Causal vectors, not raw telemetry</div>
                         </div>
                         <div class="spec-item">
                             <div class="spec-val">Fleet-safe</div>
-                            <div class="spec-label">Share learnings, not raw telemetry</div>
+                            <div class="spec-label">A lie can never be inherited as truth</div>
                         </div>
                         <div class="spec-item">
                             <div class="spec-val">Auditable</div>
-                            <div class="spec-label">Reviewable models, not black boxes</div>
+                            <div class="spec-label">Every action traces to an edge, its certainty, its history</div>
                         </div>
                     </div>
                 </div>
@@ -739,11 +1035,12 @@
     <!-- CTA -->
     <section id="contact" class="cta-section">
         <div class="container" style="position: relative; z-index: 2;">
-            <div class="section-label">Get Started</div>
-            <h2 class="section-title">Calibrate the prior. Assure&nbsp;the&nbsp;runtime.</h2>
+            <div class="section-label">Start</div>
+            <h2 class="section-title">Bring us one system you don't fully&nbsp;trust.</h2>
             <p class="section-lead">
-                Satellites, factories, robots, data centers, chips. Anywhere a model is deployed in the physical world,
-                Nervous Machine calibrates it against what's actually happening.
+                In a working session, we'll map it &mdash; show you where certainty can be earned from data you already
+                have, and name the first measurement that's missing. Deploying into a new domain is two config files,
+                not a research program.
             </p>
             <div class="cta-buttons">
                 <a href="https://calendly.com/heidi-everychart/30min" class="btn btn-primary">Book a Call</a>
@@ -755,13 +1052,36 @@
     <!-- Footer -->
     <footer>
         <div class="container">
+            <p class="epigraph">Knowing what you don't know is the beginning of knowing.</p>
             <div style="display: flex; justify-content: center; gap: 2.5rem; margin-bottom: 1.25rem; flex-wrap: wrap;">
-                <a href="https://nervousmachine.substack.com" target="_blank"
-                    style="color: var(--color-text-muted); text-decoration: none; font-size: 0.85rem; transition: color 0.3s;">Substack</a>
+                <a href="https://nervousmachine.substack.com" target="_blank">Substack</a>
             </div>
             <p>&copy; 2026 Nervous Machine. All rights reserved.</p>
         </div>
     </footer>
+
+    <script>
+        // Hero calibration: Z earns its way from 0.000 to 0.940 on load.
+        (function () {
+            var el = document.getElementById('zread');
+            if (!el) return;
+            var target = 0.940, dur = 1600;
+            if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                el.textContent = 'Z = ' + target.toFixed(3);
+                return;
+            }
+            var start = null;
+            function ease(t) { return 1 - Math.pow(1 - t, 3); }
+            function step(ts) {
+                if (!start) start = ts;
+                var p = Math.min((ts - start) / dur, 1);
+                el.textContent = 'Z = ' + (target * ease(p)).toFixed(3);
+                if (p < 1) requestAnimationFrame(step);
+            }
+            // wait for the figure's fadeUp to begin before calibrating
+            setTimeout(function () { requestAnimationFrame(step); }, 1000);
+        })();
+    </script>
 
 </body>
 
