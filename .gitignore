@@ -1,0 +1,13 @@
+# This repository publishes only the nervousmachine.com site.
+# Archived pages, decks, and framework experiments stay local, untracked.
+/*
+!/index.html
+!/quantum
+!/data-centers
+!/space
+!/CNAME
+!/llms.txt
+!/README.md
+!/.gitignore
+.DS_Store
+__pycache__/
