@@ -11,3 +11,4 @@
 !/.gitignore
 .DS_Store
 __pycache__/
+!/favicon.ico
