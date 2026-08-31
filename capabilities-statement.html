@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nervous Machine — Dual-Use Capability Statement</title>
+    <style>
+        :root {
+            --bg-color: #0b0c10;
+            --surface-color: #1f2833;
+            --text-primary: #f2f2f2;
+            --text-secondary: #c5a059;
+            /* Muted gold visual anchor */
+            --accent-color: #45f3ff;
+            --border-color: #2c3540;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            border: 1px solid var(--border-color);
+            padding: 40px;
+            background-color: rgba(31, 40, 51, 0.3);
+            border-radius: 4px;
+        }
+
+        header {
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            letter-spacing: 2px;
+            margin: 0 0 5px 0;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin: 0;
+        }
+
+        h2 {
+            font-size: 1.3rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-left: 3px solid var(--text-secondary);
+            padding-left: 12px;
+            margin-top: 35px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #d1d1d1;
+            font-size: 1rem;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            margin-bottom: 18px;
+            padding-left: 0;
+        }
+
+        strong.keyword {
+            color: var(--text-primary);
+            display: inline;
+        }
+
+        .highlight-text {
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .grid-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .info-block {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            border-radius: 4px;
+        }
+
+        .info-block p {
+            margin: 5px 0;
+            font-size: 0.95rem;
+        }
+
+        .info-label {
+            color: var(--text-secondary);
+            font-weight: bold;
+        }
+
+        a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .grid-info {
+                grid-template-columns: 1fr;
+            }
+
+            body {
+                padding: 15px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Nervous Machine</h1>
+            <p class="subtitle">Edge-Native Dual-Use Runtime Assured Autonomy (RTAA) & Causal Safety Kernels</p>
+        </header>
+
+        <section>
+            <h2>Company Overview</h2>
+            <p>Nervous Machine provides a deterministic, first-principles mathematical protocol designed to map the
+                boundaries of system knowledge and enforce a verifiable safety envelope at the edge. Operating entirely on-device
+                with zero GPU, cloud, or neural-network dependencies, our kilobyte-scale kernel acts as a real-time
+                runtime verification layer for complex robotics, unmanned aerial systems (UAS), and distributed
+                satellite constellations.</p>
+        </section>
+
+        <section>
+            <h2>Core Capabilities</h2>
+            <ul>
+                <li>
+                    <strong class="keyword">Runtime Assured Autonomy (RTAA) via Causal Envelopes:</strong> Act as a
+                    deterministic RTAA safety filter for un-vetted control and reinforcement learning (RL) policies.
+                    Instead of using brittle numerical thresholds that cause false flags, the kernel monitors the
+                    structural validity of physical relationships in real-time, mathematically isolating operational
+                    drift or malicious signal manipulation before it propagates to actuation.
+                </li>
+                <li>
+                    <strong class="keyword">Hierarchical Prior Inheritance & Constellation Mesh Seeding:</strong>
+                    Engineered a modular transfer architecture for robots, drones, and satellite constellations. When a
+                    new policy or orbital asset is deployed, it inherits a structured causal prior (~50kb). To guarantee
+                    safety, inherited edges seed at low operational certainty (0.30–0.40), forcing the system to rapidly
+                    re-earn certainty against local physics before executing high-risk maneuvers. Critical rules-based
+                    edges seed at high certainty (0.90) to minimize learning-rate drift while keeping the safety
+                    envelope secure.
+                </li>
+                <li>
+                    <strong class="keyword">Ultra-Low SWaP Execution (Kilobyte-Scale):</strong> The protocol is compiled
+                    entirely to Rust in the kilobyte range. Causal vectors are compressed down to <span
+                        class="highlight-text">~1kb per edge</span>, allowing real-time telemetry mesh synchronization
+                    across highly constrained downlinks, distributed robotic swarms, and embedded ARM targets (Raspberry
+                    Pi/Jetson-class) without clogging bandwidth.
+                </li>
+                <li>
+                    <strong class="keyword">Introspective Re-Hypothesis & Gap Registration:</strong> When encountering
+                    low-certainty anomalies, the kernel executes autonomous re-hypothesis loops against external domain
+                    knowledge to patch the causal graph locally. Persistent, unresolvable anomalies are cleanly logged
+                    to a definitive <span class="highlight-text">Gap Register</span>, defining the exact mathematical
+                    boundaries of what the system does not know to inform human operators or future sensor placements.
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Proven Validations & Dual-Use Case Studies</h2>
+            <ul>
+                <li>
+                    <strong class="keyword">Aerospace & Cybersecurity (ESA Swarm Constellation):</strong> In a stress
+                    test on real ESA and NASA data through the G5 Gannon superstorm, isolated an injected spoofing
+                    signature <span class="highlight-text">13&times; smaller</span> than the surrounding storm noise
+                    with zero false flags, demonstrating edge-level cyber-resilience under extreme operational stress.
+                </li>
+                <li>
+                    <strong class="keyword">Space Domain Safety & Navigation (Space Atlas):</strong> Mapped 41.5 million
+                    in-orbit measurements across 131 orbital regions from LEO to the Mars surface, establishing a
+                    definitive "map of useful space" and flagging space-weather storm model failures in real-time at 92%
+                    precision.
+                </li>
+                <li>
+                    <strong class="keyword">Quantum Telemetry Auditing (156-Qubit Processor):</strong> Discovered 17
+                    hidden shared-resource cross-component clusters from telemetry alone, with zero coupling-map input
+                    or vendor hints; <span class="highlight-text">15 confirmed</span> across multiple
+                    coordinated-motion events.
+                </li>
+                <li>
+                    <strong class="keyword">Digital Twin Assurance (CINECA m100 Supercomputer):</strong> Published a
+                    certainty map of a supercomputer's telemetry with predictions frozen and hashed before the twin's
+                    first gradient step. The map rank-ordered the digital twin's 2022 failures at <span
+                        class="highlight-text">&rho; = +0.94</span>, while the twin's own ensemble variance localized
+                    nothing.
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Technology Readiness Levels (TRL)</h2>
+            <ul>
+                <li>
+                    <strong class="keyword">TRL 6 — Space Domain Cyber-Resilience & Anomaly Isolation:</strong>
+                    Validated on real on-orbit telemetry from the ESA Swarm constellation, isolating an injected
+                    spoofing signature from extreme G5 geomagnetic noise with zero false flags.
+                </li>
+                <li>
+                    <strong class="keyword">TRL 5 — Runtime Assured Autonomy (RTAA) Core Math Kernel:</strong>
+                    First-principles Rust kernel compiled and validated on hardware targets within high-fidelity
+                    simulated flight environments (USAF RTAA SBIR proposal submitted).
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Corporate Information & Readiness</h2>
+            <div class="grid-info">
+                <div class="info-block">
+                    <p><span class="info-label">Structure:</span> Solo Technical Founder (Everychart, Inc.)</p>
+                    <p><span class="info-label">Deployment:</span> Edge-native, hardware-agnostic (ARM, Embedded, Linux)
+                    </p>
+                </div>
+                <div class="info-block">
+                    <p><span class="info-label">Federal Status:</span> USAF RTAA SBIR Proposal Submitted</p>
+                    <p><span class="info-label">Contact:</span> heidi@everychart.io</p>
+                    <p><span class="info-label">Web:</span> <a href="https://nervousmachine.com"
+                            target="_blank">nervousmachine.com</a></p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+</body>
+
+</html>
