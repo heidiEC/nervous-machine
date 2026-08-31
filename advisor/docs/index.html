@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NM Advisor — Nervous Machine</title>
+    <meta name="description"
+        content="Developer documentation for the NM Advisor evaluation kit: duty-cycle assurance for payload hosts. Quickstart, CM5 install, calibration gates, API reference, Python client.">
+    <meta name="robots" content="noindex">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+<style>
+  :root {
+    --bg: #06060F;
+    --card: #0E0E1E;
+    --edge: #1C1C34;
+    --text: #C8C8E0;
+    --muted: #8888AA;
+    --cyan: #00FFFF;
+    --warm: #FF7A7A;
+    --amber: #FFB25E;
+    --violet: #A96BFF;
+    --font-display: 'Instrument Serif', Georgia, serif;
+    --font-body: 'DM Sans', -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-weight: 300;
+    line-height: 1.65;
+    font-size: 16px;
+    margin: 0;
+    padding: 0 20px 96px;
+  }
+  .shell { max-width: 1080px; margin: 0 auto; display: grid;
+           grid-template-columns: 200px minmax(0, 1fr); gap: 48px; }
+  nav.toc { position: sticky; top: 24px; align-self: start;
+            padding-top: 96px; font-size: 13.5px; }
+  nav.toc a { display: block; color: var(--muted); text-decoration: none;
+              padding: 4px 0 4px 12px; border-left: 1px solid var(--edge); }
+  nav.toc a:hover, nav.toc a:focus-visible { color: var(--cyan);
+              border-left-color: var(--cyan); outline: none; }
+  nav.toc .grp { font-family: var(--font-mono); font-size: 10.5px;
+                 letter-spacing: 0.14em; text-transform: uppercase;
+                 color: var(--muted); margin: 18px 0 4px; opacity: 0.7; }
+  @media (max-width: 860px) { .shell { grid-template-columns: 1fr; }
+                              nav.toc { display: none; } }
+  main { min-width: 0; }
+
+  header.hero { padding: 72px 0 12px; }
+  .eyebrow { font-family: var(--font-mono); font-size: 12px;
+             letter-spacing: 0.14em; text-transform: uppercase;
+             color: var(--muted); }
+  .eyebrow b { color: var(--cyan); font-weight: 500; }
+  h1 { font-family: var(--font-display); font-weight: 400;
+       font-size: clamp(40px, 6vw, 58px); line-height: 1.05;
+       margin: 12px 0 16px; color: #FFFFFF; }
+  .standfirst { font-size: 18.5px; max-width: 600px; }
+  .standfirst em { font-family: var(--font-display); font-style: italic;
+                   color: #FFFFFF; }
+
+  h2 { font-family: var(--font-display); font-weight: 400; font-size: 28px;
+       color: #FFFFFF; margin: 60px 0 8px; padding-top: 8px;
+       border-top: 1px solid var(--edge); text-wrap: balance; }
+  h3 { font-size: 16px; font-weight: 600; color: #E6E6F5; margin: 28px 0 6px; }
+  p { margin: 12px 0; max-width: 68ch; }
+  strong { font-weight: 600; color: #E6E6F5; }
+  a { color: var(--cyan); text-decoration: none; border-bottom: 1px solid #00505A; }
+  a:hover { border-bottom-color: var(--cyan); }
+  code { font-family: var(--font-mono); font-size: 0.86em; color: var(--cyan);
+         background: var(--card); border: 1px solid var(--edge);
+         border-radius: 3px; padding: 1px 5px; }
+  pre { background: var(--card); border: 1px solid var(--edge);
+        padding: 16px 18px; overflow-x: auto; font-family: var(--font-mono);
+        font-size: 13px; line-height: 1.55; margin: 16px 0; color: var(--text); }
+  pre code { background: none; border: none; padding: 0; color: inherit; }
+  pre .c { color: var(--muted); }
+  pre .k { color: var(--cyan); }
+  pre .s { color: var(--amber); }
+
+  .tablewrap { overflow-x: auto; margin: 18px 0; border: 1px solid var(--edge); }
+  table { border-collapse: collapse; width: 100%; min-width: 560px;
+          background: var(--card); font-size: 14px; }
+  th { font-family: var(--font-mono); font-weight: 500; font-size: 11px;
+       letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+       text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--edge); }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--edge);
+       vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  td.mono { font-family: var(--font-mono); font-size: 12.5px; white-space: nowrap; }
+  .m { font-family: var(--font-mono); font-size: 10.5px; font-weight: 500;
+       padding: 1px 7px; border-radius: 3px; letter-spacing: 0.06em;
+       display: inline-block; margin-right: 6px; }
+  .m.get { color: var(--cyan); border: 1px solid #00505A; }
+  .m.post { color: var(--violet); border: 1px solid #4A2B77; }
+  .tag { font-family: var(--font-mono); font-size: 10.5px; padding: 1px 7px;
+         border-radius: 3px; display: inline-block; }
+  .tag.bench { color: var(--amber); border: 1px solid #6B4A22; }
+
+  .callout { background: var(--card); border: 1px solid var(--edge);
+             border-left: 3px solid var(--cyan); padding: 14px 18px;
+             margin: 18px 0; font-size: 15px; max-width: none; }
+  .callout.warn { border-left-color: var(--amber); }
+  .callout p { margin: 4px 0; max-width: none; }
+
+  ol.steps { counter-reset: s; list-style: none; padding: 0; margin: 18px 0; }
+  ol.steps li { counter-increment: s; display: grid;
+                grid-template-columns: 34px 1fr; gap: 14px; padding: 12px 0;
+                border-bottom: 1px solid var(--edge); }
+  ol.steps li::before { content: counter(s); font-family: var(--font-mono);
+                font-size: 13px; color: var(--cyan); padding-top: 2px; }
+  ol.steps b { font-weight: 600; color: #E6E6F5; }
+  ol.steps pre { margin: 8px 0 0; }
+
+  dl.faq dt { font-weight: 600; color: #E6E6F5; margin-top: 18px; }
+  dl.faq dd { margin: 4px 0 0; max-width: 68ch; }
+
+  footer { margin-top: 72px; padding-top: 18px; border-top: 1px solid var(--edge);
+           font-family: var(--font-mono); font-size: 12px; color: var(--muted);
+           display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+</style>
+</head>
+<body>
+
+<div class="shell">
+<nav class="toc" aria-label="Contents">
+  <span class="grp">Start</span>
+  <a href="#what">What it is</a>
+  <a href="#get">Get the kit</a>
+  <a href="#quickstart">Quickstart</a>
+  <span class="grp">Deploy</span>
+  <a href="#install">Install on the CM5</a>
+  <a href="#calibration">Calibration &amp; gates</a>
+  <a href="#sensing">What the board can sense</a>
+  <span class="grp">Integrate</span>
+  <a href="#api">API reference</a>
+  <a href="#sdk">Python client</a>
+  <a href="#envelope-block">Payload envelopes</a>
+  <a href="#signals">Signals &amp; the ledger</a>
+  <span class="grp">Reference</span>
+  <a href="#faq">FAQ</a>
+  <a href="#license">License</a>
+</nav>
+<main>
+
+<header class="hero">
+  <p class="eyebrow">Nervous Machine · developer documentation · <b>v0.1 evaluation</b></p>
+  <h1>NM Advisor</h1>
+  <p class="standfirst">A daemon on your payload computer that learns, on the box, what payloads do to its thermal, power, battery, and memory envelope — and answers one question over a local API: <em>can this payload run, for how long, and when must it stop.</em></p>
+</header>
+
+<h2 id="what">What it is — and deliberately isn't</h2>
+<p><code>nm-advisord</code> sits beside your payload manager. Every cause-and-effect relationship it uses carries a certainty score <strong>earned from prediction error against your telemetry</strong> — it cannot be asserted, seeded high, or faked. Where evidence hasn't been earned, verdicts fall back to conservative per-class defaults and say so.</p>
+<p>It is <strong>not a controller</strong> — it holds no actuators and commands nothing; your OS keeps every decision. It is <strong>not an LLM on the device</strong> — the learning law is a compiled ~330&nbsp;KB artifact, sha256-verified before every start, with no cloud and no network in the learning loop. And it is <strong>not a dashboard</strong> — it queues typed signals when something deserves attention; a quiet board sends nothing.</p>
+<div class="callout">
+  <p><strong>The two guarantees.</strong> Advisory only, by construction: worst case is a wrong suggestion, which its own certainty math then erodes. Never fabricate: every verdict states its basis — <code>earned</code> (named edges, earned certainty, click-through receipts) or <code>default</code> (conservative envelope). Verdicts get <em>more permissive</em> as the advisor learns; the learning period is a visible payoff curve, not a black-box warmup.</p>
+</div>
+
+<h2 id="get">Get the kit</h2>
+<p>The evaluation kit is a signed tarball, <strong>under 1&nbsp;MB</strong>: <code>nm-advisor-kit-0.1.2.tar.gz</code>, delivered through <strong>your transfer feed</strong> at <code>transfer.nervousmachine.com</code> — the same append-only, tagged ledger everything else NM sends you lands in. With your consumer key:</p>
+<pre><code>export NM_TRANSFER_TOKEN=&lt;your key&gt;
+python3 nm_transfer_fetch.py tags                <span class="c"># everything NM has sent you</span>
+python3 nm_transfer_fetch.py save advisor-kit    <span class="c"># download + sha256-verify the kit</span></code></pre>
+<p>The kit is self-contained — Python 3.9+ standard library only, nothing to <code>pip install</code>, no accounts needed for anything on this page.</p>
+<div class="tablewrap"><table>
+  <tr><th>path</th><th>what it is</th></tr>
+  <tr><td class="mono">MANIFEST.json</td><td>kit version, kernel version, sha256 for every file — check it first</td></tr>
+  <tr><td class="mono">advisor/</td><td>the daemon: engine + compiled kernel, verdict composer, API server, telemetry readers, status page</td></tr>
+  <tr><td class="mono">sdk/nm_advisor_client.py</td><td>the Python client — one stdlib file; also a CLI</td></tr>
+  <tr><td class="mono">docs/ADVISORY-API.md</td><td>the integration contract (this page's API section, as a versioned file)</td></tr>
+  <tr><td class="mono">config.json · payloads.json</td><td>the two files that describe <em>your</em> board and <em>your</em> payloads</td></tr>
+  <tr><td class="mono">install.sh · deploy/</td><td>CM5 installer + systemd unit (state persists in <code>/var/lib/nm-advisor</code>)</td></tr>
+  <tr><td class="mono">tests/</td><td>the receipts — <code>python3 -m unittest discover tests</code></td></tr>
+</table></div>
+<p>The kernel artifact inside (<code>nm-kernel/0.1.0 logit-v2</code>) is a licensed binary; the loader verifies its hash and replays a golden trajectory before first use — a mismatch <strong>refuses to learn</strong> rather than mislearning. Targets: aarch64 Linux (CM5/Jetson), x86_64 Linux, Apple Silicon and Windows x64 (bench).</p>
+
+<h2 id="quickstart">Quickstart — ten minutes on your laptop</h2>
+<p>Runs on macOS (Apple Silicon), Linux, and Windows x64 — plain <code>python</code> from any terminal, no WSL, no build step. The kernel self-verifies at load on every platform.</p>
+<pre><code><span class="c"># from the kit root — no hardware, no install, nothing leaves your machine</span>
+python3 -m advisor.main --bench --speedup 30
+<span class="c"># open http://127.0.0.1:8800  — the status page</span>
+
+python3 sdk/nm_advisor_client.py verdict imager
+python3 sdk/nm_advisor_client.py quote --power-w 6 --duration-s 1800</code></pre>
+<p>Bench mode runs a synthetic satellite — every field labeled <code>sim</code>, because provenance rides with every number here — through the full lifecycle: calibrate on a quiet synthetic day, freeze the measurement scale, learn live, serve verdicts. <code>docs/PLAY.md</code> in the kit is the guided tour: start the imager and watch the RUN window count down; start the radio and watch a first contact <em>earn</em> instead of alarm; inject the cooling fault — the one thing that does alarm; stack payloads in eclipse until battery, not thermal, becomes the limiting factor.</p>
+
+<h2 id="install">Install on the CM5</h2>
+<pre><code>sudo sh install.sh</code></pre>
+<p>The installer verifies the kernel artifacts against <code>SHA256SUMS</code>, creates a locked-down <code>nm-advisor</code> service user, copies code (read-only at runtime) to <code>/opt/nm-advisor</code>, seeds mutable state in <code>/var/lib/nm-advisor</code>, and installs the systemd unit. It does <strong>not</strong> start the daemon — calibration comes first, and the daemon will hold verdicts until it has a frozen scale. Then:</p>
+<ol class="steps">
+  <li><div><b>Describe the board</b> — <code>/opt/nm-advisor/config.json</code>: your <code>device_id</code>, thermal ceiling, power budget, SoC/memory floors, cadence.</div></li>
+  <li><div><b>Describe the payloads</b> — <code>/var/lib/nm-advisor/payloads.json</code>, one envelope block per payload (<a href="#envelope-block">format below</a>). Your scheduler can also register them live via <code>POST /v0/payloads</code>.</div></li>
+  <li><div><b>Calibrate on real telemetry</b> — at least 24 hours, idle <em>plus</em> at least one load burst (run your payloads by hand during the window):
+  <pre><code>cd /opt/nm-advisor &amp;&amp; sudo -u nm-advisor python3 -m advisor.main \
+  --device --calibrate 86400 \
+  --results /var/lib/nm-advisor \
+  --payloads /var/lib/nm-advisor/payloads.json</code></pre></div></li>
+  <li><div><b>Start and enable</b> — <code>sudo systemctl enable --now nm-advisord</code>, then ask it something: <code>python3 /opt/nm-advisor/sdk/nm_advisor_client.py verdict &lt;payload_id&gt;</code>.</div></li>
+</ol>
+
+<h2 id="calibration">Calibration &amp; gates — why it refuses</h2>
+<p>The gates are the product. Refusals are the system telling you the number you'd have gotten wasn't real:</p>
+<div class="tablewrap"><table>
+  <tr><th>gate</th><th>behavior</th></tr>
+  <tr><td><strong>No learning before freeze</strong></td><td>Calibration finds the smallest measurement band per observable whose median error beats the bar; that band is frozen <strong>write-once, dated</strong>. Without it the daemon serves HOLD verdicts (<code>basis: unavailable</code>) and says so.</td></tr>
+  <tr><td><strong>Explicit mode, always</strong></td><td><code>--bench</code> (synthetic, declared sim) or <code>--device</code> (real readers) must be chosen — a real board never silently gets the simulator.</td></tr>
+  <tr><td><strong>Kernel verify at every start</strong></td><td>sha256 against the manifest, then a golden-trajectory replay; failure refuses to learn.</td></tr>
+  <tr><td><strong>Recalibration is a decision</strong></td><td>Re-freezing a frozen observable is rejected; move the results dir aside — the old scale and its earned edges stay auditable. Newly sensed observables are the exception: they join additively as dated addenda, existing values untouched.</td></tr>
+</table></div>
+
+<h2 id="sensing">What the board can sense</h2>
+<p>The readers measure what the hardware provides and never fake the rest — fields are omitted, not invented, and every present field is source-flagged <code>measured</code>:</p>
+<div class="tablewrap"><table>
+  <tr><th>observable</th><th>source</th><th>bare CM5</th></tr>
+  <tr><td class="mono">soc_temp_c</td><td>/sys/class/thermal</td><td>✓ built-in</td></tr>
+  <tr><td class="mono">mem_available_mb</td><td>/proc/meminfo</td><td>✓ built-in</td></tr>
+  <tr><td class="mono">input_power_w</td><td>INA-class power monitor on your carrier</td><td>needs instrumentation</td></tr>
+  <tr><td class="mono">pack_soc_pct</td><td>battery fuel gauge</td><td>needs instrumentation</td></tr>
+</table></div>
+<p>Calibration freezes what the board can sense (thermal is required) and records the rest as <strong>unsensed</strong>. Those edges honestly never earn, and verdicts use conservative per-class defaults for those factors — <em>and say so</em>. Thermal + memory alone already answer the core duty-cycle question.</p>
+<div class="callout">
+  <p><strong>Add a sensor later and the installation adapts.</strong> Wire the hardware, run the same <code>--calibrate</code> command again: frozen values never change — the new observable's band is frozen as a <em>dated addendum</em>, its edges start earning from their priors, and verdicts widen from <code>default</code> toward <code>earned</code> on that factor as evidence accumulates. Payloads adapt live with no calibration at all: <code>POST /v0/payloads</code> any time. Tell us what your carrier exposes and we'll map the readers.</p>
+</div>
+
+<h2 id="api">API reference — v0</h2>
+<p>Host-local HTTP (loopback, port <code>8800</code> by default), JSON in and out, no auth by design — remote exposure, if any, is your OS's decision to mediate. Verdicts are microsecond-cheap graph arithmetic: re-ask freely; every verdict carries <code>valid_for_s</code>.</p>
+<div class="tablewrap"><table>
+  <tr><th>endpoint</th><th>purpose</th></tr>
+  <tr><td class="mono"><span class="m get">GET</span>/v0/health</td><td>status, kernel version, frozen flag</td></tr>
+  <tr><td class="mono"><span class="m get">GET</span>/v0/envelope</td><td>live headroom per observable, regime, learning state</td></tr>
+  <tr><td class="mono"><span class="m get">GET</span>/v0/verdict/{payload_id}</td><td>RUN / HOLD / STOP_BY for a registered payload's declared envelope</td></tr>
+  <tr><td class="mono"><span class="m post">POST</span>/v0/verdict</td><td>price a hypothetical run — the request-quote form (below)</td></tr>
+  <tr><td class="mono"><span class="m get">GET</span>/v0/payloads</td><td>the registry</td></tr>
+  <tr><td class="mono"><span class="m post">POST</span>/v0/payloads</td><td>register / update an envelope → 201</td></tr>
+  <tr><td class="mono"><span class="m post">POST</span>/v0/run/start · /v0/run/stop</td><td>announce transitions — commissioning context, not alarms</td></tr>
+  <tr><td class="mono"><span class="m get">GET</span>/v0/edges</td><td>the causal graph as learned: Z and W per edge</td></tr>
+  <tr><td class="mono"><span class="m get">GET</span>/v0/signals?since_seq=N</td><td>typed outbox + the byte ledger</td></tr>
+  <tr><td class="mono"><span class="m get">GET</span>/v0/receipts/{edge_id}</td><td>the click-through: earned history behind a verdict</td></tr>
+  <tr><td class="mono"><span class="m post">POST</span>/v0/downlink</td><td>simulated ground pass — advances the outbox cursor, returns the pass receipt</td></tr>
+  <tr><td class="mono"><span class="m post">POST</span>/v0/bench/fault <span class="tag bench">bench only</span></td><td>inject the cooling-degradation fault the model doesn't know</td></tr>
+</table></div>
+<p>Errors are structured: <code>404 unknown_payload</code> includes the <code>known</code> list; malformed bodies get <code>400 invalid_json</code> / <code>invalid_request</code>, never a 500.</p>
+
+<h3>The verdict object</h3>
+<p>Real output, bench mode (an earned thermal edge at Z&nbsp;=&nbsp;0.97):</p>
+<pre><code>{
+  "payload_id": "imager",
+  "verdict": <span class="s">"RUN"</span>,                      <span class="c">// RUN | HOLD | STOP_BY</span>
+  "max_duration_s": 100961,
+  "stop_by": "2026-09-01T05:51:15Z",
+  "limiting_factor": "pack_soc_pct",
+  "confidence": {
+    "basis": <span class="s">"earned"</span>,                  <span class="c">// earned | default | mixed</span>
+    "min_Z": 0.971,
+    "edges": ["payload_duty_cycle_th|soc_temp_c",
+              "power_draw_soc_drawdown|pack_soc_pct"]
+  },
+  "because": "...",                      <span class="c">// plain-language reasoning</span>
+  "valid_for_s": 300,
+  "receipts": ["/v0/receipts/payload_duty_cycle_th|soc_temp_c"]
+}</code></pre>
+<p>A <code>HOLD</code> carries <code>retry_after_s</code> and the limiting factor. A running payload's verdict can become <code>STOP_BY</code> — <strong>advisory revocation, never a kill</strong>; honoring it is the integration contract. Where composing edges haven't earned, the verdict uses the default table for the payload's <code>thermal_class</code> and says so; as Z crosses the threshold, the same query silently upgrades.</p>
+
+<h3>The request-quote form</h3>
+<p>Describe the run you want; NM prices it against the live causal state. NM quotes — it never reserves; your scheduler keeps the calendar.</p>
+<pre><code><span class="k">POST</span> /v0/verdict
+{
+  "power_w": 6.0,          <span class="c">// or energy_wh</span>
+  "duration_s": 1800,
+  "duty": 0.9,             <span class="c">// optional, default 1.0</span>
+  "mem_mb": 400,           <span class="c">// optional resource floor</span>
+  "finish_by": "2026-08-30T19:00:00Z",   <span class="c">// optional deadline</span>
+  "payload_id": "imager"   <span class="c">// optional — ad-hoc requests are legal</span>
+}</code></pre>
+<p>Answers: <code>RUN</code> (full window available now), <code>HOLD</code> with <code>available_now_s</code> (physics grants part — take the partial or retry), or a refusal that names the factor and why.</p>
+
+<h2 id="sdk">Python client</h2>
+<p><code>sdk/nm_advisor_client.py</code> — one stdlib-only file; copy it next to your payload manager. As a library:</p>
+<pre><code><span class="k">from</span> nm_advisor_client <span class="k">import</span> Advisor
+nm = Advisor()                          <span class="c"># http://127.0.0.1:8800</span>
+
+v = nm.verdict(<span class="s">"imager"</span>)
+<span class="k">if</span> v[<span class="s">"verdict"</span>] == <span class="s">"RUN"</span>:
+    nm.run_start(<span class="s">"imager"</span>)             <span class="c"># announce the start</span>
+    ...                                 <span class="c"># re-ask while running; honor STOP_BY</span>
+    nm.run_stop(<span class="s">"imager"</span>)
+
+q = nm.quote(power_w=6.0, duration_s=1800)
+nm.register({<span class="s">"payload_id"</span>: <span class="s">"sar-01"</span>, <span class="s">"class"</span>: <span class="s">"compute"</span>, ...})
+sig = nm.signals(since_seq=0)           <span class="c"># the typed outbox</span></code></pre>
+<p>As a CLI: <code>health</code>, <code>envelope</code>, <code>edges</code>, <code>verdict &lt;id&gt;</code>, <code>quote --power-w 6 --duration-s 1800</code>, <code>start/stop &lt;id&gt;</code>, <code>signals</code>, <code>receipt &lt;edge_id&gt;</code> — and <code>manage &lt;id&gt;</code>, a working reference manager loop (ask → start if RUN → re-ask → honor STOP_BY) that shows exactly what your scheduler does natively. API errors raise <code>AdvisorError</code> with the status and decoded body.</p>
+
+<h2 id="envelope-block">Payload envelopes</h2>
+<p>Each payload declares an envelope — in <code>payloads.json</code>, via <code>POST /v0/payloads</code>, or as an <code>nm:</code> block in your packaging manifest:</p>
+<pre><code><span class="k">nm:</span>
+  payload_id: sar-imager-01
+  class: compute          <span class="c"># compute | radio | actuation | housekeeping</span>
+  expected_power_w: 6.5   <span class="c"># steady-state draw at duty=1.0</span>
+  expected_duty: 0.8      <span class="c"># fraction of wall time active while running</span>
+  thermal_class: hot      <span class="c"># hot | warm | cool — drives conservative defaults</span>
+  min_run_s: 120          <span class="c"># shorter than this isn't worth starting</span>
+  preemptible: true       <span class="c"># can honor STOP_BY mid-run</span>
+  priority: 2             <span class="c"># tie-break hint; NM advises, never schedules</span></code></pre>
+<p>The declared wattage is what verdicts budget against; the learned edges refine <em>how the board responds</em> to that load, never what you claimed it draws.</p>
+
+<h2 id="signals">Signals &amp; the byte ledger</h2>
+<p>Nothing in the verdict path touches the network — the loop closes on the device. What crosses a link, when <em>you</em> choose to sync, is typed and kilobyte-class:</p>
+<div class="tablewrap"><table>
+  <tr><th>signal</th><th>meaning</th><th>size</th></tr>
+  <tr><td class="mono" style="color:var(--warm)">anomaly</td><td>acute surprise on a stable, earned edge — the one thing that alarms</td><td class="mono">≤ ~1 KB</td></tr>
+  <tr><td class="mono" style="color:var(--violet)">curiosity</td><td>chronic unknown — a hypothesis is wanted from the ground side</td><td class="mono">≤ ~1 KB</td></tr>
+  <tr><td class="mono" style="color:var(--cyan)">promote</td><td>an edge earned; carries full provenance</td><td class="mono">~1 KB</td></tr>
+</table></div>
+<p>The ledger accounts for every byte (<code>GET /v0/signals</code> returns it alongside the queue). <strong>Link usage scales with surprise, not runtime</strong> — a quiet week costs bytes. Announced transitions (<code>run/start</code>, <code>run/stop</code>) give the engine commissioning context so an expected thermal step is learned, not alarmed; only <em>unannounced</em> change alarms.</p>
+
+<h2 id="faq">FAQ</h2>
+<dl class="faq">
+  <dt>Does it need the network?</dt>
+  <dd>Only at sync time, and only from your side. The device learns fully offline — the same posture it will have in orbit.</dd>
+  <dt>Can it break our system?</dt>
+  <dd>It holds no actuators. Worst case is a wrong suggestion — which its own certainty math then erodes. Every hardware read is defensive; a missing sensor means an omitted field, never a fake one.</dd>
+  <dt>Why does it refuse to deploy or verdict sometimes?</dt>
+  <dd>The gates are the product. No learning before the scale freezes; no earned basis before edges earn; a kernel that fails its self-check refuses to learn at all. When it refuses, it's telling you the number you'd have gotten wasn't real.</dd>
+  <dt>What's in the black box?</dt>
+  <dd>Less than you'd think. The learning law is ~25 published lines of math (papers at <a href="https://nervousmachine.com">nervousmachine.com</a>); it ships compiled and hash-verified. Everything you interact with — the config, the envelopes, the verdicts, the receipts — is inspectable text, and <code>GET /v0/receipts/&lt;edge&gt;</code> shows the evidence behind any number.</dd>
+  <dt>What does a wrong verdict cost?</dt>
+  <dd>Your scheduler keeps every decision, so a wrong suggestion costs one conservative hold or one early stop — and the error that caused it feeds back into the edge that made it.</dd>
+</dl>
+
+<h2 id="license">License &amp; contact</h2>
+<p>Evaluation use within your organization only, until superseded by a pilot agreement — the full terms ship in the kit as <code>EVALUATION-LICENSE.md</code>. The compiled kernel artifacts are licensed binaries; kernel source is not distributed. Your telemetry and hardware remain yours.</p>
+<p>Broken things, missing sensors, verdicts you don't believe — that's what the evaluation is for: <a href="mailto:heidi@everychart.io">heidi@everychart.io</a></p>
+
+<footer>
+  <span><a href="https://nervousmachine.com">nervousmachine.com</a></span>
+  <span>nm-advisor-kit 0.1.2 · kernel nm-kernel/0.1.0 logit-v2</span>
+</footer>
+</main>
+</div>
+
+</body>
+</html>
