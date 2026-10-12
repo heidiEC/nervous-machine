@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nervous Machine — How do you know what your model doesn't know?</title>
     <meta name="description"
-        content="Nervous Machine is a learning protocol that attaches a calibrated certainty to every cause-and-effect link in your system earned from real measurement, in place, without retraining.">
+        content="Nervous Machine is a learning protocol that attaches a calibrated certainty to every cause-and-effect link in your system earned from real measurement, in place, without retraining, and debriefs your team on what holds, what doesn't, and what to measure next.">
     <link
         href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
         rel="stylesheet">
@@ -381,6 +381,131 @@
             max-width: 620px;
         }
 
+        /* ─── Debrief ─── */
+        .debrief-stage {
+            position: relative;
+            aspect-ratio: 16 / 9;
+            background: #0b0f17;
+            border: 1px solid var(--color-card-border);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .debrief-stage iframe {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .debrief-play {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            border: 0;
+            background: none;
+            cursor: pointer;
+        }
+
+        .debrief-play img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            opacity: 0.55;
+            transition: opacity 0.3s;
+        }
+
+        .debrief-play:hover img {
+            opacity: 0.7;
+        }
+
+        .debrief-play .play-mark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 84px;
+            height: 84px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--color-accent-indigo), var(--color-accent-violet));
+            box-shadow: 0 4px 30px rgba(76, 0, 255, 0.5);
+        }
+
+        .debrief-play .play-mark::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 54%;
+            transform: translate(-50%, -50%);
+            border-style: solid;
+            border-width: 14px 0 14px 23px;
+            border-color: transparent transparent transparent #fff;
+        }
+
+        .debrief-tabs {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .debrief-tab {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            text-align: left;
+            font-family: var(--font-body);
+            color: var(--color-text);
+            background: var(--color-card-bg);
+            border: 1px solid var(--color-card-border);
+            border-radius: 10px;
+            padding: 1.25rem 1.5rem;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .debrief-tab:hover {
+            border-color: rgba(76, 0, 255, 0.35);
+        }
+
+        .debrief-tab[aria-pressed="true"] {
+            border-color: rgba(0, 255, 255, 0.45);
+            background: rgba(0, 255, 255, 0.04);
+        }
+
+        .debrief-tab .tab-meta {
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--color-cyan);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .debrief-tab .tab-title {
+            display: block;
+            font-weight: 600;
+            font-size: 1.05rem;
+            color: #fff;
+            margin-bottom: 0.4rem;
+        }
+
+        .debrief-tab .tab-desc {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+            line-height: 1.6;
+        }
+
+        .debrief-points {
+            margin-top: 4rem;
+        }
+
         /* ─── Three Ways (reuses how-card pattern) ─── */
         .how-grid {
             display: grid;
@@ -676,6 +801,19 @@
                 gap: 1.25rem;
             }
 
+            .debrief-tabs {
+                grid-template-columns: 1fr;
+            }
+
+            .debrief-play .play-mark {
+                width: 60px;
+                height: 60px;
+            }
+
+            .debrief-points {
+                margin-top: 2.5rem;
+            }
+
             .readings {
                 grid-template-columns: 1fr;
             }
@@ -752,6 +890,7 @@
                     style="height:1.05em;vertical-align:-0.18em;margin-right:0.5em"> Nervous Machine</div>
             <nav>
                 <ul>
+                    <li><a href="#debrief">Debrief</a></li>
                     <li><a href="/quantum">Quantum</a></li>
                     <li><a href="/data-centers">Data Centers</a></li>
                     <li><a href="https://space-atlas.nervousmachine.com">Space Atlas</a></li>
@@ -771,13 +910,15 @@
                 <p class="hero-answer">You measure it.</p>
                 <p class="hero-sub">
                     Nervous Machine attaches a calibrated certainty to every cause-and-effect link in a system
-                    earned from real measurement, in place, without retraining. Simulations and digital twins are blind
+                    earned from real measurement, in place, without retraining. Then it debriefs your team: what
+                    holds, what doesn't, and what to measure next. Simulations and digital twins are blind
                     in shifting environments with conditions they weren't trained on. We help draw that boundary and
                     catch anomalies
                     before they become failures.
                 </p>
                 <div class="hero-ctas">
                     <a href="https://calendly.com/heidi-everychart/30min" class="btn btn-primary">Book a Call</a>
+                    <a href="#debrief" class="btn btn-ghost">Watch a debrief &rarr;</a>
                     <a href="#register" class="btn btn-ghost">Read the register &rarr;</a>
                 </div>
 
@@ -810,6 +951,88 @@
                     <figcaption class="dim-caption">one causal edge &middot; learned relationship, tolerance, and earned
                         certainty</figcaption>
                 </figure>
+            </div>
+        </div>
+    </section>
+
+    <!-- Debrief -->
+    <section id="debrief">
+        <div class="container">
+            <div class="section-label">Debrief &middot; New interface &middot; Prototype</div>
+            <h2 class="section-title">The system briefs your team.</h2>
+            <p class="section-lead">
+                DEBRIEF is how a team hears from a system that has been learning while they were elsewhere. On a
+                schedule, or right away when something can't wait, it walks the team through what was learned, what
+                was refuted, what is still open, and what needs a person. Then it takes questions.
+            </p>
+
+            <div class="loop" role="list" aria-label="The order of a debrief">
+                <span class="chip" role="listitem">Learned</span><span class="arrow" aria-hidden="true">&rarr;</span>
+                <span class="chip" role="listitem">Escalated</span><span class="arrow" aria-hidden="true">&rarr;</span>
+                <span class="chip" role="listitem">Reasoning</span><span class="arrow" aria-hidden="true">&rarr;</span>
+                <span class="chip" role="listitem">Open gaps</span><span class="arrow" aria-hidden="true">&rarr;</span>
+                <span class="chip" role="listitem">Your attention</span>
+            </div>
+
+            <div class="debrief-stage" id="debrief-stage">
+                <button type="button" class="debrief-play" id="debrief-play"
+                    aria-label="Play the lunar radiation campaign debrief">
+                    <img id="debrief-poster" src="/debrief/lunar.jpg" width="1280" height="720"
+                        alt="A DEBRIEF slide: three dose episodes at the Moon that the solar proton event catalog missed">
+                    <span class="play-mark" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="debrief-tabs">
+                <button type="button" class="debrief-tab" aria-pressed="true" data-yt="eehTVPrG66Q" data-poster="/debrief/lunar.jpg"
+                    data-title="Lunar radiation campaign"
+                    data-alt="A DEBRIEF slide: three dose episodes at the Moon that the solar proton event catalog missed">
+                    <span class="tab-meta">Science campaign &middot; 3:54</span>
+                    <span class="tab-title">Lunar radiation campaign</span>
+                    <span class="tab-desc">Seventeen years of lunar-orbit dose data, started from the structure learned
+                        at Mars. Three dose episodes Earth's proton catalog missed, and what to measure first at the
+                        surface.</span>
+                </button>
+                <button type="button" class="debrief-tab" aria-pressed="false" data-yt="FOzVyW9rf0Y"
+                    data-poster="/debrief/payload.jpg" data-title="Payload computer, scheduled debrief"
+                    data-alt="A DEBRIEF slide: the same temperature rise, once explained by attitude and once unexplained">
+                    <span class="tab-meta">Operations &middot; simulated satellite &middot; 2:51</span>
+                    <span class="tab-title">Payload computer, scheduled debrief</span>
+                    <span class="tab-desc">An unexplained heat spike, an imager run stopped early, a hypothesis about
+                        the cooling path, and nothing the operator has to decide.</span>
+                </button>
+                <button type="button" class="debrief-tab" aria-pressed="false" data-yt="OekEgqZeIfw" data-poster="/debrief/mars.jpg"
+                    data-title="Mars surface radiation run"
+                    data-alt="A DEBRIEF slide: two solar-wind arrivals at Mars, each found in MAVEN orbiter data on the date">
+                    <span class="tab-meta">Science campaign &middot; 4:43</span>
+                    <span class="tab-title">Mars surface radiation run</span>
+                    <span class="tab-desc">Sixteen learning cycles on the Curiosity rover's dose record: what was
+                        accepted, what was refuted, and three asks that need a person.</span>
+                </button>
+            </div>
+            <p class="register-note">Scripted prototypes. Narration is drawn from each mission's recorded ledger; the
+                satellite is simulated. A voice version your team can question is in prototype.</p>
+
+            <div class="how-grid debrief-points">
+                <div class="how-card">
+                    <div class="how-step">Standing</div>
+                    <h3>Every finding says where it stands</h3>
+                    <p>Accepted means it passed a test written down before the data, or an independent source
+                        confirmed it. Refuted means it did not stand. Certified is the higher bar: accepted, and
+                        certainty earned. A debrief says which one applies, every time.</p>
+                </div>
+                <div class="how-card">
+                    <div class="how-step">Record</div>
+                    <h3>Answers come from the ledger</h3>
+                    <p>A learning run keeps a ledger: each cycle's question, the rule it had to pass, and what the test
+                        showed. DEBRIEF answers from that record. When the record doesn't cover a question, it says
+                        so, and says what would answer it.</p>
+                </div>
+                <div class="how-card">
+                    <div class="how-step">Asks</div>
+                    <h3>Open items come with a name</h3>
+                    <p>What the system can't close alone is handed to the team as a specific ask: the measurement, the
+                        data access, or the expertise that would move it. This is where your people matter most.</p>
+                </div>
             </div>
         </div>
     </section>
@@ -875,7 +1098,7 @@
                         initialize the model.
                         These outputs are the best possible guess about causal drivers and their impact within a system.
                         The model is
-                        typically ~50kb serialized, and can be deployed to Rasberry-pi, Jetson-class, or cloud targets.
+                        typically ~50kb serialized, and can be deployed to Raspberry Pi, Jetson-class, or cloud targets.
                     </p>
                 </div>
                 <div class="how-card">
@@ -892,7 +1115,7 @@
                 <div class="how-card">
                     <div class="how-step">Improve</div>
                     <h3>Register gaps</h3>
-                    <p>Edges that exaust all hypotheses without earning certainty are registered as gaps, with the
+                    <p>Edges that exhaust all hypotheses without earning certainty are registered as gaps, with the
                         missing measurement named and dated. The register is the record of unknowns and the boundary of
                         knowledge, and can
                         be used to prioritize future research or training, and inform decision-making in complex
@@ -1031,8 +1254,8 @@
             <div class="section-label">Start</div>
             <h2 class="section-title">Measure certainty in your systems.</h2>
             <p class="section-lead">
-                Deploying into a new domain is two config files. The kernel does the rest. Set up a call to learn more
-                about causal learning, assured autonomy, and how to register the gaps in your knowledge.
+                Bring one system you don't fully trust. We configure the causal model with you, the kernel learns from
+                your measurements, and your team gets a debrief on what holds, what doesn't, and what to measure next.
 
             </p>
             <div class="cta-buttons">
@@ -1055,6 +1278,49 @@
     </footer>
 
     <script>
+        // Debrief videos: tabs pick the video, the stage loads the YouTube player on click.
+        (function () {
+            var stage = document.getElementById('debrief-stage');
+            if (!stage) return;
+            var play = document.getElementById('debrief-play');
+            var poster = document.getElementById('debrief-poster');
+            var tabs = document.querySelectorAll('.debrief-tab');
+            var current = tabs[0];
+
+            function showPoster() {
+                var frame = stage.querySelector('iframe');
+                if (frame) stage.removeChild(frame);
+                poster.src = current.getAttribute('data-poster');
+                poster.alt = current.getAttribute('data-alt');
+                play.setAttribute('aria-label', 'Play the debrief: ' + current.getAttribute('data-title'));
+                play.hidden = false;
+            }
+
+            function start() {
+                var id = current.getAttribute('data-yt');
+                if (!id) return;
+                var frame = document.createElement('iframe');
+                frame.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0';
+                frame.title = 'DEBRIEF: ' + current.getAttribute('data-title');
+                frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+                frame.allowFullscreen = true;
+                play.hidden = true;
+                stage.appendChild(frame);
+            }
+
+            play.addEventListener('click', start);
+            Array.prototype.forEach.call(tabs, function (tab) {
+                tab.addEventListener('click', function () {
+                    var playing = !!stage.querySelector('iframe');
+                    current.setAttribute('aria-pressed', 'false');
+                    current = tab;
+                    current.setAttribute('aria-pressed', 'true');
+                    showPoster();
+                    if (playing) start();
+                });
+            });
+        })();
+
         // Hero calibration: Z earns its way from 0.000 to 0.940 on load.
         (function () {
             var el = document.getElementById('zread');
