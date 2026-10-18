@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Nervous Machine Pitch</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+<style>
+html{scroll-snap-type:y mandatory;background:#0E0F1C}
+body{margin:0;background:#0E0F1C;display:flex;flex-direction:column;align-items:center;gap:24px;padding:24px 16px 72px;box-sizing:border-box;font-family:Roboto,Arial,sans-serif}
+.frame{position:relative;width:min(100vw - 32px,(100vh - 48px) * 16 / 9);aspect-ratio:16/9;overflow:hidden;scroll-snap-align:center;box-shadow:0 10px 40px rgba(0,0,0,.45);border-radius:6px;background:#FBFBFD}
+.frame>section{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;transform:scale(var(--s,1));overflow:hidden}
+section,section *{box-sizing:border-box}
+section h1,section h2,section h3,section p{margin:0}
+section h1,section h2,section h3{font-weight:600}
+section aside{display:none}
+section table{border-collapse:collapse;width:100%}
+section th,section td{padding:12px 16px;border-bottom:1px solid #E3E4EE;vertical-align:top;text-align:left;font-weight:inherit}
+section th{font-weight:700}
+section hr{margin:0;border:0;align-self:start}
+section b{font-weight:700}
+.conn{position:absolute;left:0;top:0;width:1920px;height:1080px;pointer-events:none;overflow:visible}
+.counter{position:fixed;right:20px;bottom:16px;color:#A3A7C2;font:500 14px/1 'IBM Plex Mono',ui-monospace,Menlo,monospace;background:rgba(14,15,28,.7);padding:6px 10px;border-radius:999px}
+.help{position:fixed;left:20px;bottom:16px;color:#A3A7C2;font:400 13px/1 Roboto,Arial,sans-serif;opacity:.8}
+@media print{html{scroll-snap-type:none}body{background:#fff;padding:0;gap:0;display:block}.frame{width:1920px;height:1080px;box-shadow:none;border-radius:0;page-break-after:always;break-after:page}.frame>section{transform:none}.counter,.help{display:none}@page{size:1920px 1080px;margin:0}}
+</style>
+</head>
+<body>
+<div class="frame" id="s1">
+<section id="cover" data-transition="fade" style="background:#FBFBFD;color:#14172B;font-family:'Roboto', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px">
+<div style="position:absolute;left:0;top:0;width:12px;height:1080px;background:linear-gradient(180deg,#19D3F5 0%,#6E35F0 100%)"></div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:0">
+<div style="width:64px;height:64px;background:#19D3F5;border-radius:50%;flex:none"></div>
+<div style="width:180px;height:10px;background:linear-gradient(90deg,#19D3F5 0%,#6E35F0 100%)"></div>
+<div style="width:64px;height:64px;background:#6E35F0;border-radius:50%;flex:none"></div>
+</div>
+<p style="font-family:'Montserrat', Arial, sans-serif;font-size:40px;font-weight:500;color:#4A4F5E;letter-spacing:1px">Nervous Machine</p>
+<h1 style="font-family:'Montserrat', Arial, sans-serif;font-size:96px;font-weight:600;line-height:1.1;text-align:center">On the Shoulders of Machines</h1>
+<p style="font-size:36px;color:#4A4F5E;text-align:center">Big models propose. The edge earns certainty. People move the frontier.</p>
+<aside>Open with the tagline. Everything in the deck is one loop: big models propose, the edge earns certainty against measurement, and people move the frontier where certainty was never earned.</aside>
+</section>
+
+</div>
+<div class="frame" id="s2">
+<section id="problem" data-transition="fade" style="background:#FBFBFD;color:#14172B;font-family:'Roboto', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="position:absolute;left:0;top:0;width:12px;height:1080px;background:linear-gradient(180deg,#19D3F5 0%,#6E35F0 100%)"></div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#4E49BE">The problem</p>
+<h2 style="font-family:'Montserrat', Arial, sans-serif;font-size:60px;font-weight:600;line-height:1.1">AI proposes faster than anyone can check it against the world.</h2>
+</div>
+<div style="display:flex;flex-direction:row;gap:28px;align-items:stretch">
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;background:#FFFFFF;border:1px solid #E3E4EE;border-radius:16px;padding:36px">
+<p style="font-size:24px;font-weight:700;color:#4E49BE">01</p>
+<h3 style="font-size:32px;font-weight:600;line-height:1.2">The data lands too late</h3>
+<p style="font-size:26px;line-height:1.4;color:#4A4F5E">Measurements arrive late, partial or never. Links carry kilobytes, not the full record.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;background:#FFFFFF;border:1px solid #E3E4EE;border-radius:16px;padding:36px">
+<p style="font-size:24px;font-weight:700;color:#4E49BE">02</p>
+<h3 style="font-size:32px;font-weight:600;line-height:1.2">Fit isn’t measurement</h3>
+<p style="font-size:26px;line-height:1.4;color:#4A4F5E">Models fit their training data, not this site, this sensor or this season.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;background:#FFFFFF;border:1px solid #E3E4EE;border-radius:16px;padding:36px">
+<p style="font-size:24px;font-weight:700;color:#4E49BE">03</p>
+<h3 style="font-size:32px;font-weight:600;line-height:1.2">No one knows where knowledge ends</h3>
+<p style="font-size:26px;line-height:1.4;color:#4A4F5E">Models can’t say what they’ve never seen, and can’t grade their own answers.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;background:#E9E9FA;border:1px solid #C9CAF0;border-radius:16px;padding:36px">
+<p style="font-size:24px;font-weight:700;color:#4E49BE">04 · and so</p>
+<h3 style="font-size:32px;font-weight:600;line-height:1.2">People fall behind, and the frontier stops moving</h3>
+<p style="font-size:26px;line-height:1.4;color:#4A4F5E">What the models can’t settle needs a person’s judgment. Teams decide on what was confirmed last quarter.</p>
+</div>
+</div>
+<p style="font-size:30px;font-weight:500;color:#14172B">If people can’t reach the frontier, the frontier doesn’t move.</p>
+<div style="position:absolute;left:128px;right:128px;bottom:64px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#6B7085">Nervous Machine</p>
+<p style="font-size:24px;color:#6B7085">2</p>
+</div>
+<aside>Gaps 01 to 03 are the machine failing to check itself against the world. Gap 04 is the consequence: what never earns certainty needs a person’s judgment, and only people do abduction at the frontier. Talk track, not yet sourced for a slide: the domain experts who can judge the frontier are cycling out, and the juniors replacing them inherit the tools but not the map.</aside>
+</section>
+
+</div>
+<div class="frame" id="s3">
+<section id="cost" data-transition="fade" style="background:#FBFBFD;color:#14172B;font-family:'Roboto', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<div style="position:absolute;left:0;top:0;width:12px;height:1080px;background:linear-gradient(180deg,#19D3F5 0%,#6E35F0 100%)"></div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#4E49BE">What the gaps cost</p>
+<h2 style="font-family:'Montserrat', Arial, sans-serif;font-size:60px;font-weight:600;line-height:1.1">Who pays when the AI is wrong?</h2>
+</div>
+<table style="font-size:24px;color:#14172B;border:none">
+<tr style="background:#F1F1F8"><th style="width:14%;text-align:left;padding:14px 16px">The reason</th><th style="width:13%;text-align:left">The number</th><th style="width:55%;text-align:left">What happened</th><th style="width:18%;text-align:left">Who paid</th></tr>
+<tr><td style="color:#4E49BE">01 · Late data</td><td style="color:#3B36A8">Up to 40%</td><td>Deep Space Network oversubscribed; missions got 8,500–15,000 fewer tracking hours than requested</td><td>Space science</td></tr>
+<tr><td style="color:#4E49BE">02 · Fit</td><td style="color:#3B36A8">38 of 49</td><td>Starlink satellites lost to a minor storm, Feb 2022; drag ran up to 50% above earlier launches</td><td>Satellite operators</td></tr>
+<tr><td style="color:#4E49BE">03 · Unknowns</td><td style="color:#3B36A8">4 of 5</td><td>Commercial lunar landings, 2023–25, that crashed or tipped over; all four involved altitude sensing</td><td>Lunar missions</td></tr>
+<tr><td style="color:#4E49BE">04 · People</td><td style="color:#3B36A8">−19%</td><td>Developers measured slower with AI tools in a randomized trial, while believing they were 20% faster</td><td>Engineering teams</td></tr>
+<tr><td style="color:#4E49BE">04 · People</td><td style="color:#3B36A8">8 million</td><td>Imagery analysts NGA’s director said exploiting 20 years of commercial imagery by hand would take</td><td>Intelligence</td></tr>
+</table>
+<p style="font-size:26px;line-height:1.4;color:#4A4F5E"><b>The cause, in the research’s words:</b> AI systems “do not retain feedback, adapt to context, or improve over time.” MIT NANDA, 2025</p>
+<div style="position:absolute;left:128px;right:128px;bottom:64px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#6B7085">NASA OIG IG-23-016 · SpaceX 2022; Baruah et al. 2024 · NASA OIG IG-24-013 · METR Jul 2025 · NGA 2017</p>
+<p style="font-size:24px;color:#6B7085">3</p>
+</div>
+<aside>Each row is one of the four gaps with a cost that was paid. Read down the reason column: late data, fit, unknowns, people. METR is a 2025 trial; date it, and note the 2026 follow-up if asked. This is also the sales qualifier: who pays when the AI is wrong?</aside>
+</section>
+
+</div>
+<div class="frame" id="s4">
+<section id="market" data-transition="fade" style="background:#FBFBFD;color:#14172B;font-family:'Roboto', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<div style="position:absolute;left:0;top:0;width:12px;height:1080px;background:linear-gradient(180deg,#19D3F5 0%,#6E35F0 100%)"></div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#4E49BE">The market</p>
+<h2 style="font-family:'Montserrat', Arial, sans-serif;font-size:60px;font-weight:600;line-height:1.1">Every forecast assumes the AI delivers.</h2>
+</div>
+<div style="display:flex;flex-direction:row;align-items:end;gap:32px">
+<p style="width:440px;font-size:24px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#6B7085">Market</p>
+<p style="width:680px;font-size:24px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#6B7085">Shared scale, $ a year, 0 to $1.5T</p>
+<p style="width:220px;font-size:24px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#6B7085;text-align:right">Shortfall</p>
+<p style="width:220px;font-size:24px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#6E35F0;text-align:right">Four gaps</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:18px">
+<div style="display:flex;flex-direction:row;align-items:center;gap:32px">
+<div style="width:440px;display:flex;flex-direction:column;gap:4px"><h3 style="font-size:28px;font-weight:600">Robotics and humanoids</h3><p style="font-size:24px;color:#6B7085">Forecast $38B in 2035 · delivered 25–40%</p></div>
+<div style="position:relative;width:680px;height:28px"><div style="position:absolute;left:0;top:8px;width:17px;height:12px;background:#D6D7E6"></div><div style="position:absolute;left:10px;top:4px;width:4px;height:20px;background:#3B36A8"></div><div style="position:absolute;left:3px;top:4px;width:4px;height:20px;background:#6E35F0"></div></div>
+<p style="width:220px;font-size:30px;font-weight:700;text-align:right;font-variant-numeric:tabular-nums">$23B–$29B</p>
+<p style="width:220px;font-size:30px;font-weight:700;text-align:right;color:#6E35F0;font-variant-numeric:tabular-nums">$7.5B–$9.4B</p>
+</div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:32px">
+<div style="width:440px;display:flex;flex-direction:column;gap:4px"><h3 style="font-size:28px;font-weight:600">Commercial space: data and applications</h3><p style="font-size:24px;color:#6B7085">Forecast $1.39T in 2035 · delivered 50–87%</p></div>
+<div style="position:relative;width:680px;height:28px"><div style="position:absolute;left:0;top:8px;width:631px;height:12px;background:#D6D7E6"></div><div style="position:absolute;left:82px;top:4px;width:233px;height:20px;background:#3B36A8"></div><div style="position:absolute;left:27px;top:4px;width:77px;height:20px;background:#6E35F0"></div></div>
+<p style="width:220px;font-size:30px;font-weight:700;text-align:right;font-variant-numeric:tabular-nums">$181B–$696B</p>
+<p style="width:220px;font-size:30px;font-weight:700;text-align:right;color:#6E35F0;font-variant-numeric:tabular-nums">$60B–$230B</p>
+</div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:32px">
+<div style="width:440px;display:flex;flex-direction:column;gap:4px"><h3 style="font-size:28px;font-weight:600">Defense AI and autonomy</h3><p style="font-size:24px;color:#6B7085">Forecast $59B in 2027 · delivered 40–51%</p></div>
+<div style="position:relative;width:680px;height:28px"><div style="position:absolute;left:0;top:8px;width:27px;height:12px;background:#D6D7E6"></div><div style="position:absolute;left:13px;top:4px;width:4px;height:20px;background:#3B36A8"></div><div style="position:absolute;left:4px;top:4px;width:4px;height:20px;background:#6E35F0"></div></div>
+<p style="width:220px;font-size:30px;font-weight:700;text-align:right;font-variant-numeric:tabular-nums">$29B–$35B</p>
+<p style="width:220px;font-size:30px;font-weight:700;text-align:right;color:#6E35F0;font-variant-numeric:tabular-nums">$9.5B–$12B</p>
+</div>
+<hr style="border-top:2px solid #C9CAF0;width:1656px">
+<div style="display:flex;flex-direction:row;align-items:center;gap:32px">
+<div style="width:440px;display:flex;flex-direction:column;gap:4px"><h3 style="font-size:28px;font-weight:600">Three markets, a year</h3><p style="font-size:24px;color:#6B7085">Annual, 2027–2035, sourced inputs only</p></div>
+<p style="width:680px;font-size:24px;color:#4A4F5E">Forecast value today’s delivery rates won’t produce; the four-gaps share is at 33%.</p>
+<p style="width:220px;font-size:32px;font-weight:700;text-align:right;font-variant-numeric:tabular-nums">$232B–$759B</p>
+<p style="width:220px;font-size:32px;font-weight:700;text-align:right;color:#6E35F0;font-variant-numeric:tabular-nums">$77B–$251B</p>
+</div>
+<hr style="border-top:1px solid #E3E4EE;width:1656px">
+<div style="display:flex;flex-direction:row;align-items:center;gap:32px">
+<div style="width:440px;display:flex;flex-direction:column;gap:4px"><h3 style="font-size:28px;font-weight:600">Quantum compute and sensing</h3><p style="font-size:24px;color:#6B7085">Forecast $35B–$82B in 2035 · low case shown</p></div>
+<div style="width:680px;display:flex;flex-direction:column;gap:6px"><p style="font-size:24px;color:#9A5B00;border:1px solid #9A5B00;border-radius:999px;padding:2px 14px;align-self:start">Forecast sourced · delivered share placeholder · not in totals</p><div style="position:relative;width:680px;height:20px"><div style="position:absolute;left:0;top:4px;width:16px;height:12px;background:#D6D7E6"></div><div style="position:absolute;left:7px;top:0;width:5px;height:20px;background:#3B36A8"></div></div></div>
+<p style="width:220px;font-size:30px;font-weight:700;text-align:right;font-variant-numeric:tabular-nums">$15B–$26B</p>
+<p style="width:220px;font-size:30px;font-weight:700;text-align:right;color:#6E35F0;font-variant-numeric:tabular-nums">$4.9B–$8.7B</p>
+</div>
+</div>
+<div style="position:absolute;left:128px;right:128px;bottom:64px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#6B7085">forecast × (1 − delivered share) = shortfall; × share from the four gaps = reliability gap. Nervous Machine estimate; sources on the market page.</p>
+<p style="font-size:24px;color:#6B7085">4</p>
+</div>
+<aside>The anchors are not alike: commercial space is the whole data-and-applications layer of the WEF/McKinsey $1.79T forecast; robotics is Goldman’s humanoids only. Say so before anyone does the comparison for you. Delivered shares come from delivery-rate surveys and mission records in each domain (Cisco, McKinsey, Aerospace Corp, Swartwout, DIU). Quantum’s forecast is McKinsey’s Quantum Technology Monitor 2025, medium confidence; its delivered share borrows cross-industry AI ROI figures (IBM, S&P Global), so it is shown and not added.</aside>
+</section>
+
+</div>
+<div class="frame" id="s5">
+<section id="solution" data-transition="fade" style="background:#FBFBFD;color:#14172B;font-family:'Roboto', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="position:absolute;left:0;top:0;width:12px;height:1080px;background:linear-gradient(180deg,#19D3F5 0%,#6E35F0 100%)"></div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#4E49BE">The solution</p>
+<h2 style="font-family:'Montserrat', Arial, sans-serif;font-size:60px;font-weight:600;line-height:1.1">Propose. Earn. Move the frontier.</h2>
+</div>
+<div style="display:flex;flex-direction:row;gap:40px;align-items:stretch">
+<div style="flex:1;min-height:380px;display:flex;flex-direction:column;gap:14px;background:#FFFFFF;border:1px solid #E3E4EE;border-radius:16px;padding:28px">
+<p style="font-size:24px;font-weight:700;color:#4E49BE">01 · proposes</p>
+<h3 style="font-size:32px;font-weight:600;line-height:1.2">System 2 prior</h3>
+<p style="font-size:24px;line-height:1.4;color:#4A4F5E">Big models compose the starting hypotheses: which relationships should hold, compiled to kilobytes.</p>
+</div>
+<div style="flex:1;min-height:380px;display:flex;flex-direction:column;gap:14px;background:#FFFFFF;border:1px solid #E3E4EE;border-radius:16px;padding:28px">
+<p style="font-size:24px;font-weight:700;color:#4E49BE">02 · closes gaps 02 · 03</p>
+<h3 style="font-size:32px;font-weight:600;line-height:1.2">NM Learner</h3>
+<p style="font-size:24px;line-height:1.4;color:#4A4F5E">Scores each relationship against measurement where the data lands; earns certainty for each one separately.</p>
+</div>
+<div style="flex:1;min-height:380px;display:flex;flex-direction:column;gap:14px;background:#FFFFFF;border:1px solid #E3E4EE;border-radius:16px;padding:28px">
+<p style="font-size:24px;font-weight:700;color:#4E49BE">03 · closes gap 01</p>
+<h3 style="font-size:32px;font-weight:600;line-height:1.2">NM Network</h3>
+<p style="font-size:24px;line-height:1.4;color:#4A4F5E">Drift goes back to System 2 as a question. Breaks go to operations. What never earns certainty is a frontier gap.</p>
+</div>
+<div style="flex:1;min-height:380px;display:flex;flex-direction:column;gap:14px;background:#E9E9FA;border:1px solid #C9CAF0;border-radius:16px;padding:28px">
+<p style="font-size:24px;font-weight:700;color:#4E49BE">04 · closes gap 04</p>
+<h3 style="font-size:32px;font-weight:600;line-height:1.2">DEBRIEF</h3>
+<p style="font-size:24px;line-height:1.4;color:#4A4F5E">Briefs the team: confirmed, drifting, unknown, and where they add the most. From the ledger, never from the model’s opinion of itself.</p>
+</div>
+</div>
+<svg class="conn" viewBox="0 0 1920 1080" aria-hidden="true"><line x1="518.0" y1="474.0" x2="550.0" y2="474.0" stroke="#4E49BE" stroke-width="3" stroke-linecap="round"/><polygon points="550.0,474.0 534.0,479.0 534.0,469.0" fill="#4E49BE"/></svg>
+<svg class="conn" viewBox="0 0 1920 1080" aria-hidden="true"><line x1="944.0" y1="474.0" x2="976.0" y2="474.0" stroke="#4E49BE" stroke-width="3" stroke-linecap="round"/><polygon points="976.0,474.0 960.0,479.0 960.0,469.0" fill="#4E49BE"/></svg>
+<svg class="conn" viewBox="0 0 1920 1080" aria-hidden="true"><line x1="1370.0" y1="474.0" x2="1402.0" y2="474.0" stroke="#4E49BE" stroke-width="3" stroke-linecap="round"/><polygon points="1402.0,474.0 1386.0,479.0 1386.0,469.0" fill="#4E49BE"/></svg>
+<svg class="conn" viewBox="0 0 1920 1080" aria-hidden="true"><line x1="1599.0" y1="668.0" x2="1599.0" y2="716.0" stroke="#6E35F0" stroke-width="3" stroke-linecap="round"/></svg>
+<svg class="conn" viewBox="0 0 1920 1080" aria-hidden="true"><line x1="1599.0" y1="716.0" x2="321.0" y2="716.0" stroke="#6E35F0" stroke-width="3" stroke-linecap="round"/></svg>
+<svg class="conn" viewBox="0 0 1920 1080" aria-hidden="true"><line x1="321.0" y1="716.0" x2="321.0" y2="672.0" stroke="#6E35F0" stroke-width="3" stroke-linecap="round"/><polygon points="321.0,672.0 326.0,688.0 316.0,688.0" fill="#6E35F0"/></svg>
+<div style="position:absolute;left:910px;top:692px;width:100px;height:48px;background:#FBFBFD;border:3px solid #6E35F0;border-radius:24px;display:flex;align-items:center;justify-content:center"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6E35F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+<p style="position:absolute;left:128px;top:748px;width:1664px;font-size:26px;font-weight:500;color:#6E35F0;text-align:center">abduction: the hypothesis nobody had. People close what never earned certainty, and the frontier moves.</p>
+<p style="position:absolute;left:128px;top:812px;width:1664px;font-size:28px;color:#14172B">The framework patches itself. People are asked only where only people work: the frontier.</p>
+<div style="position:absolute;left:128px;right:128px;bottom:64px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#6B7085">Nervous Machine</p>
+<p style="font-size:24px;color:#6B7085">5</p>
+</div>
+<aside>It is one directed loop, not four components. The first three steps make the ledger trustworthy; DEBRIEF only avoids hallucination because it briefs from that ledger, never from a model’s report of itself (the 72-cycle run is the proof). The return arrow is the step nothing automates: a person’s abduction closes a frontier gap and becomes the next prior.</aside>
+</section>
+
+</div>
+<div class="frame" id="s6">
+<section id="job" data-transition="fade" style="background:#F3F3FA;color:#14172B;font-family:'Roboto', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<div style="position:absolute;left:0;top:0;width:12px;height:1080px;background:linear-gradient(180deg,#19D3F5 0%,#6E35F0 100%)"></div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#4E49BE">A different job</p>
+<h2 style="font-family:'Montserrat', Arial, sans-serif;font-size:60px;font-weight:600;line-height:1.1">A twin predicts. Nervous Machine keeps score.</h2>
+</div>
+<table style="font-size:26px;color:#14172B;background:#FFFFFF;border:1px solid #E3E4EE">
+<tr style="background:#E9E9FA"><th style="width:18%;text-align:left;padding:14px 18px"></th><th style="width:38%;text-align:left">A model or digital twin</th><th style="width:44%;text-align:left;color:#3B36A8">Nervous Machine</th></tr>
+<tr><td style="color:#6B7085">Its job</td><td>Predict the system</td><td>Keep score of the relationships in it</td></tr>
+<tr><td style="color:#6B7085">Learns</td><td>Before deployment, from large data</td><td>In operation, from each measured outcome</td></tr>
+<tr><td style="color:#6B7085">Gives you</td><td>A prediction</td><td>Certainty per relationship, anomalies, open questions, a gap register</td></tr>
+<tr><td style="color:#6B7085">When it’s wrong</td><td>Someone has to notice</td><td>Drift goes to re-hypothesis; breaks go to operations</td></tr>
+<tr><td style="color:#6B7085">Shares</td><td>Raw data, or the whole model</td><td>Kilobytes: certainty, anomalies, confirmed relationships</td></tr>
+</table>
+<p style="font-size:28px;line-height:1.4;color:#4A4F5E">Twins and models are among the things Nervous Machine scores. It works alongside every vendor’s stack. <b>Everyone ships the mean. Nervous Machine ships the variance.</b></p>
+<div style="position:absolute;left:128px;right:128px;bottom:64px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#6B7085">Nervous Machine</p>
+<p style="font-size:24px;color:#6B7085">6</p>
+</div>
+<aside>Not a competitor to the twin or the model: it scores them. The distinctive row is the last two: the forecast, the twin and the LLM answer are all means; Nervous Machine ships the variance per relationship, from measured residuals, and the variance is what fits in kilobytes.</aside>
+</section>
+
+</div>
+<div class="frame" id="s7">
+<section id="advisors" data-transition="fade" style="background:#FBFBFD;color:#14172B;font-family:'Roboto', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<div style="position:absolute;left:0;top:0;width:12px;height:1080px;background:linear-gradient(180deg,#19D3F5 0%,#6E35F0 100%)"></div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#4E49BE">One advisor, many envelopes</p>
+<h2 style="font-family:'Montserrat', Arial, sans-serif;font-size:60px;font-weight:600;line-height:1.1">Learn each envelope. Say when a device is leaving it.</h2>
+</div>
+<div style="display:flex;flex-direction:row;gap:28px;align-items:stretch">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#E9E9FA;border:1px solid #C9CAF0;border-radius:16px;padding:32px">
+<p style="font-size:24px;font-weight:700;color:#4E49BE">Components</p>
+<h3 style="font-size:32px;font-weight:600;line-height:1.2">Embedded advisor</h3>
+<p style="font-size:24px;line-height:1.4;color:#4A4F5E">Ships inside the part. Learns its envelope on this bus, in this orbit; reports when it can run and when its reading counts.</p>
+<div style="flex:1"></div>
+<p style="font-size:24px;line-height:1.35;color:#6B7085">Payload advisor built; embedding in talks with three makers.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FFFFFF;border:1px solid #E3E4EE;border-radius:16px;padding:32px">
+<p style="font-size:24px;font-weight:700;color:#4E49BE">Satellites</p>
+<h3 style="font-size:32px;font-weight:600;line-height:1.2">Payload advisor</h3>
+<p style="font-size:24px;line-height:1.4;color:#4A4F5E">Power, thermal and duty-cycle margin for each payload, learned in orbit.</p>
+<div style="flex:1"></div>
+<p style="font-size:24px;line-height:1.35;color:#6B7085">Built; synthetic bench. First flight: the Orbital Clarity pilot.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FFFFFF;border:1px solid #E3E4EE;border-radius:16px;padding:32px">
+<p style="font-size:24px;font-weight:700;color:#4E49BE">Robots and vehicles</p>
+<h3 style="font-size:32px;font-weight:600;line-height:1.2">Policy advisor</h3>
+<p style="font-size:24px;line-height:1.4;color:#4A4F5E">A causal prior per policy. Learns the environmental, mechanical and sensor envelopes; flags a device leaving the safe or economic range.</p>
+<div style="flex:1"></div>
+<p style="font-size:24px;line-height:1.35;color:#6B7085">Demonstrated on a small robot over Bluetooth.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FFFFFF;border:1px solid #E3E4EE;border-radius:16px;padding:32px">
+<p style="font-size:24px;font-weight:700;color:#4E49BE">Qubits and sensors</p>
+<h3 style="font-size:32px;font-weight:600;line-height:1.2">Calibration advisor</h3>
+<p style="font-size:24px;line-height:1.4;color:#4A4F5E">Which qubits move together, and which to trust today, from the calibration telemetry already kept.</p>
+<div style="flex:1"></div>
+<p style="font-size:24px;line-height:1.35;color:#6B7085">Published on ibm_fez.</p>
+</div>
+</div>
+<p style="font-size:26px;line-height:1.4;color:#4A4F5E"><b>DEBRIEF</b> briefs the team when any advisor sees a device nearing an envelope edge. Advisory: it reports the margin; the operator or controller decides.</p>
+<div style="position:absolute;left:128px;right:128px;bottom:64px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#6B7085">Nervous Machine</p>
+<p style="font-size:24px;color:#6B7085">7</p>
+</div>
+<aside>Same advisor, four envelopes. The embedded advisor is the payload advisor packaged inside a component so the part is self-hosted in the spacecraft: it knows when it can reliably run and take measurements. Embedding is in conversation, not shipped; say so.</aside>
+</section>
+
+</div>
+<div class="frame" id="s8">
+<section id="buyers" data-transition="fade" style="background:#FBFBFD;color:#14172B;font-family:'Roboto', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<div style="position:absolute;left:0;top:0;width:12px;height:1080px;background:linear-gradient(180deg,#19D3F5 0%,#6E35F0 100%)"></div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#4E49BE">Who pays now</p>
+<h2 style="font-family:'Montserrat', Arial, sans-serif;font-size:60px;font-weight:600;line-height:1.1">Who pays now. Ordered by how fast they close.</h2>
+</div>
+<table style="font-size:24px;color:#14172B;background:#FFFFFF;border:1px solid #E3E4EE">
+<tr style="background:#F1F1F8"><th style="width:22%;text-align:left;padding:14px 16px">Segment</th><th style="width:34%;text-align:left">Why they pay</th><th style="width:28%;text-align:left">What they buy</th><th style="width:16%;text-align:left">Status</th></tr>
+<tr><td style="color:#3B36A8">01 · Space component manufacturers</td><td>A part that flags its own bad reading is a lander that doesn’t tip. Autonomy goes on the spec sheet.</td><td>An embedded licence per unit, after an integration pilot</td><td style="color:#3B36A8">Closes fastest; three in conversation</td></tr>
+<tr><td>02 · Quantum compute and sensing</td><td>Calibration time is machine time; which qubits and sensors to trust today</td><td>A pilot on their archive, then the advisor on the control stack</td><td>Shown on ibm_fez</td></tr>
+<tr><td>03 · Space operators and mission science</td><td>38 of 49 satellites lost to a storm the model under-called</td><td>The pilot, then per-asset payload advisors</td><td>Pilot: Orbital Clarity</td></tr>
+<tr><td>04 · Supercomputer and data-center operations</td><td>32 faults the alarms missed; 26 of 31 confirmed by the operations log</td><td>A pilot on their telemetry; slower close, many owners</td><td>Shown on Marconi100</td></tr>
+<tr><td>05 · Fleets and defense analysis</td><td>DIU moved 41–51% of prototypes to production; the rest stalled</td><td>Policy advisor per fleet; DEBRIEF for analysts. Longest close</td><td>Demonstrated</td></tr>
+</table>
+<p style="font-size:26px;line-height:1.4;color:#4A4F5E"><b>The offer:</b> a fixed-price pilot. Bring an archive and one question; get back a scored record of what is confirmed, a gap register, and a DEBRIEF the team can question. The qualifier in every conversation: who pays when the AI is wrong?</p>
+<div style="position:absolute;left:128px;right:128px;bottom:64px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#6B7085">Nervous Machine</p>
+<p style="font-size:24px;color:#6B7085">8</p>
+</div>
+<aside>Ordering is our estimate of close speed: a product team with a ship date buys faster than an operations committee. Component makers embed Nervous Machine so the part is self-hosted in the spacecraft and knows when it can run and when its reading counts. Still to fill from the first priced conversations: teams per segment, who holds the budget, and price.</aside>
+</section>
+
+</div>
+<div class="frame" id="s9">
+<section id="shown" data-transition="fade" style="background:#F3F3FA;color:#14172B;font-family:'Roboto', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<div style="position:absolute;left:0;top:0;width:12px;height:1080px;background:linear-gradient(180deg,#19D3F5 0%,#6E35F0 100%)"></div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#4E49BE">What’s shown</p>
+<h2 style="font-family:'Montserrat', Arial, sans-serif;font-size:60px;font-weight:600;line-height:1.1">Hypotheses scored against real records, misses kept on file.</h2>
+</div>
+<div style="display:flex;flex-direction:row;gap:28px;align-items:stretch">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FFFFFF;border:1px solid #E3E4EE;border-radius:16px;padding:32px">
+<p style="font-size:24px;font-weight:700;color:#4E49BE">Published · IBM telemetry</p>
+<p style="font-size:56px;font-weight:700;color:#3B36A8;font-variant-numeric:tabular-nums;line-height:1.1">15 of 17</p>
+<h3 style="font-size:30px;font-weight:600;line-height:1.2">156 qubits on ibm_fez</h3>
+<p style="font-size:24px;line-height:1.4;color:#4A4F5E">17 clusters of qubits that move together, 15 confirmed by independent events. AUC 0.718 against 0.37 and 0.34 for per-qubit detectors.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FFFFFF;border:1px solid #E3E4EE;border-radius:16px;padding:32px">
+<p style="font-size:24px;font-weight:700;color:#4E49BE">Pre-registered · operator log</p>
+<p style="font-size:56px;font-weight:700;color:#3B36A8;font-variant-numeric:tabular-nums;line-height:1.1">26 of 31</p>
+<h3 style="font-size:30px;font-weight:600;line-height:1.2">Marconi100 supercomputer</h3>
+<p style="font-size:24px;line-height:1.4;color:#4A4F5E">32 hardware faults that temperature alarms missed. Operators drained the node in 26 of 31 checkable cases, against about 4 by chance.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FFFFFF;border:1px solid #E3E4EE;border-radius:16px;padding:32px">
+<p style="font-size:24px;font-weight:700;color:#4E49BE">Reproduced · NASA data</p>
+<p style="font-size:56px;font-weight:700;color:#3B36A8;font-variant-numeric:tabular-nums;line-height:1.1">12 of 17</p>
+<h3 style="font-size:30px;font-weight:600;line-height:1.2">Mars surface radiation</h3>
+<p style="font-size:24px;line-height:1.4;color:#4A4F5E">A persistent dose deficit was registered as a gap, then re-hypothesized as two dated solar-wind arrivals; both show in MAVEN data. Two pre-registered reproductions matched 12 of 17 published numbers.</p>
+</div>
+</div>
+<p style="font-size:26px;line-height:1.4;color:#4A4F5E"><b>Validating now:</b> a pre-registered test suite for the per-relationship error rule, config-layer scale and range, the drift and anomaly channels, and data guardrails.</p>
+<div style="position:absolute;left:128px;right:128px;bottom:64px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#6B7085">doi:10.5281/zenodo.20575885 · doi:10.5281/zenodo.20649152 · Marconi100 pre-registration on request</p>
+<p style="font-size:24px;color:#6B7085">9</p>
+</div>
+<aside>Lead with ibm_fez for a quantum or component-maker room, with Marconi100 for operations. The misses stay on the slide: 2 of 17 clusters unconfirmed, 5 of 17 Mars numbers not reproduced. That is the credibility move; don’t polish it away.</aside>
+</section>
+
+</div>
+<div class="frame" id="s10">
+<section id="pilot" data-transition="fade" style="background:#FBFBFD;color:#14172B;font-family:'Roboto', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="position:absolute;left:0;top:0;width:12px;height:1080px;background:linear-gradient(180deg,#19D3F5 0%,#6E35F0 100%)"></div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#4E49BE">The pilot · Orbital Clarity, with D-CUBED</p>
+<h2 style="font-family:'Montserrat', Arial, sans-serif;font-size:60px;font-weight:600;line-height:1.1">Ask for the reading that closes a gap. Share it in kilobytes.</h2>
+</div>
+<div style="display:flex;flex-direction:row;gap:28px;align-items:stretch">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FFFFFF;border:1px solid #E3E4EE;border-radius:16px;padding:32px">
+<p style="font-size:24px;font-weight:700;color:#4E49BE">01 · Space Atlas</p>
+<p style="font-size:26px;line-height:1.4;color:#4A4F5E">Registers a drag gap in a voxel and requests a reading.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FFFFFF;border:1px solid #E3E4EE;border-radius:16px;padding:32px">
+<p style="font-size:24px;font-weight:700;color:#4E49BE">02 · Payload advisor</p>
+<p style="font-size:26px;line-height:1.4;color:#4A4F5E">On each satellite, checks power, thermal and duty-cycle margin.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FFFFFF;border:1px solid #E3E4EE;border-radius:16px;padding:32px">
+<p style="font-size:24px;font-weight:700;color:#4E49BE">03 · The reply</p>
+<p style="font-size:26px;line-height:1.4;color:#4A4F5E">Satellites with margin take the reading and reply in kilobytes.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#E9E9FA;border:1px solid #C9CAF0;border-radius:16px;padding:32px">
+<p style="font-size:24px;font-weight:700;color:#4E49BE">04 · The record</p>
+<p style="font-size:26px;line-height:1.4;color:#4A4F5E">The voxel’s certainty updates. The gap closes, or stays registered with a reason.</p>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;border-top:1px solid #E3E4EE;padding:28px 0 0 0">
+<h3 style="font-size:32px;font-weight:600">Fixed before flight</h3>
+<p style="font-size:26px;line-height:1.4;color:#4A4F5E">The voxel gap list and what each reading should change · bytes per exchange · share of requests met · when a gap counts as closed.</p>
+</div>
+<div style="position:absolute;left:128px;right:128px;bottom:64px;display:flex;flex-direction:row;justify-content:space-between">
+<p style="font-size:24px;color:#6B7085">Nervous Machine</p>
+<p style="font-size:24px;color:#6B7085">10</p>
+</div>
+<aside>The pass criteria are fixed before flight so the pilot cannot be re-judged afterwards. Optional second column, only if true by the time you present: one embedded advisor in one component, on the bench, with one manufacturer.</aside>
+</section>
+
+</div>
+<div class="counter" id="counter">1 / 10</div><div class="help">← → to move · Home/End · print for PDF</div>
+<script>
+const frames=[...document.querySelectorAll('.frame')];
+const fit=()=>frames.forEach(f=>f.style.setProperty('--s',(f.clientWidth/1920).toFixed(5)));
+new ResizeObserver(fit).observe(document.body);fit();
+const counter=document.getElementById('counter');
+const current=()=>{const mid=innerHeight/2;let best=0,d=1e9;frames.forEach((f,i)=>{const r=f.getBoundingClientRect();const c=Math.abs((r.top+r.bottom)/2-mid);if(c<d){d=c;best=i;}});return best;};
+const show=i=>{i=Math.max(0,Math.min(frames.length-1,i));frames[i].scrollIntoView({behavior:'smooth',block:'center'});history.replaceState(null,'','#'+(i+1));};
+const update=()=>{counter.textContent=(current()+1)+' / '+frames.length;};
+addEventListener('scroll',update,{passive:true});update();
+addEventListener('keydown',e=>{if(['ArrowRight','ArrowDown','PageDown',' '].includes(e.key)){e.preventDefault();show(current()+1);}else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();show(current()-1);}else if(e.key==='Home'){show(0);}else if(e.key==='End'){show(frames.length-1);}});
+const h=parseInt(location.hash.slice(1),10);if(h>1){requestAnimationFrame(()=>frames[h-1].scrollIntoView({block:'center'}));}
+</script>
+</body>
+</html>

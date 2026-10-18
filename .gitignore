@@ -16,3 +16,5 @@
 __pycache__/
 !/favicon.ico
 !/logo.svg
+!/pitch
+!/market
