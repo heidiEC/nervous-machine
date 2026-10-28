@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Launch Autoresearch — Nervous Machine</title>
+    <meta name="description" content="Agents propose techniques from other industries for launch's hardest problems. A causal harness keeps or discards each one against a rule written down before it runs.">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <style>
+        :root {
+            --color-dark-bg: #06060F;
+            --color-card-bg: #0E0E1E;
+            --color-card-border: rgba(76, 0, 255, 0.15);
+            --color-accent-indigo: #4C00FF;
+            --color-accent-violet: #8A2BE2;
+            --color-cyan: #00FFFF;
+            --color-amber: #FFB454;
+            --color-text: #C8C8E0;
+            --color-text-muted: #8888AA;
+            --color-grid: rgba(136, 136, 170, 0.15);
+            --font-display: 'Instrument Serif', Georgia, serif;
+            --font-body: 'DM Sans', system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-dark-bg);
+            color: var(--color-text);
+            line-height: 1.7;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+
+        header {
+            position: fixed; width: 100%; top: 0; z-index: 1000;
+            background: rgba(6, 6, 15, 0.9); backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(76, 0, 255, 0.1); padding: 1rem 0;
+        }
+        header .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--font-display); font-size: 1.5rem; color: #fff; text-decoration: none; }
+        nav ul { list-style: none; display: flex; gap: 2rem; }
+        nav a { color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+        nav a:hover, nav a.active { color: var(--color-cyan); }
+
+        section { padding: 5rem 0; }
+        .hero { padding: 170px 0 3.5rem; }
+        .eyebrow { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-amber); margin-bottom: 1rem; }
+        h1 { font-family: var(--font-display); font-weight: 400; color: #fff; font-size: clamp(2.4rem, 5vw, 3.8rem); line-height: 1.1; text-wrap: balance; max-width: 18ch; }
+        h2 { font-family: var(--font-display); font-weight: 400; color: #fff; font-size: clamp(1.8rem, 3.4vw, 2.5rem); line-height: 1.15; margin-bottom: 1rem; text-wrap: balance; }
+        h3 { font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 0.35rem; }
+        .lede { font-size: 1.15rem; max-width: 62ch; margin-top: 1.25rem; }
+        .muted { color: var(--color-text-muted); }
+        .small { font-size: 0.85rem; }
+        p + p { margin-top: 0.9rem; }
+
+        .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 2rem; }
+        .step { background: var(--color-card-bg); border: 1px solid var(--color-card-border); border-radius: 14px; padding: 1.5rem; }
+        .step .n { font-family: var(--font-mono); color: var(--color-cyan); font-size: 0.8rem; margin-bottom: 0.6rem; }
+
+        .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin: 2rem 0 1.5rem; }
+        .tile { background: var(--color-card-bg); border: 1px solid var(--color-card-border); border-radius: 12px; padding: 1.1rem 1.2rem; }
+        .tile .lab { font-size: 0.8rem; color: var(--color-text-muted); }
+        .tile .num { font-family: var(--font-display); font-size: 2.4rem; color: #fff; line-height: 1.1; font-variant-numeric: tabular-nums; }
+
+        .board { display: grid; grid-template-columns: 1.15fr 1fr; gap: 1.25rem; }
+        .card { background: var(--color-card-bg); border: 1px solid var(--color-card-border); border-radius: 14px; padding: 1.5rem; min-width: 0; }
+        .card .note { font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1rem; }
+        .chart { position: relative; min-height: 260px; }
+        .chart svg { display: block; width: 100%; height: auto; }
+        .tip { position: absolute; pointer-events: none; background: #15152A; border: 1px solid var(--color-card-border); border-radius: 8px; padding: 0.35rem 0.6rem; font-size: 0.78rem; white-space: nowrap; }
+        .tip .k { color: var(--color-text-muted); }
+
+        table { width: 100%; border-collapse: collapse; font-size: 0.88rem; font-variant-numeric: tabular-nums; }
+        th { text-align: left; font-weight: 500; color: var(--color-text-muted); padding: 0.45rem 0.6rem 0.45rem 0; border-bottom: 1px solid var(--color-card-border); }
+        td { padding: 0.5rem 0.6rem 0.5rem 0; border-bottom: 1px solid rgba(76, 0, 255, 0.08); }
+        td.r, th.r { text-align: right; }
+        .pill { display: inline-block; font-size: 0.75rem; padding: 0 0.55rem; border-radius: 999px; border: 1px solid currentColor; white-space: nowrap; }
+        .pill.ok { color: var(--color-cyan); }
+        .pill.gap { color: var(--color-amber); }
+        .impact { display: inline-block; height: 6px; border-radius: 3px; background: var(--color-accent-violet); vertical-align: middle; margin-right: 0.5rem; opacity: 0.8; }
+
+        .findings { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; margin-top: 2rem; }
+        .finding { border-left: 2px solid var(--color-accent-indigo); padding-left: 1.1rem; }
+
+        .form-wrap { display: grid; grid-template-columns: 1fr 1.1fr; gap: 2.5rem; align-items: start; }
+        form { background: var(--color-card-bg); border: 1px solid var(--color-card-border); border-radius: 14px; padding: 1.75rem; display: grid; gap: 1rem; }
+        label { display: grid; gap: 0.35rem; font-size: 0.88rem; color: #fff; }
+        label .hint { color: var(--color-text-muted); font-size: 0.78rem; }
+        input, select, textarea { font: inherit; font-size: 0.92rem; color: var(--color-text); background: #0A0A18; border: 1px solid rgba(136, 136, 170, 0.3); border-radius: 8px; padding: 0.6rem 0.75rem; width: 100%; }
+        textarea { min-height: 6rem; resize: vertical; }
+        input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid var(--color-cyan); outline-offset: 2px; }
+        .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .check { display: flex; gap: 0.6rem; align-items: flex-start; font-size: 0.85rem; color: var(--color-text); }
+        .check input { width: auto; margin-top: 0.3rem; }
+        fieldset { border: none; display: grid; gap: 0.5rem; }
+        legend { font-size: 0.88rem; color: #fff; margin-bottom: 0.4rem; }
+        .btn { display: inline-block; font: inherit; font-weight: 600; font-size: 0.95rem; color: #fff; background: var(--color-accent-indigo); border: none; border-radius: 999px; padding: 0.75rem 1.6rem; cursor: pointer; text-decoration: none; }
+        .btn:hover { background: var(--color-accent-violet); }
+        .status { font-size: 0.88rem; }
+        .status.ok { color: var(--color-cyan); }
+        .status.err { color: var(--color-amber); }
+        .mono { font-family: var(--font-mono); font-size: 0.85rem; }
+
+        .fence { border: 1px solid rgba(255, 180, 84, 0.3); border-radius: 12px; padding: 1.1rem 1.25rem; font-size: 0.88rem; margin-top: 1.5rem; }
+
+        footer { padding: 3rem 0; border-top: 1px solid rgba(76, 0, 255, 0.1); text-align: center; font-size: 0.85rem; color: var(--color-text-muted); }
+        footer a { color: var(--color-text-muted); text-decoration: none; }
+        footer a:hover { color: var(--color-cyan); }
+
+        @media (max-width: 860px) {
+            header .container { flex-direction: column; gap: 0.75rem; }
+            nav ul { gap: 1.25rem; flex-wrap: wrap; justify-content: center; }
+            .hero { padding: 160px 0 2.5rem; }
+            section { padding: 3.5rem 0; }
+            .steps, .board, .findings, .form-wrap, .row2 { grid-template-columns: 1fr; }
+            .container { padding: 0 max(16px, env(safe-area-inset-left, 0px)) 0 max(16px, env(safe-area-inset-right, 0px)); }
+        }
+        @media (prefers-reduced-motion: no-preference) {
+            .score-line { stroke-dasharray: var(--len); stroke-dashoffset: var(--len); animation: draw 1.4s ease-out forwards; }
+            @keyframes draw { to { stroke-dashoffset: 0; } }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <a href="/" class="logo"><img src="/logo.svg" alt="" style="height:1.05em;vertical-align:-0.18em;margin-right:0.5em"> Nervous Machine</a>
+            <nav>
+                <ul>
+                    <li><a href="/#debrief">Debrief</a></li>
+                    <li><a href="/quantum">Quantum</a></li>
+                    <li><a href="/data-centers">Data Centers</a></li>
+                    <li><a href="/launch" class="active">Launch</a></li>
+                    <li><a href="https://space-atlas.nervousmachine.com">Space Atlas</a></li>
+                    <li><a href="/#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <p class="eyebrow">Launch autoresearch</p>
+                <h1>What other industries already solved for launch</h1>
+                <p class="lede">Agents propose techniques from aviation, chip cooling, nuclear power, semiconductors and more for launch's hardest problems. A causal harness keeps or discards each one against a rule written down before it runs, and remembers everything that was tried.</p>
+            </div>
+        </section>
+
+        <section id="how" style="padding-top:1rem">
+            <div class="container">
+                <h2>How it works</h2>
+                <p class="muted" style="max-width:62ch">The graph behind it starts from every orbital launch attempt since 1957 and the published root causes of failures, then links in evidence from dozens of other fields.</p>
+                <div class="steps">
+                    <div class="step">
+                        <p class="n">Propose</p>
+                        <h3>A technique from somewhere else</h3>
+                        <p class="small muted">An agent (or a person) names a technique proven in another field and the launch problem it should help. It reads what's already been tried first, so nothing is proposed twice.</p>
+                    </div>
+                    <div class="step">
+                        <p class="n">Evaluate</p>
+                        <h3>Through the causal graph</h3>
+                        <p class="small muted">The harness traces which launch outcomes the idea would move and how certain each link is. It flags conditions that rule it out (cryogenic, vacuum, vibration) and side effects it would bring in. Ideas only earn credit from evidence across several programs.</p>
+                    </div>
+                    <div class="step">
+                        <p class="n">Keep or discard</p>
+                        <h3>Against a rule set in advance</h3>
+                        <p class="small muted">A step is kept only if it improves the current set of practices by more than it costs to integrate. Every decision, and its reason, is recorded. Nothing here counts as proven in launch until launch evidence earns it.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="leaderboard">
+            <div class="container">
+                <h2>Current leaderboard</h2>
+                <p class="muted" style="max-width:62ch"><span id="lb-summary">Loading the latest run…</span> <span class="small">Updated <span id="lb-updated">—</span>.</span></p>
+                <div class="tiles">
+                    <div class="tile"><div class="lab">Steps tried</div><div class="num" data-field="tried">—</div></div>
+                    <div class="tile"><div class="lab">Kept</div><div class="num" data-field="kept">—</div></div>
+                    <div class="tile"><div class="lab">Blocked by physics</div><div class="num" data-field="blocked_by_physics">—</div></div>
+                    <div class="tile"><div class="lab">Practices adopted</div><div class="num" data-field="adopted">—</div></div>
+                    <div class="tile"><div class="lab">Open gaps (of 12)</div><div class="num" data-field="open_gaps">—</div></div>
+                    <div class="tile"><div class="lab">Techniques in catalog</div><div class="num" data-field="catalog_techniques">—</div></div>
+                </div>
+                <div class="board">
+                    <div class="card">
+                        <h3>Best score by step</h3>
+                        <p class="note">The practice set's expected score after each proposed step. Dots mark kept steps. The line only rises when a step beats the current set.</p>
+                        <div class="chart" id="traj"></div>
+                    </div>
+                    <div class="card">
+                        <h3>Launch problems: covered and open</h3>
+                        <p class="note">From the failure and emissions analysis, ordered by how much each matters. An open gap means no imported technique has earned a place yet. A bet is a proposed technique waiting for evidence; it can't enter the practice set on a good idea alone.</p>
+                        <div style="overflow-x:auto">
+                            <table>
+                                <thead><tr><th>Problem</th><th>Weight</th><th class="r">Adopted</th><th class="r">Bets queued</th><th>Status</th></tr></thead>
+                                <tbody id="coverage"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <p class="small muted" style="margin-top:1.25rem; max-width:80ch">Scores are the model's expected benefit from evidence in other industries, not results from launch. Specific techniques and hardware recommendations stay with reviewed contributors.</p>
+            </div>
+        </section>
+
+        <section id="findings">
+            <div class="container">
+                <h2>What the launch record already says</h2>
+                <p class="muted" style="max-width:62ch">From 7,186 orbital launch attempts (J. McDowell's GCAT catalog) and published failure investigations.</p>
+                <div class="findings">
+                    <div class="finding">
+                        <h3>Maturity dominates failure</h3>
+                        <p class="small muted">An engine's first flights carry about ten times the failure odds of a mature one, more than any choice of propellant or design. Propellant chemistry doesn't predict reliability once maturity is accounted for.</p>
+                    </div>
+                    <div class="finding">
+                        <h3>New rockets fail from design, mature ones from production</h3>
+                        <p class="small muted">Since 2000, most failures on a vehicle's first three flights involved a new design element. Failures of mature vehicles are mostly manufacturing defects and contamination.</p>
+                    </div>
+                    <div class="finding">
+                        <h3>Every propellant trades one pollutant for another</h3>
+                        <p class="small muted">Kerosene leaves soot high in the atmosphere. Solid motors leave alumina and chlorine in the stratosphere. Hydrogen is cleaner but usually flies with solid boosters.</p>
+                    </div>
+                    <div class="finding">
+                        <h3>The evidence for reuse is one program deep</h3>
+                        <p class="small muted">Reuse cuts new hardware per tonne sharply, but nearly all of that evidence comes from a single vehicle family. The harness won't give reuse full credit until a second program confirms it.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contribute">
+            <div class="container form-wrap">
+                <div>
+                    <h2>Become a contributor</h2>
+                    <p>Contributors bring ideas, evidence, or agent compute. Proposals run through the same harness, and you see how each one fared.</p>
+                    <p class="muted">We review every request. Contributions stay private until reviewed, and the graph itself isn't published.</p>
+                    <div class="fence">
+                        <strong style="color:#fff">Please don't send export-controlled technical data.</strong>
+                        <p class="muted" style="margin-top:0.4rem">Propose published techniques and say where they work. Leave out detailed designs, drawings or performance data for specific vehicles or engines. We may ask where you're based and who you work with, because launch technology is subject to export controls.</p>
+                    </div>
+                </div>
+                <form id="contrib-form" novalidate>
+                    <div class="row2">
+                        <label for="c-name">Name<input id="c-name" name="name" autocomplete="name" required></label>
+                        <label for="c-email">Email<input id="c-email" name="email" type="email" autocomplete="email" required></label>
+                    </div>
+                    <div class="row2">
+                        <label for="c-org">Organization<input id="c-org" name="organization" autocomplete="organization"></label>
+                        <label for="c-country">Country<input id="c-country" name="country" autocomplete="country-name" required></label>
+                    </div>
+                    <label for="c-expertise">Your field
+                        <span class="hint">Where your know-how comes from: propulsion, chip cooling, turbomachinery, materials, reliability…</span>
+                        <input id="c-expertise" name="expertise">
+                    </label>
+                    <fieldset>
+                        <legend>How you'd like to contribute</legend>
+                        <label class="check" for="c-ideas"><input type="checkbox" id="c-ideas" name="contribute" value="ideas"> Propose techniques from my field</label>
+                        <label class="check" for="c-evidence"><input type="checkbox" id="c-evidence" name="contribute" value="evidence"> Share sources, test data or failure reports</label>
+                        <label class="check" for="c-compute"><input type="checkbox" id="c-compute" name="contribute" value="compute"> Run proposal agents on my own compute</label>
+                    </fieldset>
+                    <label for="c-idea">An idea you'd want to test (optional)
+                        <span class="hint">A technique, where it works today, and the launch problem it could help.</span>
+                        <textarea id="c-idea" name="idea"></textarea>
+                    </label>
+                    <label class="check" for="c-terms"><input type="checkbox" id="c-terms" name="terms" required> I won't submit export-controlled technical data, and I understand contributions are reviewed before they're used.</label>
+                    <div style="display:flex; gap:1rem; align-items:center; flex-wrap:wrap">
+                        <button class="btn" type="submit">Request to contribute</button>
+                        <span class="status" id="c-status" role="status"></span>
+                    </div>
+                    <p class="small muted" id="c-fallback" hidden>Our intake isn't connected yet. Email the same details to <span class="mono">heidi@everychart.io</span>.</p>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div style="display: flex; justify-content: center; gap: 2.5rem; margin-bottom: 1.25rem; flex-wrap: wrap;">
+                <a href="https://nervousmachine.substack.com" target="_blank" rel="noopener">Substack</a>
+            </div>
+            <p>&copy; 2026 Nervous Machine. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Intake endpoint for contributor requests. Empty until the server endpoint exists;
+        // until then the form shows the email fallback instead of pretending to send.
+        const INTAKE_URL = '';
+
+        const fmt = (v) => (typeof v === 'number' && !Number.isInteger(v)) ? v.toFixed(2) : Number(v).toLocaleString('en-US');
+        const get = (name) => fetch('data/' + name + '.json', { cache: 'no-cache' }).then((r) => { if (!r.ok) throw new Error(name); return r.json(); });
+
+        Promise.all([get('summary'), get('coverage'), get('trajectory'), get('updated')]).then(([summary, coverage, traj, updated]) => {
+            const s = summary[0];
+            document.querySelectorAll('.tile .num').forEach((el) => { el.textContent = fmt(s[el.dataset.field]); });
+            document.getElementById('lb-summary').textContent =
+                `${fmt(s.kept)} of ${fmt(s.tried)} proposed steps were kept. The best practice set adopts ${fmt(s.adopted)} techniques from other industries, and ${fmt(s.open_gaps)} of 12 launch problems are still open.`;
+            document.getElementById('lb-updated').textContent = new Date(updated.updated + 'T00:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+            drawCoverage(coverage);
+            drawTraj(traj);
+            window.addEventListener('resize', () => drawTraj(traj));
+        }).catch(() => {
+            document.getElementById('lb-summary').textContent = "The leaderboard data didn't load. Try refreshing the page.";
+        });
+
+        function drawCoverage(rows) {
+            const tb = document.getElementById('coverage');
+            tb.replaceChildren();
+            const maxW = Math.max(...rows.map((r) => r.impact));
+            rows.forEach((r) => {
+                const tr = document.createElement('tr');
+                const a = document.createElement('td'); a.textContent = r.pain_point;
+                const b = document.createElement('td');
+                const bar = document.createElement('span'); bar.className = 'impact'; bar.style.width = (48 * r.impact / maxW) + 'px';
+                b.append(bar, document.createTextNode(r.impact.toFixed(1)));
+                const c = document.createElement('td'); c.className = 'r'; c.textContent = r.adopted;
+                const q = document.createElement('td'); q.className = 'r'; q.textContent = r.bets_queued ?? 0;
+                const d = document.createElement('td'); const p = document.createElement('span');
+                p.className = 'pill ' + (r.status === 'covered' ? 'ok' : 'gap'); p.textContent = r.status; d.appendChild(p);
+                tr.append(a, b, c, q, d); tb.appendChild(tr);
+            });
+        }
+
+        function drawTraj(rows) {
+            const el = document.getElementById('traj');
+            el.replaceChildren();
+            const data = rows.map((r) => ({ c: +r.cycle, s: +r.best_score, kept: r.decision === 'keep', op: r.op }));
+            const W = Math.max(300, el.clientWidth), H = 260, mt = 12, mb = 28;
+            const yMax = Math.max(...data.map((d) => d.s)) * 1.12 || 1;
+            const step = yMax > 1.5 ? 0.5 : 0.25;
+            const ticks = []; for (let t = 0; t <= yMax + 1e-9; t += step) ticks.push(+t.toFixed(2));
+            const NS = 'http://www.w3.org/2000/svg';
+            const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('role', 'img'); svg.setAttribute('aria-label', 'Best score by step');
+            const mk = (tag, attrs, text) => { const n = document.createElementNS(NS, tag); Object.entries(attrs).forEach(([k, v]) => n.setAttribute(k, v)); if (text != null) n.textContent = text; svg.appendChild(n); return n; };
+            const probe = mk('text', { 'font-size': 12, 'font-family': 'DM Sans' }, ticks[ticks.length - 1].toFixed(2));
+            const ml = probe.getComputedTextLength() + 12; probe.remove();
+            const c0 = data[0].c, c1 = data[data.length - 1].c;
+            const x = (c) => ml + (c - c0) / Math.max(1, c1 - c0) * (W - ml - 12);
+            const yTop = ticks[ticks.length - 1];
+            const y = (v) => mt + (1 - v / yTop) * (H - mt - mb);
+            ticks.forEach((t) => {
+                mk('line', { x1: ml, x2: W - 12, y1: y(t), y2: y(t), stroke: 'var(--color-grid)' });
+                mk('text', { x: ml - 8, y: y(t) + 4, 'text-anchor': 'end', 'font-size': 12, fill: 'var(--color-text-muted)', 'font-family': 'DM Sans' }, t.toFixed(2));
+            });
+            const nx = Math.max(2, Math.floor((W - ml) / 90));
+            for (let i = 0; i <= nx; i++) {
+                const c = Math.round(c0 + (c1 - c0) * i / nx);
+                mk('text', { x: x(c), y: H - 8, 'text-anchor': 'middle', 'font-size': 12, fill: 'var(--color-text-muted)', 'font-family': 'DM Sans' }, c);
+            }
+            let dpath = '';
+            data.forEach((d, i) => { dpath += i === 0 ? `M${x(d.c)},${y(d.s)}` : `H${x(d.c)}V${y(d.s)}`; });
+            const line = mk('path', { d: dpath, fill: 'none', stroke: 'var(--color-cyan)', 'stroke-width': 2, 'stroke-linejoin': 'round', 'stroke-linecap': 'round', class: 'score-line' });
+            line.style.setProperty('--len', line.getTotalLength());
+            data.filter((d) => d.kept).forEach((d) => mk('circle', { cx: x(d.c), cy: y(d.s), r: 3.5, fill: 'var(--color-amber)' }));
+            el.appendChild(svg);
+            const tip = document.createElement('div'); tip.className = 'tip'; tip.hidden = true; el.appendChild(tip);
+            const hit = mk('rect', { x: ml, y: 0, width: W - ml - 12, height: H, fill: 'transparent' });
+            hit.addEventListener('pointermove', (ev) => {
+                const box = svg.getBoundingClientRect();
+                const mx = (ev.clientX - box.left) / box.width * W;
+                const c = c0 + (mx - ml) / (W - ml - 12) * (c1 - c0);
+                let best = data[0]; data.forEach((d) => { if (Math.abs(d.c - c) < Math.abs(best.c - c)) best = d; });
+                const k = document.createElement('div'); k.className = 'k'; k.textContent = `Step ${best.c} · ${best.op}, ${best.kept ? 'kept' : 'discarded'}`;
+                const v = document.createElement('div'); v.textContent = `Best score ${best.s.toFixed(2)}`;
+                tip.replaceChildren(k, v); tip.hidden = false;
+                const px = x(best.c) / W * box.width;
+                tip.style.left = Math.min(Math.max(0, px + 10), box.width - tip.offsetWidth) + 'px';
+                tip.style.top = Math.max(0, y(best.s) / H * box.height - 46) + 'px';
+            });
+            hit.addEventListener('pointerleave', () => { tip.hidden = true; });
+        }
+
+        const form = document.getElementById('contrib-form');
+        const status = document.getElementById('c-status');
+        form.addEventListener('submit', async (ev) => {
+            ev.preventDefault();
+            status.className = 'status'; status.textContent = '';
+            const fd = new FormData(form);
+            const missing = ['name', 'email', 'country'].filter((k) => !String(fd.get(k) || '').trim());
+            if (missing.length) { status.className = 'status err'; status.textContent = 'Please add your ' + missing.join(', ') + '.'; return; }
+            if (!form.querySelector('#c-terms').checked) { status.className = 'status err'; status.textContent = 'Please confirm the export-control note to continue.'; return; }
+            if (!INTAKE_URL) { document.getElementById('c-fallback').hidden = false; status.className = 'status err'; status.textContent = "Requests can't be sent from this page yet."; return; }
+            const body = { name: fd.get('name'), email: fd.get('email'), organization: fd.get('organization'), country: fd.get('country'),
+                expertise: fd.get('expertise'), contribute: fd.getAll('contribute'), idea: fd.get('idea'), terms: true, source: 'nervousmachine.com/launch' };
+            try {
+                const r = await fetch(INTAKE_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+                if (!r.ok) throw new Error(r.status);
+                form.reset(); status.className = 'status ok'; status.textContent = "Request received. We'll be in touch by email.";
+            } catch (e) {
+                document.getElementById('c-fallback').hidden = false;
+                status.className = 'status err'; status.textContent = "That didn't go through. Email us instead, details below.";
+            }
+        });
+    </script>
+</body>
+
+</html>
