@@ -71,8 +71,9 @@
         .tile .lab { font-size: 0.8rem; color: var(--color-text-muted); }
         .tile .num { font-family: var(--font-display); font-size: 2.4rem; color: #fff; line-height: 1.1; font-variant-numeric: tabular-nums; }
 
-        .board { display: grid; grid-template-columns: 1.15fr 1fr; gap: 1.25rem; align-items: start; }
-        .card { background: var(--color-card-bg); border: 1px solid var(--color-card-border); border-radius: 14px; padding: 1.5rem; min-width: 0; }
+        .board { display: grid; grid-template-columns: 1.15fr 1fr; gap: 1.25rem; }
+        .card { background: var(--color-card-bg); border: 1px solid var(--color-card-border); border-radius: 14px; padding: 1.5rem; min-width: 0; display: flex; flex-direction: column; }
+        .card .foot { margin-top: auto; padding-top: 1rem; font-size: 0.8rem; color: var(--color-text-muted); }
         .card .note { font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1rem; }
         .chart { position: relative; }
         .chart svg { display: block; width: 100%; height: auto; }
@@ -183,6 +184,7 @@
                         <h3>Best score by step</h3>
                         <p class="note">The practice set's expected score after each proposed step. Dots mark kept steps. The line only rises when a step beats the current set.</p>
                         <div class="chart" id="traj"></div>
+                        <p class="foot">Scores are the model's expected benefit from evidence in other industries, not results from launch.</p>
                     </div>
                     <div class="card">
                         <h3>Launch problems: covered and open</h3>
@@ -195,7 +197,6 @@
                         </div>
                     </div>
                 </div>
-                <p class="small muted" style="margin-top:1.25rem; max-width:80ch">Scores are the model's expected benefit from evidence in other industries, not results from launch.</p>
             </div>
         </section>
 
