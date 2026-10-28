@@ -71,16 +71,16 @@
         .tile .lab { font-size: 0.8rem; color: var(--color-text-muted); }
         .tile .num { font-family: var(--font-display); font-size: 2.4rem; color: #fff; line-height: 1.1; font-variant-numeric: tabular-nums; }
 
-        .board { display: grid; grid-template-columns: 1.15fr 1fr; gap: 1.25rem; }
+        .board { display: grid; grid-template-columns: 1.15fr 1fr; gap: 1.25rem; align-items: start; }
         .card { background: var(--color-card-bg); border: 1px solid var(--color-card-border); border-radius: 14px; padding: 1.5rem; min-width: 0; }
         .card .note { font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1rem; }
-        .chart { position: relative; min-height: 260px; }
+        .chart { position: relative; }
         .chart svg { display: block; width: 100%; height: auto; }
         .tip { position: absolute; pointer-events: none; background: #15152A; border: 1px solid var(--color-card-border); border-radius: 8px; padding: 0.35rem 0.6rem; font-size: 0.78rem; white-space: nowrap; }
         .tip .k { color: var(--color-text-muted); }
 
         table { width: 100%; border-collapse: collapse; font-size: 0.88rem; font-variant-numeric: tabular-nums; }
-        th { text-align: left; font-weight: 500; color: var(--color-text-muted); padding: 0.45rem 0.6rem 0.45rem 0; border-bottom: 1px solid var(--color-card-border); }
+        th { text-align: left; white-space: nowrap; font-weight: 500; color: var(--color-text-muted); padding: 0.45rem 0.6rem 0.45rem 0; border-bottom: 1px solid var(--color-card-border); }
         td { padding: 0.5rem 0.6rem 0.5rem 0; border-bottom: 1px solid rgba(76, 0, 255, 0.08); }
         td.r, th.r { text-align: right; }
         .pill { display: inline-block; font-size: 0.75rem; padding: 0 0.55rem; border-radius: 999px; border: 1px solid currentColor; white-space: nowrap; }
@@ -91,26 +91,11 @@
         .findings { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; margin-top: 2rem; }
         .finding { border-left: 2px solid var(--color-accent-indigo); padding-left: 1.1rem; }
 
-        .form-wrap { display: grid; grid-template-columns: 1fr 1.1fr; gap: 2.5rem; align-items: start; }
-        form { background: var(--color-card-bg); border: 1px solid var(--color-card-border); border-radius: 14px; padding: 1.75rem; display: grid; gap: 1rem; }
-        label { display: grid; gap: 0.35rem; font-size: 0.88rem; color: #fff; }
-        label .hint { color: var(--color-text-muted); font-size: 0.78rem; }
-        input, select, textarea { font: inherit; font-size: 0.92rem; color: var(--color-text); background: #0A0A18; border: 1px solid rgba(136, 136, 170, 0.3); border-radius: 8px; padding: 0.6rem 0.75rem; width: 100%; }
-        textarea { min-height: 6rem; resize: vertical; }
-        input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid var(--color-cyan); outline-offset: 2px; }
-        .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-        .check { display: flex; gap: 0.6rem; align-items: flex-start; font-size: 0.85rem; color: var(--color-text); }
-        .check input { width: auto; margin-top: 0.3rem; }
-        fieldset { border: none; display: grid; gap: 0.5rem; }
-        legend { font-size: 0.88rem; color: #fff; margin-bottom: 0.4rem; }
-        .btn { display: inline-block; font: inherit; font-weight: 600; font-size: 0.95rem; color: #fff; background: var(--color-accent-indigo); border: none; border-radius: 999px; padding: 0.75rem 1.6rem; cursor: pointer; text-decoration: none; }
-        .btn:hover { background: var(--color-accent-violet); }
-        .status { font-size: 0.88rem; }
-        .status.ok { color: var(--color-cyan); }
-        .status.err { color: var(--color-amber); }
-        .mono { font-family: var(--font-mono); font-size: 0.85rem; }
+        a:focus-visible { outline: 2px solid var(--color-cyan); outline-offset: 2px; }
+        .contact { font-size: 1rem; color: var(--color-text); }
+        .contact a { color: var(--color-cyan); text-decoration: none; border-bottom: 1px solid rgba(0, 255, 255, 0.35); }
+        .contact a:hover { border-bottom-color: var(--color-cyan); }
 
-        .fence { border: 1px solid rgba(255, 180, 84, 0.3); border-radius: 12px; padding: 1.1rem 1.25rem; font-size: 0.88rem; margin-top: 1.5rem; }
 
         footer { padding: 3rem 0; border-top: 1px solid rgba(76, 0, 255, 0.1); text-align: center; font-size: 0.85rem; color: var(--color-text-muted); }
         footer a { color: var(--color-text-muted); text-decoration: none; }
@@ -121,7 +106,7 @@
             nav ul { gap: 1.25rem; flex-wrap: wrap; justify-content: center; }
             .hero { padding: 160px 0 2.5rem; }
             section { padding: 3.5rem 0; }
-            .steps, .board, .findings, .form-wrap, .row2 { grid-template-columns: 1fr; }
+            .steps, .board, .findings { grid-template-columns: 1fr; }
             .container { padding: 0 max(16px, env(safe-area-inset-left, 0px)) 0 max(16px, env(safe-area-inset-right, 0px)); }
         }
         @media (prefers-reduced-motion: no-preference) {
@@ -210,7 +195,7 @@
                         </div>
                     </div>
                 </div>
-                <p class="small muted" style="margin-top:1.25rem; max-width:80ch">Scores are the model's expected benefit from evidence in other industries, not results from launch. Specific techniques and hardware recommendations stay with reviewed contributors.</p>
+                <p class="small muted" style="margin-top:1.25rem; max-width:80ch">Scores are the model's expected benefit from evidence in other industries, not results from launch.</p>
             </div>
         </section>
 
@@ -239,47 +224,9 @@
             </div>
         </section>
 
-        <section id="contribute">
-            <div class="container form-wrap">
-                <div>
-                    <h2>Become a contributor</h2>
-                    <p>Contributors bring ideas, evidence, or agent compute. Proposals run through the same harness, and you see how each one fared.</p>
-                    <p class="muted">We review every request. Contributions stay private until reviewed, and the graph itself isn't published.</p>
-                    <div class="fence">
-                        <strong style="color:#fff">Please don't send export-controlled technical data.</strong>
-                        <p class="muted" style="margin-top:0.4rem">Propose published techniques and say where they work. Leave out detailed designs, drawings or performance data for specific vehicles or engines. We may ask where you're based and who you work with, because launch technology is subject to export controls.</p>
-                    </div>
-                </div>
-                <form id="contrib-form" novalidate>
-                    <div class="row2">
-                        <label for="c-name">Name<input id="c-name" name="name" autocomplete="name" required></label>
-                        <label for="c-email">Email<input id="c-email" name="email" type="email" autocomplete="email" required></label>
-                    </div>
-                    <div class="row2">
-                        <label for="c-org">Organization<input id="c-org" name="organization" autocomplete="organization"></label>
-                        <label for="c-country">Country<input id="c-country" name="country" autocomplete="country-name" required></label>
-                    </div>
-                    <label for="c-expertise">Your field
-                        <span class="hint">Where your know-how comes from: propulsion, chip cooling, turbomachinery, materials, reliability…</span>
-                        <input id="c-expertise" name="expertise">
-                    </label>
-                    <fieldset>
-                        <legend>How you'd like to contribute</legend>
-                        <label class="check" for="c-ideas"><input type="checkbox" id="c-ideas" name="contribute" value="ideas"> Propose techniques from my field</label>
-                        <label class="check" for="c-evidence"><input type="checkbox" id="c-evidence" name="contribute" value="evidence"> Share sources, test data or failure reports</label>
-                        <label class="check" for="c-compute"><input type="checkbox" id="c-compute" name="contribute" value="compute"> Run proposal agents on my own compute</label>
-                    </fieldset>
-                    <label for="c-idea">An idea you'd want to test (optional)
-                        <span class="hint">A technique, where it works today, and the launch problem it could help.</span>
-                        <textarea id="c-idea" name="idea"></textarea>
-                    </label>
-                    <label class="check" for="c-terms"><input type="checkbox" id="c-terms" name="terms" required> I won't submit export-controlled technical data, and I understand contributions are reviewed before they're used.</label>
-                    <div style="display:flex; gap:1rem; align-items:center; flex-wrap:wrap">
-                        <button class="btn" type="submit">Request to contribute</button>
-                        <span class="status" id="c-status" role="status"></span>
-                    </div>
-                    <p class="small muted" id="c-fallback" hidden>Our intake isn't connected yet. Email the same details to <span class="mono">heidi@everychart.io</span>.</p>
-                </form>
+        <section id="contribute" style="padding-top:0">
+            <div class="container">
+                <p class="contact">Interested in contributing to this project? Email <a href="mailto:heidi@everychart.io">heidi@everychart.io</a>.</p>
             </div>
         </section>
     </main>
@@ -294,10 +241,6 @@
     </footer>
 
     <script>
-        // Intake endpoint for contributor requests. Empty until the server endpoint exists;
-        // until then the form shows the email fallback instead of pretending to send.
-        const INTAKE_URL = '';
-
         const fmt = (v) => (typeof v === 'number' && !Number.isInteger(v)) ? v.toFixed(2) : Number(v).toLocaleString('en-US');
         const get = (name) => fetch('data/' + name + '.json', { cache: 'no-cache' }).then((r) => { if (!r.ok) throw new Error(name); return r.json(); });
 
@@ -343,6 +286,7 @@
             const NS = 'http://www.w3.org/2000/svg';
             const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('role', 'img'); svg.setAttribute('aria-label', 'Best score by step');
             const mk = (tag, attrs, text) => { const n = document.createElementNS(NS, tag); Object.entries(attrs).forEach(([k, v]) => n.setAttribute(k, v)); if (text != null) n.textContent = text; svg.appendChild(n); return n; };
+            el.appendChild(svg);   // must be in the page before text can be measured
             const probe = mk('text', { 'font-size': 12, 'font-family': 'DM Sans' }, ticks[ticks.length - 1].toFixed(2));
             const ml = probe.getComputedTextLength() + 12; probe.remove();
             const c0 = data[0].c, c1 = data[data.length - 1].c;
@@ -363,7 +307,6 @@
             const line = mk('path', { d: dpath, fill: 'none', stroke: 'var(--color-cyan)', 'stroke-width': 2, 'stroke-linejoin': 'round', 'stroke-linecap': 'round', class: 'score-line' });
             line.style.setProperty('--len', line.getTotalLength());
             data.filter((d) => d.kept).forEach((d) => mk('circle', { cx: x(d.c), cy: y(d.s), r: 3.5, fill: 'var(--color-amber)' }));
-            el.appendChild(svg);
             const tip = document.createElement('div'); tip.className = 'tip'; tip.hidden = true; el.appendChild(tip);
             const hit = mk('rect', { x: ml, y: 0, width: W - ml - 12, height: H, fill: 'transparent' });
             hit.addEventListener('pointermove', (ev) => {
@@ -381,27 +324,6 @@
             hit.addEventListener('pointerleave', () => { tip.hidden = true; });
         }
 
-        const form = document.getElementById('contrib-form');
-        const status = document.getElementById('c-status');
-        form.addEventListener('submit', async (ev) => {
-            ev.preventDefault();
-            status.className = 'status'; status.textContent = '';
-            const fd = new FormData(form);
-            const missing = ['name', 'email', 'country'].filter((k) => !String(fd.get(k) || '').trim());
-            if (missing.length) { status.className = 'status err'; status.textContent = 'Please add your ' + missing.join(', ') + '.'; return; }
-            if (!form.querySelector('#c-terms').checked) { status.className = 'status err'; status.textContent = 'Please confirm the export-control note to continue.'; return; }
-            if (!INTAKE_URL) { document.getElementById('c-fallback').hidden = false; status.className = 'status err'; status.textContent = "Requests can't be sent from this page yet."; return; }
-            const body = { name: fd.get('name'), email: fd.get('email'), organization: fd.get('organization'), country: fd.get('country'),
-                expertise: fd.get('expertise'), contribute: fd.getAll('contribute'), idea: fd.get('idea'), terms: true, source: 'nervousmachine.com/launch' };
-            try {
-                const r = await fetch(INTAKE_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-                if (!r.ok) throw new Error(r.status);
-                form.reset(); status.className = 'status ok'; status.textContent = "Request received. We'll be in touch by email.";
-            } catch (e) {
-                document.getElementById('c-fallback').hidden = false;
-                status.className = 'status err'; status.textContent = "That didn't go through. Email us instead, details below.";
-            }
-        });
     </script>
 </body>
 
